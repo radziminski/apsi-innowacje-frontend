@@ -4,7 +4,7 @@ import SampleComponent from '~/components/SampleComponent';
 function App() {
   return (
     <>
-      <SampleComponent text="Hello world!" />
+      <SampleComponent text="Innowacje projekt" />
     </>
   );
 }
