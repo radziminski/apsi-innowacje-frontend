@@ -1,7 +1,12 @@
 import React from 'react';
+import SampleComponent from '~/components/SampleComponent';
 
 function App() {
-  return <div className="App">Hello World!!</div>;
+  return (
+    <>
+      <SampleComponent text="Hello world!" />
+    </>
+  );
 }
 
 export default App;
