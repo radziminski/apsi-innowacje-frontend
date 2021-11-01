@@ -1,4 +1,6 @@
-export const getLoginPath = () => '/logowanie';
+export const getRootPath = () => '/';
+
+export const getLoginPath = () => '/login';
 
 export const getDashboardPath = () => '/dashboard';
 

@@ -35,6 +35,7 @@ module.exports = merge(WEBPACK_BASE, {
       directory: require('./webpack.base').PUBLIC_DIRECTORY,
     },
     open: true,
+    historyApiFallback: true,
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
