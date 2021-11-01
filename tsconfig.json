@@ -17,6 +17,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
+    "baseUrl": ".",
     "noImplicitAny": false,
     "paths": {
       "~/*": ["./src/*"]
