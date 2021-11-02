@@ -4,6 +4,14 @@ export const COLORS = {
   black: '#000000',
   white: '#ffffff',
   transparent: 'transparent',
+  primary: '#5226ff',
+  primaryDark: '#1b255a',
+  primaryLight: '#eee9ff',
+  background: '#f8f9fb',
+  accent1: '#e8246b',
+  accent2: '#fcbf59',
+  accent3: '#00b7fd',
+  gray: '#959fba'
 };
 
 export const FONT_WEIGHTS = {
@@ -15,7 +23,7 @@ export const FONT_WEIGHTS = {
   semiBold: 600,
   bold: 700,
   extraBold: 800,
-  black: 900,
+  black: 900
 };
 
 export const Z_INDEX = {
@@ -30,20 +38,20 @@ export const Z_INDEX = {
   stickedFront: 29,
   modalBack: 30,
   modalMiddle: 35,
-  modalFront: 39,
+  modalFront: 39
 };
 
 export const BREAKPOINTS: Record<Device, number> = {
   [Device.Desktop]: 1920,
   [Device.Tab]: 962,
-  [Device.Mobile]: 601,
+  [Device.Mobile]: 601
 };
 
 export const MEDIA_QUERIES = {
   ...Object.values(Device).reduce<Record<Device, string>>((acc, breakpoint) => {
     return {
       ...acc,
-      [breakpoint]: `only screen and (max-width: ${BREAKPOINTS[breakpoint]}px)`,
+      [breakpoint]: `only screen and (max-width: ${BREAKPOINTS[breakpoint]}px)`
     };
-  }, {} as Record<Device, string>),
+  }, {} as Record<Device, string>)
 };
