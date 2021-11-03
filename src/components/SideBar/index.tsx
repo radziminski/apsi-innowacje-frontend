@@ -6,11 +6,12 @@ import { useOutsideClick } from '~/hooks/useOutsideClick';
 import { Z_INDEX } from '~/styles/variables';
 import Box from '../Box';
 import Logo from '../Logo';
+import { ModalOverlay } from '../ModalOverlay';
 import Nav from '../Nav';
 import { Container } from './parts';
 
 export const SideBar: React.FC = () => {
-  const [isOpened, setIsOpened] = useState(false);
+  const [isOpened, setIsOpened] = useState<boolean | null>(false);
   const { isTab } = useDevice();
   const ref = useRef(null);
 
@@ -26,11 +27,14 @@ export const SideBar: React.FC = () => {
       </Container>
 
       {isTab && (
-        <Box zIndex={Z_INDEX.modalMiddle} position="fixed" left="1rem" top="2rem" borderRadius="12px">
-          <button onClick={() => setIsOpened(true)}>
-            <IoMdMenu size={32} />
-          </button>
-        </Box>
+        <>
+          <Box zIndex={Z_INDEX.modalMiddle} position="fixed" left="1rem" top="2rem" borderRadius="12px">
+            <button onClick={() => setIsOpened(true)}>
+              <IoMdMenu size={32} />
+            </button>
+          </Box>
+          <ModalOverlay isVisible={isOpened} />
+        </>
       )}
     </>
   );
