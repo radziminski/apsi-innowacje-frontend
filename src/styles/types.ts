@@ -1,7 +1,7 @@
 export enum Device {
   Desktop = 'desktop',
   Tab = 'tab',
-  Mobile = 'mobile'
+  Mobile = 'mobile',
 }
 
 export interface CustomTheme {

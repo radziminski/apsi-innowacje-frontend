@@ -5,9 +5,10 @@ import Nav from '../Nav';
 
 export const SideBar: React.FC = () => {
   return (
-    <FlexBox width={250} padding="3rem 2rem" flexDirection="column">
-      <Logo />
-      <Box marginBottom="2rem" />
+    <FlexBox width={250} padding="3rem 0" flexDirection="column">
+      <Box padding="0 2rem" marginBottom="3rem">
+        <Logo />
+      </Box>
       <Nav />
     </FlexBox>
   );

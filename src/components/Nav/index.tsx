@@ -1,45 +1,58 @@
 import React from 'react';
-import { MdOutlineDashboardCustomize } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { COLORS, FONT_WEIGHTS } from '~/styles/variables';
+import { MdOutlineDashboardCustomize, MdOutlineRateReview, MdOutlineDashboard } from 'react-icons/md';
+import { BiMessageDetail } from 'react-icons/bi';
+import { useLocation } from 'react-router-dom';
+
+import { getIdeasPath, getCreateIdeaPath, getInspirationsPath, getVotingPath } from '~/constants/paths';
+import { COLORS } from '~/styles/variables';
 import Box, { FlexBox } from '../Box';
-import { Heading3 } from '../Text';
+import NavItem from '../NavItem';
+import { Pill } from './parts';
 
 const ICON_SIZE = 16;
 
 const NAV_LINKS = [
   {
-    icon: <MdOutlineDashboardCustomize size={ICON_SIZE} />,
-    to: '/',
-    label: 'Pomysły'
+    icon: <MdOutlineDashboard size={ICON_SIZE} />,
+    to: getIdeasPath(),
+    label: 'Pomysły',
   },
   {
     icon: <MdOutlineDashboardCustomize size={ICON_SIZE} />,
-    to: '/',
-    label: 'Nowy pomysł'
+    to: getCreateIdeaPath(),
+    label: 'Nowy pomysł',
   },
   {
-    icon: <MdOutlineDashboardCustomize size={ICON_SIZE} />,
-    to: '/',
-    label: 'Pomysły'
-  }
+    icon: <MdOutlineRateReview size={ICON_SIZE} />,
+    to: getVotingPath(),
+    label: 'Głosowanie',
+  },
+  {
+    icon: <BiMessageDetail size={ICON_SIZE} />,
+    to: getInspirationsPath(),
+    label: 'Inspiracje',
+  },
 ];
 
 export const Nav: React.FC = () => {
+  const location = useLocation();
+
+  const getLocationOffset = () => {
+    return NAV_LINKS.findIndex((link) => location.pathname.startsWith(link.to));
+  };
+
   return (
-    <FlexBox as="nav" flexDirection="column" color={COLORS.gray}>
-      {NAV_LINKS.map(link => (
-        <Link key={link.label} to={link.to}>
-          <FlexBox alignItems="center" marginBottom="1rem" cursor="pointer">
-            {link.icon}
-            <Box marginRight="0.75rem" />
-            <Heading3 fontSize="0.75rem" fontWeight={FONT_WEIGHTS.medium}>
-              {link.label}
-            </Heading3>
-          </FlexBox>
-        </Link>
-      ))}
-    </FlexBox>
+    <Box as="nav" padding="0 2.5rem" position="relative">
+      <FlexBox as="ul" flexDirection="column" color={COLORS.gray}>
+        {NAV_LINKS.map((link) => (
+          <Box as="li" paddingY="0.75rem" key={link.label}>
+            <NavItem {...link} isActive={location.pathname.startsWith(link.to)} />
+          </Box>
+        ))}
+      </FlexBox>
+
+      <Pill offset={5 + getLocationOffset() * 40} />
+    </Box>
   );
 };
 
