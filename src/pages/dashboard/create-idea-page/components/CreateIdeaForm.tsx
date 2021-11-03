@@ -30,9 +30,9 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <FlexBox className={props.className}>
-          <FormRow label={'Tytuł pomysłu'} formId={'title'} type={'text'} />
+          <FormRow label={'Tematyka pomysłu'} formId={'topic'} type={'select'} />
+          <FormRow label={'Słowa kluczowe'} formId={'keywords'} type={'createable-select'} />
           <FormRow label={'Opis'} formId={'description'} type={'textarea'} />
-          <FormRow label={'Słowa kluczowe'} formId={'keywords'} type={'text'} />
           <FormRow label={'Planowane korzyści'} formId={'benefits'} type={'text'} />
           <FormRow label={'Planowane koszty'} formId={'costs'} type={'text'} />
           <FormRow label={'Załączniki'} formId={'attachments'} type={'text'} />
