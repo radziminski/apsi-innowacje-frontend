@@ -1,16 +1,38 @@
-import React from 'react';
-import Box, { FlexBox } from '../Box';
+import React, { useRef, useState } from 'react';
+import { IoMdMenu } from 'react-icons/io';
+
+import { useDevice } from '~/hooks';
+import { useOutsideClick } from '~/hooks/useOutsideClick';
+import { Z_INDEX } from '~/styles/variables';
+import Box from '../Box';
 import Logo from '../Logo';
 import Nav from '../Nav';
+import { Container } from './parts';
 
 export const SideBar: React.FC = () => {
+  const [isOpened, setIsOpened] = useState(false);
+  const { isTab } = useDevice();
+  const ref = useRef(null);
+
+  useOutsideClick(ref, () => isOpened && setIsOpened(false));
+
   return (
-    <FlexBox width={250} padding="3rem 0" flexDirection="column">
-      <Box padding="0 2rem" marginBottom="3rem">
-        <Logo />
-      </Box>
-      <Nav />
-    </FlexBox>
+    <>
+      <Container isOpened={isOpened || !isTab} ref={ref}>
+        <Box padding="0 2rem" marginBottom="3rem">
+          <Logo />
+        </Box>
+        <Nav />
+      </Container>
+
+      {isTab && (
+        <Box zIndex={Z_INDEX.modalMiddle} position="fixed" left="1rem" top="2rem" borderRadius="12px">
+          <button onClick={() => setIsOpened(true)}>
+            <IoMdMenu size={32} />
+          </button>
+        </Box>
+      )}
+    </>
   );
 };
 
