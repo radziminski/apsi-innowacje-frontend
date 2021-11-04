@@ -44,7 +44,10 @@ export const Nav: React.FC = () => {
   const location = useLocation();
 
   const getLocationOffset = () => {
-    return NAV_LINKS.findIndex((link) => location.pathname.startsWith(link.to));
+    return Math.max(
+      NAV_LINKS.findIndex((link) => location.pathname.startsWith(link.to)),
+      0
+    );
   };
 
   return (
