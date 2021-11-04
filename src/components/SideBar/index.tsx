@@ -20,7 +20,7 @@ export const SideBar: React.FC = () => {
   return (
     <>
       <Container isOpened={isOpened || !isTab} ref={ref}>
-        <Box padding="0 2rem" marginBottom="3rem">
+        <Box padding="0 3rem" marginBottom="4rem">
           <Logo />
         </Box>
         <Nav />
@@ -28,9 +28,9 @@ export const SideBar: React.FC = () => {
 
       {isTab && (
         <>
-          <Box zIndex={Z_INDEX.modalMiddle} position="fixed" left="1rem" top="2rem" borderRadius="12px">
+          <Box zIndex={Z_INDEX.modalMiddle} position="fixed" left="3rem" top="4rem" borderRadius="12px">
             <button onClick={() => setIsOpened(true)}>
-              <IoMdMenu size={32} />
+              <IoMdMenu size={48} />
             </button>
           </Box>
           <ModalOverlay isVisible={isOpened} />

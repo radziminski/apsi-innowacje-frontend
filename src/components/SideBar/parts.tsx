@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const Container = styled.aside<{ isOpened: boolean }>`
   display: flex;
-  width: 250px;
-  padding: 3rem 0;
+  width: 380px;
+  padding: 4rem 0;
   flex-direction: column;
   height: 100vh;
   background: ${({ theme }) => theme.colors.white};

@@ -15,7 +15,7 @@ import Box, { FlexBox } from '../Box';
 import NavItem from '../NavItem';
 import { Pill } from './parts';
 
-const ICON_SIZE = 16;
+const ICON_SIZE = 22;
 
 const NAV_LINKS = [
   {
@@ -48,23 +48,23 @@ export const Nav: React.FC = () => {
   };
 
   return (
-    <FlexBox flexDirection="column" as="nav" padding="0 2.5rem" position="relative" height="100%">
+    <FlexBox flexDirection="column" as="nav" padding="0 3.5rem" position="relative" height="100%">
       <FlexBox as="ul" flexDirection="column" color={COLORS.gray}>
         {NAV_LINKS.map((link) => (
-          <Box as="li" paddingY="0.75rem" key={link.label}>
+          <Box as="li" paddingY="1.25rem" key={link.label}>
             <NavItem {...link} isActive={location.pathname.startsWith(link.to)} />
           </Box>
         ))}
       </FlexBox>
 
-      <Pill offset={5 + getLocationOffset() * 40} />
+      <Pill offset={9 + getLocationOffset() * 64} />
 
-      <Box paddingBottom="2.5rem" borderBottom={`1px solid ${COLORS.gray}`} opacity={0.5} />
+      <Box paddingBottom="3rem" borderBottom={`1px solid ${COLORS.gray}`} opacity={0.5} />
       <Box marginTop="3rem" color={COLORS.gray}>
-        <Box paddingY="0.75rem">
+        <Box paddingY="1.25rem">
           <NavItem to="" icon={<MdOutlineAccountCircle size={ICON_SIZE} />} label="Dane użytkownika" />
         </Box>
-        <Box paddingY="0.75rem">
+        <Box paddingY="1.25rem">
           <NavItem to="" icon={<MdLogout size={ICON_SIZE} />} label="Wyloguj" />
         </Box>
       </Box>

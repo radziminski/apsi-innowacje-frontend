@@ -17,8 +17,8 @@ export const NavItem: React.FC<Props> = ({ label, to, icon, isActive }) => {
     <Link key={label} to={to}>
       <Container isActive={isActive}>
         {icon}
-        <Box marginRight="0.75rem" />
-        <Heading3 fontSize="0.75rem" fontWeight={FONT_WEIGHTS.medium}>
+        <Box marginRight="1rem" />
+        <Heading3 fontSize="1.1rem" fontWeight={FONT_WEIGHTS.medium}>
           {label}
         </Heading3>
       </Container>
