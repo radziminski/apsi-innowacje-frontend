@@ -14,6 +14,13 @@ export const COLORS = {
   gray: '#959fba'
 };
 
+export const MARGINS = {
+  small: '1rem',
+  medium: '1.5rem',
+  big: '15px',
+  large: '20px'
+};
+
 export const FONT_WEIGHTS = {
   thin: 100,
   extraLight: 200,

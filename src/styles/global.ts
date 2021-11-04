@@ -8,7 +8,6 @@ const globalStyles = css`
     font-size: 100%;
     background-color: ${({ theme }) => theme.colors.white};
   }
-  html,
   body {
     width: 100%;
     height: 100%;
