@@ -1,7 +1,7 @@
 import { createGlobalStyle, css } from 'styled-components';
 import { normalize } from 'styled-normalize';
 
-const baseFontFamily = '';
+const baseFontFamily = 'Poppins';
 
 const globalStyles = css`
   html {

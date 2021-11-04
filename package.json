@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "engines": {
     "npm": "^7",
-    "node": "^12.22.0"
+    "node": "^14.16.0"
   },
   "private": true,
   "dependencies": {
@@ -29,7 +29,7 @@
     "start:dev": "cross-env ENV_FILE=dev NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js",
     "start:prod": "cross-env ENV_FILE=prod NODE_ENV=production webpack serve --config ./webpack/webpack.prod.js",
     "clean": "rm -rf ./build",
-    "build": "npm run clean && cross-env NODE_ENV=production ENV_FILE=prod && webpack build --config ./webpack/webpack.prod.js",
+    "build": "npm run clean && cross-env ENV_FILE=prod NODE_ENV=production && webpack build --config ./webpack/webpack.prod.js",
     "test": "jest",
     "lint": "eslint ./src/ --ext js,jsx,ts,tsx",
     "lint:fix": "eslint ./src/ --ext js,jsx,ts,tsx --fix",

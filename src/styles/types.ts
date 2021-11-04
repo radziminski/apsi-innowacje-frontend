@@ -9,6 +9,14 @@ export interface CustomTheme {
     black: string;
     transparent: string;
     white: string;
+    primary: string;
+    primaryDark: string;
+    primaryLight: string;
+    background: string;
+    accent1: string;
+    accent2: string;
+    accent3: string;
+    gray: string;
   };
   fontWeights: {
     thin: number;

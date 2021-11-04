@@ -3,7 +3,15 @@ import { Device } from './types';
 export const COLORS = {
   black: '#000000',
   white: '#ffffff',
-  transparent: 'transparent'
+  transparent: 'transparent',
+  primary: '#5226ff',
+  primaryDark: '#1b255a',
+  primaryLight: '#eee9ff',
+  background: '#f8f9fb',
+  accent1: '#e8246b',
+  accent2: '#fcbf59',
+  accent3: '#00b7fd',
+  gray: '#959fba'
 };
 
 export const MARGINS = {
