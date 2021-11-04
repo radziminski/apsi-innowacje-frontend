@@ -15,8 +15,8 @@ export const COLORS = {
 };
 
 export const MARGINS = {
-  small: '5px',
-  medium: '10px',
+  small: '1rem',
+  medium: '1.5rem',
   big: '15px',
   large: '20px'
 };

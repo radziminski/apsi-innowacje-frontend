@@ -2,19 +2,25 @@ import { FormProvider, useForm } from 'react-hook-form';
 import React from 'react';
 import { FlexBox } from '~/components/Box';
 import styled from 'styled-components';
-import FormRow from '~/pages/dashboard/create-idea-page/components/FormRow';
+import FormRow from '~/components/forms/FormRow';
+import { MARGINS } from '~/styles/variables';
 
 const SubmitButtonBase = (props: { className?: string }): JSX.Element => {
   return (
-    <button type={'submit'} className={props.className}>
-      Wyślij
-    </button>
+    <div className={props.className}>
+      <button type={'submit'}>Wyślij</button>
+    </div>
   );
 };
 
 const SubmitButton = styled(SubmitButtonBase)`
-  background-color: #eee;
-  padding: 15px;
+  text-align: right;
+  button {
+    background-color: #eee;
+    border-radius: 999px;
+    margin: ${MARGINS.medium};
+    padding: ${MARGINS.small} ${MARGINS.medium};
+  }
 `;
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
@@ -28,21 +34,53 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <FlexBox className={props.className}>
-          <FormRow label={'Tematyka pomysłu'} formId={'topic'} type={'select'} />
-          <FormRow label={'Słowa kluczowe'} formId={'keywords'} type={'createable-select'} />
-          <FormRow label={'Opis'} formId={'description'} type={'textarea'} />
-          <FormRow label={'Planowane korzyści'} formId={'benefits'} type={'text'} />
-          <FormRow label={'Planowane koszty'} formId={'costs'} type={'text'} />
-          <FormRow label={'Załączniki'} formId={'attachments'} type={'text'} />
-        </FlexBox>
-        <SubmitButton />
-      </form>
+      <div className={props.className}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <FlexBox>
+            <FormRow label={'Tematyka pomysłu'} formId={'topic'} type={'select'} />
+            <FormRow label={'Słowa kluczowe'} formId={'keywords'} type={'createable-select'} />
+            <FormRow
+              label={'Opis'}
+              formId={'description'}
+              type={'textarea'}
+              rows={8}
+              placeholder={'Opowiedz nam o swoim pomyśle'}
+            />
+            <FormRow
+              label={'Planowane korzyści'}
+              formId={'benefits'}
+              type={'textarea'}
+              rows={4}
+              placeholder={'Jakie korzyści może przynieść twój pomysł?'}
+            />
+            <FormRow
+              label={'Planowane koszty'}
+              formId={'costs'}
+              type={'text'}
+              placeholder={'Tu jakieś ranges do wyboru pewnie'}
+            />
+            <FormRow
+              label={'Załączniki'}
+              formId={'attachments'}
+              type={'text'}
+              placeholder={'Tu jakiś dropzone + możliwość kliknięcia z otwarciem eksploratora'}
+            />
+          </FlexBox>
+          <SubmitButton />
+        </form>
+      </div>
     </FormProvider>
   );
 };
 
 export default styled(CreateIdeaForm)`
-  flex-direction: column;
+  margin: ${MARGINS.small};
+
+  > form > div {
+    flex-direction: column;
+  }
+
+  textarea {
+    border-radius: 1.5rem;
+  }
 `;

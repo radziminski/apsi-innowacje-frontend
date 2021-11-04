@@ -1,13 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  FormAsyncSelectInput,
-  FormCreateableSelectInput,
-  FormTextAreaInput,
-  FormTextInput
-} from '~/pages/dashboard/create-idea-page/components/FormInputs';
 import { FlexBox } from '~/components/Box';
-import { MARGINS } from '~/styles/variables';
+import { COLORS, MARGINS } from '~/styles/variables';
+import { FormTextInput } from '~/components/forms/FormTextInput';
+import { FormAsyncSelect } from '~/components/forms/FormAsyncSelect';
+import { FormCreateableSelect } from '~/components/forms/FormCreateableSelect';
+import { FormTextArea } from '~/components/forms/FormTextArea';
 
 export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
 
@@ -26,9 +24,9 @@ const FormRow = (props: FormRowProps): JSX.Element => {
 
   const getFormComponent = (type: FormType): JSX.Element => {
     if (type == 'text') return <FormTextInput id={formId} {...rest} />;
-    else if (type == 'textarea') return <FormTextAreaInput id={formId} {...rest} />;
-    else if (type == 'select') return <FormAsyncSelectInput id={formId} {...rest} />;
-    else if (type == 'createable-select') return <FormCreateableSelectInput id={formId} {...rest} />;
+    else if (type == 'textarea') return <FormTextArea id={formId} {...rest} />;
+    else if (type == 'select') return <FormAsyncSelect id={formId} {...rest} />;
+    else if (type == 'createable-select') return <FormCreateableSelect id={formId} {...rest} />;
     else return <FormTextInput id={formId} />;
   };
 
@@ -44,10 +42,25 @@ const FormRow = (props: FormRowProps): JSX.Element => {
 
 export default styled(FormRow)`
   flex-direction: row;
-  margin: ${MARGINS.medium};
+  margin: ${MARGINS.small};
   > div {
     width: 50%;
     display: flex;
-    align-items: center;
+    align-items: top;
+
+    label {
+      margin-top: ${MARGINS.small};
+    }
+  }
+
+  input,
+  select,
+  textarea {
+    margin: 0 ${MARGINS.small};
+    width: 100%;
+    ::placeholder {
+      color: ${COLORS.gray};
+      opacity: 1;
+    }
   }
 `;
