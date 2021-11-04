@@ -1,10 +1,12 @@
+/* eslint-disable */
 import React from 'react';
 import { MemoizeFormInput } from '~/pages/dashboard/create-idea-page/util/MemoizeFormInput';
 import { Controller, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import { MARGINS } from '~/styles/variables';
 import AsyncSelect from 'react-select/async';
-import AsyncCreatableSelect from 'react-select/async-creatable';
+import CreatableSelect from 'react-select/creatable';
+import { ActionMeta, OnChangeValue } from 'react-select';
 
 export interface FormInputPropsBase {
   id: string;
@@ -40,10 +42,9 @@ interface Option {
   value: string;
 }
 
-const FormSelectInputBase = (props: FormInputProps & { createable: boolean }) => {
+const FormAsyncSelectInputBase = (props: FormInputProps) => {
   const { id, className, ...rest } = props;
   const { control } = useFormContext();
-  // const [options, setOptions] = React.useState([] as Option[]);
   const getFilteredOptions = (fetchedOptions: Option[], inputValue: string) => {
     return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
   };
@@ -66,15 +67,7 @@ const FormSelectInputBase = (props: FormInputProps & { createable: boolean }) =>
     //TODO
   }, []);
 
-  return props.createable ? (
-    <Controller
-      name={id}
-      control={control}
-      render={() => (
-        <AsyncCreatableSelect isMulti cacheOptions defaultOptions loadOptions={fetchOptions} onChange={handleChange} />
-      )}
-    />
-  ) : (
+  return (
     <Controller
       name={id}
       control={control}
@@ -86,11 +79,23 @@ const FormSelectInputBase = (props: FormInputProps & { createable: boolean }) =>
           defaultOptions
           {...field}
           className={className}
-          id={id}
           {...rest}
         />
         // </MemoizeFormInput>
       )}
+    />
+  );
+};
+
+const FormCreateableSelectInputBase = (props: FormInputProps) => {
+  const { id, className, ...rest } = props;
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      name={id}
+      control={control}
+      render={({ field }) => <CreatableSelect isMulti {...field} {...rest} isClearable={false} />}
     />
   );
 };
@@ -112,4 +117,7 @@ export const FormTextAreaInput = styled(FormTextAreaInputBase)`
   resize: none;
 `;
 
-export const FormSelectInput = styled(FormSelectInputBase)``;
+export const FormAsyncSelectInput = styled(FormAsyncSelectInputBase)``;
+
+export const FormCreateableSelectInput = styled(FormCreateableSelectInputBase)``;
+/* eslint-enable */

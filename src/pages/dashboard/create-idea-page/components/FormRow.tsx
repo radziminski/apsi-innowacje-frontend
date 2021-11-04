@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-  FormSelectInput,
+  FormAsyncSelectInput,
+  FormCreateableSelectInput,
   FormTextAreaInput,
   FormTextInput
 } from '~/pages/dashboard/create-idea-page/components/FormInputs';
 import { FlexBox } from '~/components/Box';
+import { MARGINS } from '~/styles/variables';
 
 export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
 
@@ -25,8 +27,8 @@ const FormRow = (props: FormRowProps): JSX.Element => {
   const getFormComponent = (type: FormType): JSX.Element => {
     if (type == 'text') return <FormTextInput id={formId} {...rest} />;
     else if (type == 'textarea') return <FormTextAreaInput id={formId} {...rest} />;
-    else if (type == 'select') return <FormSelectInput id={formId} {...rest} />;
-    else if (type == 'createable-select') return <FormSelectInput id={formId} {...rest} createable />;
+    else if (type == 'select') return <FormAsyncSelectInput id={formId} {...rest} />;
+    else if (type == 'createable-select') return <FormCreateableSelectInput id={formId} {...rest} />;
     else return <FormTextInput id={formId} />;
   };
 
@@ -42,7 +44,7 @@ const FormRow = (props: FormRowProps): JSX.Element => {
 
 export default styled(FormRow)`
   flex-direction: row;
-
+  margin: ${MARGINS.medium};
   > div {
     width: 50%;
     display: flex;
