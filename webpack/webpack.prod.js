@@ -7,6 +7,8 @@ const SRC_MAP_STRATEGY = 'source-map';
 const ASSETS_LIMIT = 1000 * 1000 * 3;
 const ENTRY_POINT_LIMIT = 1000 * 1000 * 3;
 
+const ENV_FILE = process.env.ENV_FILE;
+
 module.exports = merge(WEBPACK_BASE, {
   mode: 'production',
   devtool: SRC_MAP_STRATEGY,
@@ -26,7 +28,7 @@ module.exports = merge(WEBPACK_BASE, {
   plugins: [
     new Dotenv({
       systemvars: true,
-      path: './.env',
+      path: ENV_FILE ? `./.env.${ENV_FILE}` : './env.prod',
     }),
   ],
 });

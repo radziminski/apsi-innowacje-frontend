@@ -44,7 +44,7 @@ module.exports = merge(WEBPACK_BASE, {
     }),
     new Dotenv({
       systemvars: true,
-      path: ENV_FILE ? `./.env.${ENV_FILE}` : './env',
+      path: ENV_FILE ? `./.env.${ENV_FILE}` : './env.dev',
     }),
   ],
 });
