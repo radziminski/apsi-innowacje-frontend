@@ -6,6 +6,7 @@ import { FormTextInput } from '~/components/forms/FormTextInput';
 import { FormAsyncSelect } from '~/components/forms/FormAsyncSelect';
 import { FormCreateableSelect } from '~/components/forms/FormCreateableSelect';
 import { FormTextArea } from '~/components/forms/FormTextArea';
+import { Dropzone } from '~/components/Dropzone';
 
 export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
 
@@ -36,6 +37,7 @@ const FormRow = (props: FormRowProps): JSX.Element => {
     else if (type == 'textarea') return <FormTextArea {...component_props} />;
     else if (type == 'select') return <FormAsyncSelect {...component_props} />;
     else if (type == 'createable-select') return <FormCreateableSelect {...component_props} />;
+    else if (type == 'dropzone') return <Dropzone {...component_props} />;
     else return <FormTextInput id={formId} />;
   };
 
@@ -52,8 +54,15 @@ const FormRow = (props: FormRowProps): JSX.Element => {
 export default styled(FormRow)`
   flex-direction: row;
   margin: ${MARGINS.small};
+  > div:first-child {
+    width: 35%;
+  }
+
+  > div:nth-child(2) {
+    width: 65%;
+  }
+
   > div {
-    width: 50%;
     display: flex;
     align-items: top;
 
@@ -67,11 +76,11 @@ export default styled(FormRow)`
     transition: box-shadow 0.15s ease-in-out;
 
     &--active {
-      box-shadow: 0 0 0.25rem ${COLORS.gray};
+      box-shadow: 0 0 0.25rem ${COLORS.primary};
     }
 
     &:hover:not(div) {
-      box-shadow: 0 0 0.15rem ${COLORS.gray};
+      box-shadow: 0 0 0.15rem ${COLORS.primary};
       transition: box-shadow 0.15s ease-in;
     }
   }

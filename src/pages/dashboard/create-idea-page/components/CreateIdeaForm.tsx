@@ -18,13 +18,13 @@ const SubmitButton = styled(SubmitButtonBase)`
   button {
     background-color: ${COLORS.lightGray};
     border-radius: 999px;
-    margin: ${MARGINS.medium};
+    margin: ${MARGINS.small};
     padding: ${MARGINS.small} ${MARGINS.medium};
     &:hover {
-      background-color: ${COLORS.gray};
+      background-color: ${COLORS.primary};
     }
     &:active {
-      background-color: ${COLORS.darkGray};
+      background-color: ${COLORS.accent3};
     }
   }
 
@@ -81,12 +81,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
               type={'text'}
               placeholder={'Tu jakieś ranges do wyboru pewnie'}
             />
-            <FormRow
-              label={'Załączniki'}
-              formId={'attachments'}
-              type={'text'}
-              placeholder={'Tu jakiś dropzone + możliwość kliknięcia z otwarciem eksploratora'}
-            />
+            <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} />
           </FlexBox>
           <SubmitButton />
         </form>

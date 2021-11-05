@@ -19,9 +19,11 @@ export const customSelectStyles = {
   control: (provided, state) => ({
     ...provided,
     borderColor: 'transparent',
-    boxShadow: state.isFocused ? `0 0 0.25rem ${COLORS.gray}` : 0,
+    boxShadow: state.isFocused ? `0 0 0.25rem ${COLORS.primary}` : 0,
     '&:hover': {
-      boxShadow: state.isFocused ? `0 0 0.25rem ${COLORS.gray} !important` : `0 0 0.15rem ${COLORS.gray} !important`,
+      boxShadow: state.isFocused
+        ? `0 0 0.25rem ${COLORS.primary} !important`
+        : `0 0 0.15rem ${COLORS.primary} !important`,
       transition: 'box-shadow 0.15s ease-in-out'
     },
     borderRadius: '1rem'
