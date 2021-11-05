@@ -19,7 +19,9 @@ const CreateIdeaPage = (props: { className?: string }): JSX.Element => {
 
 export default styled(CreateIdeaPage)`
   margin: ${MARGINS.medium};
+  margin-top: ${MARGINS.big};
   > div {
     margin: ${MARGINS.small};
+    margin-top: ${MARGINS.big};
   }
 `;

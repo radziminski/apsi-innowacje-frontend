@@ -21,17 +21,26 @@ export type FormRowProps = FormRowPropsBase & any;
 
 const FormRow = (props: FormRowProps): JSX.Element => {
   const { label, formId, type, className, ...rest } = props;
+  const [isActive, setIsActive] = React.useState<boolean>(false);
 
   const getFormComponent = (type: FormType): JSX.Element => {
-    if (type == 'text') return <FormTextInput id={formId} {...rest} />;
-    else if (type == 'textarea') return <FormTextArea id={formId} {...rest} />;
-    else if (type == 'select') return <FormAsyncSelect id={formId} {...rest} />;
-    else if (type == 'createable-select') return <FormCreateableSelect id={formId} {...rest} />;
+    const component_props = {
+      id: formId,
+      customClassName: `form-row_form-component${isActive ? '--active' : ''}`,
+      onFocusChangeHandler: (gained: boolean) => {
+        setIsActive(gained);
+      },
+      ...rest
+    };
+    if (type == 'text') return <FormTextInput {...component_props} />;
+    else if (type == 'textarea') return <FormTextArea {...component_props} />;
+    else if (type == 'select') return <FormAsyncSelect {...component_props} />;
+    else if (type == 'createable-select') return <FormCreateableSelect {...component_props} />;
     else return <FormTextInput id={formId} />;
   };
 
   return (
-    <FlexBox className={className}>
+    <FlexBox className={`${className} form-row`}>
       <div>
         <label htmlFor={formId}>{label}</label>
       </div>
@@ -53,14 +62,25 @@ export default styled(FormRow)`
     }
   }
 
-  input,
-  select,
-  textarea {
-    margin: 0 ${MARGINS.small};
+  .form-row_form-component {
+    box-shadow: none;
+    transition: box-shadow 0.15s ease-in-out;
+
+    &--active {
+      box-shadow: 0 0 0.25rem ${COLORS.gray};
+    }
+
+    &:hover:not(div) {
+      box-shadow: 0 0 0.15rem ${COLORS.gray};
+      transition: box-shadow 0.15s ease-in;
+    }
+  }
+
+  .form-row_form-component,
+  .form-row_form-component--active {
     width: 100%;
     ::placeholder {
-      color: ${COLORS.gray};
-      opacity: 1;
+      color: ${COLORS.lightGray};
     }
   }
 `;

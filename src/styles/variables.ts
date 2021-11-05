@@ -11,14 +11,16 @@ export const COLORS = {
   accent1: '#e8246b',
   accent2: '#fcbf59',
   accent3: '#00b7fd',
-  gray: '#959fba'
+  darkGray: '#757f9a',
+  gray: '#959fba',
+  lightGray: '#c4cfda'
 };
 
 export const MARGINS = {
   small: '1rem',
   medium: '1.5rem',
-  big: '15px',
-  large: '20px'
+  big: '2rem',
+  large: '3rem'
 };
 
 export const FONT_WEIGHTS = {

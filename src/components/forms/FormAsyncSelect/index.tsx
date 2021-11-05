@@ -2,11 +2,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import React from 'react';
 import AsyncSelect from 'react-select/async';
 import styled from 'styled-components';
-import { FormInputProps, Option } from '~/components/forms';
-import { MARGINS } from '~/styles/variables';
+import { customSelectStyles, FormInputProps, Option } from '~/components/forms';
 
 const FormAsyncSelectBase = (props: FormInputProps) => {
-  const { id, className, ...rest } = props;
+  const { id, className, customClassName, ...rest } = props;
   const { control } = useFormContext();
   const getFilteredOptions = (fetchedOptions: Option[], inputValue: string) => {
     return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
@@ -22,7 +21,7 @@ const FormAsyncSelectBase = (props: FormInputProps) => {
           { value: 'other', label: 'Inne' }
         ];
         resolve(getFilteredOptions(fetchedOptions, inputValue));
-      }, 1000)
+      }, 2000)
     );
   }, []);
 
@@ -41,9 +40,11 @@ const FormAsyncSelectBase = (props: FormInputProps) => {
             loadOptions={fetchOptions}
             cacheOptions
             defaultOptions
+            className={customClassName ? customClassName : ''}
+            styles={customSelectStyles}
+            noOptionsMessage={() => 'Brak opcji'}
+            loadingMessage={() => 'Ładowanie opcji...'}
             {...field}
-            // styles={customSelectStyles}
-            width={'100%'}
             {...rest}
           />
           // </MemoizeFormInput>
@@ -55,5 +56,4 @@ const FormAsyncSelectBase = (props: FormInputProps) => {
 
 export const FormAsyncSelect = styled(FormAsyncSelectBase)`
   width: 100%;
-  margin: 0 ${MARGINS.small};
 `;
