@@ -1,3 +1,4 @@
 // File with constants and env variables
 // Example
-export const API_URL = process.env.API_URL as string;
+export const DOTNET_API_URL = process.env.DOTNET_API_URL as string;
+export const JAVA_API_URL = process.env.JAVA_API_URL as string;
