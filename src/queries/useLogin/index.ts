@@ -11,8 +11,8 @@ const useLogin = () => {
     data: user,
     ...restMutation
   } = useMutation(
-    async () => {
-      const response = await apiClient.authAuthenticatePost();
+    async (credentials: { username: string; password: string }) => {
+      const response = await apiClient.authAuthenticatePost(credentials);
 
       const { token, tokenExpirationDate, ...restResponse } = response.data;
       setAuthTokensInStorage(token ?? '', tokenExpirationDate ?? '');
