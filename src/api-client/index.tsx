@@ -14,7 +14,9 @@ const dotnetConfig = new DotnetConfiguration({
   basePath: DOTNET_API_URL ?? `${document.location.protocol}//${document.location.host}`
 });
 
-export const apiClient = {
+const apiClient = {
   ...AuthApiFactory(dotnetConfig),
   ...UsersApiFactory(dotnetConfig)
 };
+
+export default apiClient;
