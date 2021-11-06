@@ -54,20 +54,19 @@ const FormRow = (props: FormRowProps): JSX.Element => {
 export default styled(FormRow)`
   flex-direction: row;
   margin: ${MARGINS.small};
-  > div:first-child {
-    width: 35%;
-  }
-
-  > div:nth-child(2) {
-    width: 65%;
-  }
-
+  align-items: flex-start;
   > div {
     display: flex;
-    align-items: top;
 
     label {
-      margin-top: ${MARGINS.small};
+      margin-top: 10px;
+    }
+
+    &:first-child {
+      width: 40%;
+    }
+    &:nth-child(2) {
+      width: 60%;
     }
   }
 
