@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import { COLORS, MARGINS } from '~/styles/variables';
+import { MARGINS } from '~/styles/variables';
 import { FormTextInput } from '~/components/forms/FormTextInput';
 import { FormAsyncSelect } from '~/components/forms/FormAsyncSelect';
 import { FormCreateableSelect } from '~/components/forms/FormCreateableSelect';
@@ -75,11 +75,11 @@ export const FormRow = styled(FormRowBase)`
     transition: box-shadow 0.15s ease-in-out;
 
     &--active {
-      box-shadow: 0 0 0.25rem ${COLORS.primary};
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
     }
 
     &:hover:not(div) {
-      box-shadow: 0 0 0.15rem ${COLORS.primary};
+      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary};
       transition: box-shadow 0.15s ease-in;
     }
   }
@@ -88,7 +88,7 @@ export const FormRow = styled(FormRowBase)`
   .form-row_form-component--active {
     width: 100%;
     ::placeholder {
-      color: ${COLORS.lightGray};
+      color: ${({ theme }) => theme.colors.lightGray};
     }
   }
 `;

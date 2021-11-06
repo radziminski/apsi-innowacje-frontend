@@ -2,7 +2,6 @@ import { useFormContext } from 'react-hook-form';
 import { MemoizeFormComponent } from '~/components/forms/util/MemoizeFormComponent';
 import React from 'react';
 import styled from 'styled-components';
-import { COLORS } from '~/styles/variables';
 import { FormComponentProps } from '~/components/forms';
 import { useFocusHandler } from '~/hooks/useFocusHandler';
 
@@ -33,7 +32,7 @@ const FormTextAreaBase = (props: FormComponentProps) => {
 export const FormTextArea = styled(FormTextAreaBase)`
   border: 0;
   border-radius: 1.5rem;
-  background-color: ${COLORS.white};
+  background-color: ${({ theme }) => theme.colors.white};
   padding: 15px;
   resize: none;
 `;

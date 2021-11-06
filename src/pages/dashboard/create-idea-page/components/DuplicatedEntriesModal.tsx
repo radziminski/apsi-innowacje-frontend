@@ -17,19 +17,19 @@ const DuplicatedEntriesModalBase = (props: DuplicatedEntriesModalProps) => {
   }, []);
   return (
     <Center className={props.className}>
-      <div>Jeden z dodanych plików został już dodany: {props.filename || ''}.</div>
+      <span>Jeden z dodanych plików został już dodany: {props.filename || ''}.</span>
       <Button onClick={handleClick} text={'Ok'} id={'duplicated-entries-modal__ok-button'} />
     </Center>
   );
 };
 
 export const DuplicatedEntriesModal = styled(DuplicatedEntriesModalBase)`
-  width: 50%;
+  max-width: 50%;
   min-height: 20%;
   flex-direction: column;
 
-  * {
-    margin: ${({ theme }) => theme.margins.small};
+  span {
+    margin: ${({ theme }) => theme.margins.medium} ${({ theme }) => theme.margins.small};
   }
 
   #duplicated-entries-modal__ok-button {

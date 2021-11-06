@@ -75,15 +75,19 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
               />
               <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} onFilesAdded={onFilesAdded} />
             </FlexBox>
-            <Button type={'submit'} text={'Wyślij'} />
+            <FlexBox className={'create-idea-form__submit-button'}>
+              <Button type={'submit'} text={'Wyślij'} />
+            </FlexBox>
           </form>
         </div>
       </FormProvider>
-      <ModalOverlay isVisible={!!duplicatedEntriesError}>
-        <ModalWindow>
-          <DuplicatedEntriesModal filename={duplicatedEntriesError} />
-        </ModalWindow>
-      </ModalOverlay>
+      {duplicatedEntriesError ? ( // need to render it conditionally, because otherwise fade-out appears temporarily on rerenders
+        <ModalOverlay isVisible={!!duplicatedEntriesError}>
+          <ModalWindow>
+            <DuplicatedEntriesModal filename={duplicatedEntriesError} />
+          </ModalWindow>
+        </ModalOverlay>
+      ) : null}
     </div>
   );
 };
@@ -94,6 +98,10 @@ export default styled(CreateIdeaForm)`
 
     > form > div {
       flex-direction: column;
+    }
+
+    .create-idea-form__submit-button {
+      align-items: flex-end;
     }
   }
 `;

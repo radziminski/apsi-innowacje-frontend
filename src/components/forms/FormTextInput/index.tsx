@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { COLORS } from '~/styles/variables';
 import { useFormContext } from 'react-hook-form';
 import { MemoizeFormComponent } from '~/components/forms/util/MemoizeFormComponent';
 import React from 'react';
@@ -33,6 +32,6 @@ const FormTextInputBase = (props: FormComponentProps) => {
 export const FormTextInput = styled(FormTextInputBase)`
   border: 0;
   border-radius: 999px;
-  background-color: ${COLORS.white};
+  background-color: ${({ theme }) => theme.colors.white};
   padding: 15px;
 `;

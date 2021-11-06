@@ -1,13 +1,11 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Heading4, Heading5 } from '~/components/Text';
+import { Paragraph } from '~/components/Text';
 import styled from 'styled-components';
-import { COLORS, MARGINS } from '~/styles/variables';
 import { Center, FlexBox } from '~/components/Box';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/store/store';
-import { FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice';
-import prettyBytes from 'pretty-bytes';
+import { AddedFilesList } from '~/components/Dropzone/AddedFilesList';
 
 export interface DropzoneProps {
   onFilesAdded: (files) => void;
@@ -19,19 +17,14 @@ export interface DropzoneProps {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DropzoneBase = (props: DropzoneProps & any) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
   React.useEffect(() => {
     if (acceptedFiles.length > 0) {
       props.onFilesAdded(acceptedFiles);
     }
   }, [acceptedFiles]);
 
-  const files = useSelector((state: RootState) => state.addedFiles.addedFiles).map((fileEntry: FileEntry) => {
-    return (
-      <li key={fileEntry.id}>
-        {fileEntry.file.name} - {prettyBytes(fileEntry.file.size)}
-      </li>
-    );
-  });
+  const addedFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
 
   return (
     <div className={props.className}>
@@ -44,15 +37,10 @@ const DropzoneBase = (props: DropzoneProps & any) => {
         })}>
         <input {...getInputProps()} />
         <Center>
-          <Heading4>{props.placeholder ? props.placeholder : 'Upuść pliki lub kliknij, by wybrać'}</Heading4>
+          <Paragraph>{props.placeholder ? props.placeholder : 'Upuść pliki lub kliknij, by wybrać'}</Paragraph>
         </Center>
       </FlexBox>
-      {acceptedFiles.length > 0 ? (
-        <div className={'dropzone__added-files'}>
-          <Heading5>Dodane pliki:</Heading5>
-          <ul>{files}</ul>
-        </div>
-      ) : null}
+      {addedFiles.length > 0 ? <AddedFilesList {...{ addedFiles }} /> : null}
     </div>
   );
 };
@@ -60,10 +48,10 @@ const DropzoneBase = (props: DropzoneProps & any) => {
 export const Dropzone = styled(DropzoneBase)`
   .dropzone {
     width: 100%;
-    padding: ${MARGINS.big};
-    border: 2px ${COLORS.primary} dashed;
+    padding: ${({ theme }) => theme.margins.big};
+    border: 2px ${({ theme }) => theme.colors.primary} dashed;
     border-radius: 1.5rem;
-    background-color: ${COLORS.white};
+    background-color: ${({ theme }) => theme.colors.white};
 
     &:hover {
       cursor: pointer;
@@ -74,6 +62,6 @@ export const Dropzone = styled(DropzoneBase)`
   }
 
   .dropzone__added-files {
-    margin-top: ${MARGINS.small};
+    margin-top: ${({ theme }) => theme.margins.small};
   }
 `;
