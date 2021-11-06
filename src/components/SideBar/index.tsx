@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { IoMdMenu } from 'react-icons/io';
 
-import { useDevice } from '~/hooks';
+import useDevice from '~/hooks/useDevice';
 import { useOutsideClick } from '~/hooks/useOutsideClick';
 import { Z_INDEX } from '~/styles/variables';
 import Box from '../Box';
