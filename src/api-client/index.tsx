@@ -6,7 +6,9 @@ export * from './dotnet/api';
 export * from './java/api';
 
 export const globalAxiosOptions = {
-  headers: {}
+  headers: {
+    'Content-Type': 'application/json'
+  }
 };
 
 const dotnetConfig = new DotnetConfiguration({
