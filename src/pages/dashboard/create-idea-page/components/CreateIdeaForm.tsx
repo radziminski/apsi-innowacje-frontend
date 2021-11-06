@@ -3,7 +3,7 @@ import React from 'react';
 import { FlexBox } from '~/components/Box';
 import styled from 'styled-components';
 import FormRow from '~/components/forms/FormRow';
-import { MARGINS } from '~/styles/variables';
+import { COLORS, MARGINS } from '~/styles/variables';
 
 const SubmitButtonBase = (props: { className?: string }): JSX.Element => {
   return (
@@ -16,10 +16,22 @@ const SubmitButtonBase = (props: { className?: string }): JSX.Element => {
 const SubmitButton = styled(SubmitButtonBase)`
   text-align: right;
   button {
-    background-color: #eee;
+    background-color: ${COLORS.lightGray};
     border-radius: 999px;
-    margin: ${MARGINS.medium};
+    margin: ${MARGINS.small};
     padding: ${MARGINS.small} ${MARGINS.medium};
+    &:hover {
+      background-color: ${COLORS.primary};
+    }
+    &:active {
+      background-color: ${COLORS.accent3};
+    }
+  }
+
+  button,
+  button:active,
+  button:hover {
+    transition: background-color 0.2s ease-in-out;
   }
 `;
 
@@ -37,8 +49,18 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
       <div className={props.className}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <FlexBox>
-            <FormRow label={'Tematyka pomysłu'} formId={'topic'} type={'select'} />
-            <FormRow label={'Słowa kluczowe'} formId={'keywords'} type={'createable-select'} />
+            <FormRow
+              label={'Tematyka pomysłu'}
+              formId={'topic'}
+              type={'select'}
+              placeholder={'Wybierz tematykę pomysłu'}
+            />
+            <FormRow
+              label={'Słowa kluczowe'}
+              formId={'keywords'}
+              type={'createable-select'}
+              placeholder={'Wpisz słowa kluczowe'}
+            />
             <FormRow
               label={'Opis'}
               formId={'description'}
@@ -59,12 +81,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
               type={'text'}
               placeholder={'Tu jakieś ranges do wyboru pewnie'}
             />
-            <FormRow
-              label={'Załączniki'}
-              formId={'attachments'}
-              type={'text'}
-              placeholder={'Tu jakiś dropzone + możliwość kliknięcia z otwarciem eksploratora'}
-            />
+            <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} />
           </FlexBox>
           <SubmitButton />
         </form>
@@ -78,9 +95,5 @@ export default styled(CreateIdeaForm)`
 
   > form > div {
     flex-direction: column;
-  }
-
-  textarea {
-    border-radius: 1.5rem;
   }
 `;

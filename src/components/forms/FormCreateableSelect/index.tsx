@@ -2,11 +2,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import CreatableSelect from 'react-select/creatable';
 import styled from 'styled-components';
 import React from 'react';
-import { FormInputProps } from '~/components/forms';
-import { MARGINS } from '~/styles/variables';
+import { customSelectStyles, FormInputProps } from '~/components/forms';
 
 const FormCreateableSelectBase = (props: FormInputProps) => {
-  const { id, className, ...rest } = props;
+  const { id, className, customClassName, ...rest } = props;
   const { control } = useFormContext();
 
   return (
@@ -14,7 +13,18 @@ const FormCreateableSelectBase = (props: FormInputProps) => {
       <Controller
         name={id}
         control={control}
-        render={({ field }) => <CreatableSelect isMulti {...field} {...rest} isClearable={false} />}
+        render={({ field }) => (
+          <CreatableSelect
+            isMulti
+            {...field}
+            {...rest}
+            noOptionsMessage={() => 'Wpisz słowo by je dodać'}
+            formatCreateLabel={(inputValue: string) => `Dodaj "${inputValue}"`}
+            isClearable={false}
+            className={customClassName}
+            styles={customSelectStyles}
+          />
+        )}
       />
     </div>
   );
@@ -22,5 +32,4 @@ const FormCreateableSelectBase = (props: FormInputProps) => {
 
 export const FormCreateableSelect = styled(FormCreateableSelectBase)`
   width: 100%;
-  margin: 0 ${MARGINS.small};
 `;

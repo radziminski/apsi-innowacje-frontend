@@ -1,7 +1,7 @@
 export enum Device {
   Desktop = 'desktop',
   Tab = 'tab',
-  Mobile = 'mobile',
+  Mobile = 'mobile'
 }
 
 export interface CustomTheme {
@@ -16,7 +16,9 @@ export interface CustomTheme {
     accent1: string;
     accent2: string;
     accent3: string;
+    darkGray: string;
     gray: string;
+    lightGray: string;
   };
   fontWeights: {
     thin: number;

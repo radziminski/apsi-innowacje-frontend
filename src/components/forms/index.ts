@@ -1,6 +1,10 @@
+import { COLORS } from '~/styles/variables';
+
 export interface FormInputPropsBase {
   id: string;
+  onFocusChangeHandler: (isGainedFocus: boolean) => void;
   className?: string;
+  customClassName?: string;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,23 +15,30 @@ export interface Option {
   value: string;
 }
 
-// export const customSelectStyles = {
-//   // menu: (provided, state) => ({
-//   //   ...provided,
-//   //   width: state.selectProps.width,
-//   //   borderBottom: '1px dotted pink',
-//   //   color: state.selectProps.menuColor,
-//   //   padding: 20,
-//   // }),
-//
-//   menu: (_, { selectProps: { width } }) => ({
-//     width: width
-//   })
-//
-//   // singleValue: (provided, state) => {
-//   //   const opacity = state.isDisabled ? 0.5 : 1;
-//   //   const transition = 'opacity 300ms';
-//   //
-//   //   return { ...provided, opacity, transition };
-//   // }
-// };
+export const customSelectStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    borderColor: 'transparent',
+    boxShadow: state.isFocused ? `0 0 0.25rem ${COLORS.primary}` : 0,
+    '&:hover': {
+      boxShadow: state.isFocused
+        ? `0 0 0.25rem ${COLORS.primary} !important`
+        : `0 0 0.15rem ${COLORS.primary} !important`,
+      transition: 'box-shadow 0.15s ease-in-out'
+    },
+    borderRadius: '1rem'
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    color: COLORS.black,
+    backgroundColor: state.isActive ? COLORS.gray : COLORS.white,
+    '&:hover': {
+      backgroundColor: '#eee',
+      transition: 'background-color 0.15s ease-in-out'
+    }
+  }),
+  placeholder: styles => ({
+    ...styles,
+    color: COLORS.lightGray
+  })
+};
