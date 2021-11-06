@@ -8,7 +8,7 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['addedFiles/addFiles']
+        ignoredActions: ['addedFiles/addFiles', 'addedFiles/removeDuplicationError']
       }
     })
 });

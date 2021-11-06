@@ -3,43 +3,13 @@ import React from 'react';
 import { FlexBox } from '~/components/Box';
 import styled from 'styled-components';
 import { FormRow } from '~/components/forms/FormRow';
-import { COLORS, MARGINS } from '~/styles/variables';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFiles, FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice';
 import { RootState } from '~/store/store';
 import { ModalOverlay } from '~/components/ModalOverlay';
 import { ModalWindow } from '~/components/ModalWindow';
 import { DuplicatedEntriesModal } from '~/pages/dashboard/create-idea-page/components/DuplicatedEntriesModal';
-
-const SubmitButtonBase = (props: { className?: string }): JSX.Element => {
-  return (
-    <div className={props.className}>
-      <button type={'submit'}>Wyślij</button>
-    </div>
-  );
-};
-
-const SubmitButton = styled(SubmitButtonBase)`
-  text-align: right;
-  button {
-    background-color: ${COLORS.lightGray};
-    border-radius: 999px;
-    margin: ${MARGINS.small};
-    padding: ${MARGINS.small} ${MARGINS.medium};
-    &:hover {
-      background-color: ${COLORS.primary};
-    }
-    &:active {
-      background-color: ${COLORS.accent3};
-    }
-  }
-
-  button,
-  button:active,
-  button:hover {
-    transition: background-color 0.2s ease-in-out;
-  }
-`;
+import { Button } from '~/components/Button';
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm();
@@ -105,7 +75,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
               />
               <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} onFilesAdded={onFilesAdded} />
             </FlexBox>
-            <SubmitButton />
+            <Button type={'submit'} text={'Wyślij'} />
           </form>
         </div>
       </FormProvider>

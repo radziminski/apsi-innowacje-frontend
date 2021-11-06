@@ -17,12 +17,12 @@ export interface FileEntry {
 
 export interface AddedFilesState {
   addedFiles: FileEntry[];
-  duplicationError: string | undefined;
+  duplicationError: string | null;
 }
 
 const initialState: AddedFilesState = {
   addedFiles: [],
-  duplicationError: undefined
+  duplicationError: null
 };
 
 const isDuplicated = (array: FileEntry[], fileName: string) => array.some(el => el.file.name === fileName);
@@ -56,7 +56,7 @@ export const addedFilesSlice = createSlice({
       }
     },
     removeDuplicationError: state => {
-      state.duplicationError = undefined;
+      state.duplicationError = null;
     }
   }
 });
