@@ -1,1 +1,20 @@
-export {};
+import { AuthApiFactory, UsersApiFactory } from './dotnet';
+import { Configuration as DotnetConfiguration } from './dotnet/configuration';
+import { DOTNET_API_URL } from '~/constants/constants';
+
+export * from './dotnet/api';
+export * from './java/api';
+
+export const globalAxiosOptions = {
+  headers: {}
+};
+
+const dotnetConfig = new DotnetConfiguration({
+  baseOptions: globalAxiosOptions,
+  basePath: DOTNET_API_URL ?? `${document.location.protocol}//${document.location.host}`
+});
+
+export const apiClient = {
+  ...AuthApiFactory(dotnetConfig),
+  ...UsersApiFactory(dotnetConfig)
+};

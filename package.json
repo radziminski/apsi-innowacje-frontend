@@ -30,7 +30,7 @@
     "start:dev": "cross-env ENV_FILE=dev NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js",
     "start:prod": "cross-env ENV_FILE=prod NODE_ENV=production webpack serve --config ./webpack/webpack.prod.js",
     "clean": "rimraf ./build",
-    "clean:clients": "rimraf src/api-client/dotnet &&  src/api-client/java",
+    "clean:clients": "rimraf src/api-client/dotnet && rimraf src/api-client/java",
     "build": "npm run clean && cross-env ENV_FILE=prod NODE_ENV=production && webpack build --config ./webpack/webpack.prod.js",
     "test": "jest",
     "lint": "eslint ./src/ --ext js,jsx,ts,tsx",
@@ -38,7 +38,7 @@
     "prepare": "husky install",
     "api:dotnet:generate": "openapi-generator-cli generate -i https://apsi-backend-dotnet.azurewebsites.net/swagger/v1/swagger.json -g typescript-axios -o src/api-client/dotnet --additional-properties=typescriptThreePlus=true,useSingleRequestParameter=true,supportsES6=true",
     "api:java:generate": "openapi-generator-cli generate -i https://apsi-backend-java.azurewebsites.net/v2/api-docs -g typescript-axios -o src/api-client/java --additional-properties=typescriptThreePlus=true,useSingleRequestParameter=true,supportsES6=true",
-    "api:generate": "npm run clean:clients && npm run api:dotnet:generate && api:java:generate"
+    "api:generate": "npm run clean:clients && npm run api:dotnet:generate && npm run api:java:generate"
   },
   "browserslist": {
     "production": [
