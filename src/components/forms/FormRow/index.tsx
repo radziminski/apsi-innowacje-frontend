@@ -6,7 +6,7 @@ import { FormTextInput } from '~/components/forms/FormTextInput';
 import { FormAsyncSelect } from '~/components/forms/FormAsyncSelect';
 import { FormCreateableSelect } from '~/components/forms/FormCreateableSelect';
 import { FormTextArea } from '~/components/forms/FormTextArea';
-import { Dropzone } from '~/components/Dropzone';
+import { FormDropzone } from '~/components/forms/FormDropzone';
 
 export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
 
@@ -20,7 +20,7 @@ export interface FormRowPropsBase {
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FormRowProps = FormRowPropsBase & any;
 
-const FormRow = (props: FormRowProps): JSX.Element => {
+const FormRowBase = (props: FormRowProps): JSX.Element => {
   const { label, formId, type, className, ...rest } = props;
   const [isActive, setIsActive] = React.useState<boolean>(false);
 
@@ -37,7 +37,7 @@ const FormRow = (props: FormRowProps): JSX.Element => {
     else if (type == 'textarea') return <FormTextArea {...component_props} />;
     else if (type == 'select') return <FormAsyncSelect {...component_props} />;
     else if (type == 'createable-select') return <FormCreateableSelect {...component_props} />;
-    else if (type == 'dropzone') return <Dropzone {...component_props} />;
+    else if (type == 'dropzone') return <FormDropzone {...component_props} />;
     else return <FormTextInput id={formId} />;
   };
 
@@ -51,7 +51,7 @@ const FormRow = (props: FormRowProps): JSX.Element => {
   );
 };
 
-export default styled(FormRow)`
+export const FormRow = styled(FormRowBase)`
   flex-direction: row;
   margin: ${MARGINS.small};
   align-items: flex-start;

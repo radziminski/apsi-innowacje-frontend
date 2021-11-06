@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { COLORS } from '~/styles/variables';
 import { useFormContext } from 'react-hook-form';
-import { MemoizeFormInput } from '~/pages/dashboard/create-idea-page/util/MemoizeFormInput';
+import { MemoizeFormComponent } from '~/components/forms/util/MemoizeFormComponent';
 import React from 'react';
-import { FormInputProps } from '~/components/forms';
+import { FormComponentProps } from '~/components/forms';
 import { useFocusHandler } from '~/hooks/useFocusHandler';
 
-const FormTextInputBase = (props: FormInputProps) => {
+const FormTextInputBase = (props: FormComponentProps) => {
   const { id, className, customClassName, onFocusChangeHandler, ...rest } = props;
   const methods = useFormContext();
   const inputRef = React.useRef<HTMLInputElement | null>(null);
@@ -14,10 +14,10 @@ const FormTextInputBase = (props: FormInputProps) => {
   useFocusHandler(inputRef, onFocusChangeHandler);
 
   return (
-    <MemoizeFormInput {...methods}>
+    <MemoizeFormComponent {...methods}>
       <input
         {...methods.register(id)}
-        type={'text'}
+        type={props.type || 'text'}
         ref={e => {
           ref(e);
           inputRef.current = e;
@@ -26,7 +26,7 @@ const FormTextInputBase = (props: FormInputProps) => {
         id={id}
         {...rest}
       />
-    </MemoizeFormInput>
+    </MemoizeFormComponent>
   );
 };
 

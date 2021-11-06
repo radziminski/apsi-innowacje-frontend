@@ -33,6 +33,12 @@ export interface CustomTheme {
   };
   breakpoints: Record<Device, number>;
   mediaQueries: Record<Device, string>;
+  margins: {
+    small: string;
+    medium: string;
+    big: string;
+    large: string;
+  };
   zIndex: {
     backgroundBack: number;
     backgroundMiddle: number;

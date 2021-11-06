@@ -1,6 +1,6 @@
 import { COLORS } from '~/styles/variables';
 
-export interface FormInputPropsBase {
+export interface FormComponentPropsBase {
   id: string;
   onFocusChangeHandler: (isGainedFocus: boolean) => void;
   className?: string;
@@ -8,7 +8,7 @@ export interface FormInputPropsBase {
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type FormInputProps = FormInputPropsBase & any;
+export type FormComponentProps = FormComponentPropsBase & any;
 
 export interface Option {
   label: string;

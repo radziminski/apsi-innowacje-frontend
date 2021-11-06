@@ -2,9 +2,9 @@ import { Controller, useFormContext } from 'react-hook-form';
 import React from 'react';
 import AsyncSelect from 'react-select/async';
 import styled from 'styled-components';
-import { customSelectStyles, FormInputProps, Option } from '~/components/forms';
+import { customSelectStyles, FormComponentProps, Option } from '~/components/forms';
 
-const FormAsyncSelectBase = (props: FormInputProps) => {
+const FormAsyncSelectBase = (props: FormComponentProps) => {
   const { id, className, customClassName, ...rest } = props;
   const { control } = useFormContext();
   const getFilteredOptions = (fetchedOptions: Option[], inputValue: string) => {

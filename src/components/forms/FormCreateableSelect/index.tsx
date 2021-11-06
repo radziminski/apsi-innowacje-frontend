@@ -2,9 +2,9 @@ import { Controller, useFormContext } from 'react-hook-form';
 import CreatableSelect from 'react-select/creatable';
 import styled from 'styled-components';
 import React from 'react';
-import { customSelectStyles, FormInputProps } from '~/components/forms';
+import { customSelectStyles, FormComponentProps } from '~/components/forms';
 
-const FormCreateableSelectBase = (props: FormInputProps) => {
+const FormCreateableSelectBase = (props: FormComponentProps) => {
   const { id, className, customClassName, ...rest } = props;
   const { control } = useFormContext();
 
