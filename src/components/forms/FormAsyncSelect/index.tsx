@@ -3,9 +3,12 @@ import React from 'react';
 import AsyncSelect from 'react-select/async';
 import styled from 'styled-components';
 import { customSelectStyles, FormComponentProps, Option } from '~/components/forms';
+import { useClassNameOnFocus } from '~/hooks/useClassNameOnFocus';
 
 const FormAsyncSelectBase = (props: FormComponentProps) => {
   const { id, className, customClassName, ...rest } = props;
+  const divRef = React.useRef<HTMLDivElement>(null);
+  const classNameSuffix = useClassNameOnFocus('--active', divRef);
   const { control } = useFormContext();
   const getFilteredOptions = (fetchedOptions: Option[], inputValue: string) => {
     return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
@@ -30,24 +33,22 @@ const FormAsyncSelectBase = (props: FormComponentProps) => {
   // }, []);
 
   return (
-    <div className={className}>
+    <div className={className} ref={divRef}>
       <Controller
         name={id}
         control={control}
         render={({ field }) => (
-          // <MemoizeFormInput {...methods}>
           <AsyncSelect
             loadOptions={fetchOptions}
             cacheOptions
             defaultOptions
-            className={customClassName ? customClassName : ''}
+            className={`${customClassName ? customClassName + classNameSuffix : ''}`}
             styles={customSelectStyles}
             noOptionsMessage={() => 'Brak opcji'}
             loadingMessage={() => 'Ładowanie opcji...'}
             {...field}
             {...rest}
           />
-          // </MemoizeFormInput>
         )}
       />
     </div>

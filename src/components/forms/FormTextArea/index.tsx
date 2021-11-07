@@ -3,14 +3,14 @@ import { MemoizeFormComponent } from '~/components/forms/util/MemoizeFormCompone
 import React from 'react';
 import styled from 'styled-components';
 import { FormComponentProps } from '~/components/forms';
-import { useFocusHandler } from '~/hooks/useFocusHandler';
+import { useClassNameOnFocus } from '~/hooks/useClassNameOnFocus';
 
 const FormTextAreaBase = (props: FormComponentProps) => {
-  const { id, className, customClassName, onFocusChangeHandler, ...rest } = props;
+  const { id, className, customClassName, ...rest } = props;
   const methods = useFormContext();
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
   const { ref } = methods.register(id);
-  useFocusHandler(inputRef, onFocusChangeHandler);
+  const classNameSuffix = useClassNameOnFocus('--active', inputRef);
 
   return (
     <MemoizeFormComponent {...methods}>
@@ -21,7 +21,7 @@ const FormTextAreaBase = (props: FormComponentProps) => {
           ref(e);
           inputRef.current = e;
         }}
-        className={`${className} ${customClassName ? customClassName : ''}`}
+        className={`${className} ${customClassName + classNameSuffix || ''}`}
         id={id}
         {...rest}
       />

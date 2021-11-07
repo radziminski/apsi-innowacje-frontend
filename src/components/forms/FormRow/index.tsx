@@ -13,7 +13,8 @@ export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
 export interface FormRowPropsBase {
   label: string;
   formId: string;
-  type: FormType;
+  type?: FormType;
+  customFormComponent?: JSX.Element;
   className?: string;
 }
 
@@ -21,16 +22,13 @@ export interface FormRowPropsBase {
 export type FormRowProps = FormRowPropsBase & any;
 
 const FormRowBase = (props: FormRowProps): JSX.Element => {
-  const { label, formId, type, className, ...rest } = props;
-  const [isActive, setIsActive] = React.useState<boolean>(false);
+  const { label, formId, className, customFormComponent, ...rest } = props;
+  const type = props.type || '';
 
   const getFormComponent = (type: FormType): JSX.Element => {
     const component_props = {
       id: formId,
-      customClassName: `form-row_form-component${isActive ? '--active' : ''}`,
-      onFocusChangeHandler: (gained: boolean) => {
-        setIsActive(gained);
-      },
+      customClassName: 'form-row_form-component',
       ...rest
     };
     if (type == 'text') return <FormTextInput {...component_props} />;
@@ -38,7 +36,8 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
     else if (type == 'select') return <FormAsyncSelect {...component_props} />;
     else if (type == 'createable-select') return <FormCreateableSelect {...component_props} />;
     else if (type == 'dropzone') return <FormDropzone {...component_props} />;
-    else return <FormTextInput id={formId} />;
+    else if (customFormComponent) return React.cloneElement(customFormComponent, component_props);
+    else return <FormTextInput {...component_props} />;
   };
 
   return (

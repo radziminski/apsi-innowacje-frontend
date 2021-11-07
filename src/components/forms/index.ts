@@ -2,7 +2,6 @@ import { COLORS } from '~/styles/variables';
 
 export interface FormComponentPropsBase {
   id: string;
-  onFocusChangeHandler: (isGainedFocus: boolean) => void;
   className?: string;
   customClassName?: string;
 }

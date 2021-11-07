@@ -10,6 +10,7 @@ import { ModalOverlay } from '~/components/ModalOverlay';
 import { ModalWindow } from '~/components/ModalWindow';
 import { DuplicatedEntriesModal } from '~/pages/dashboard/create-idea-page/components/DuplicatedEntriesModal';
 import { Button } from '~/components/Button';
+import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm();
@@ -69,9 +70,8 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
               />
               <FormRow
                 label={'Planowane koszty'}
-                formId={'costs'}
-                type={'text'}
-                placeholder={'Tu jakieś ranges do wyboru pewnie'}
+                formId={'costs_from'}
+                customFormComponent={<CreateIdeaValueRangeComponent />}
               />
               <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} onFilesAdded={onFilesAdded} />
             </FlexBox>
