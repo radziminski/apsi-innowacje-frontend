@@ -7,7 +7,6 @@ import { FlexBox } from '~/components/Box';
 import { AiOutlineDelete } from 'react-icons/ai';
 import prettyBytes from 'pretty-bytes';
 import { ModalOverlay } from '~/components/ModalOverlay';
-import { ModalWindow } from '~/components/ModalWindow';
 import { RemoveFileModal } from '~/components/Dropzone/RemoveFileModal';
 
 const useFilesListComponent = (
@@ -53,9 +52,7 @@ const AddedFilesListBase = (props: { addedFiles: FileEntry[]; className?: string
       {fileList}
       {fileToRemove ? ( // need to render it conditionally, because otherwise fade-out appears temporarily on rerenders
         <ModalOverlay isVisible={!!fileToRemove}>
-          <ModalWindow>
-            <RemoveFileModal handleChoice={handleRemovalChoice} filename={fileToRemove ? fileToRemove.file.name : ''} />
-          </ModalWindow>
+          <RemoveFileModal handleChoice={handleRemovalChoice} filename={fileToRemove ? fileToRemove.file.name : ''} />
         </ModalOverlay>
       ) : null}
     </div>

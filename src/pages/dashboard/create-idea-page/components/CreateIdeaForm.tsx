@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addFiles, FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice';
 import { RootState } from '~/store/store';
 import { ModalOverlay } from '~/components/ModalOverlay';
-import { ModalWindow } from '~/components/ModalWindow';
 import { DuplicatedEntriesModal } from '~/pages/dashboard/create-idea-page/components/DuplicatedEntriesModal';
 import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
@@ -92,9 +91,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
       </FormProvider>
       {duplicatedEntriesError ? ( // need to render it conditionally, because otherwise fade-out appears temporarily on rerenders
         <ModalOverlay isVisible={!!duplicatedEntriesError}>
-          <ModalWindow>
-            <DuplicatedEntriesModal filename={duplicatedEntriesError} />
-          </ModalWindow>
+          <DuplicatedEntriesModal filename={duplicatedEntriesError} />
         </ModalOverlay>
       ) : null}
     </div>

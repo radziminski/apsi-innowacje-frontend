@@ -4,6 +4,7 @@ import { Center } from '~/components/Box';
 import { useDispatch } from 'react-redux';
 import { removeDuplicationError } from '~/store/slices/CreateIdeaAddedFilesSlice';
 import { Button } from '~/components/Button';
+import { ModalWindow } from '~/components/ModalWindow';
 
 export interface DuplicatedEntriesModalProps {
   filename: string | null;
@@ -16,10 +17,12 @@ const DuplicatedEntriesModalBase = (props: DuplicatedEntriesModalProps) => {
     dispatch(removeDuplicationError());
   }, []);
   return (
-    <Center className={props.className}>
-      <span>Jeden z dodanych plików został już dodany: {props.filename || ''}.</span>
-      <Button onClick={handleClick} text={'Ok'} id={'duplicated-entries-modal__ok-button'} />
-    </Center>
+    <ModalWindow>
+      <Center className={props.className}>
+        <span>Jeden z dodanych plików został już dodany: {props.filename || ''}.</span>
+        <Button onClick={handleClick} text={'Ok'} id={'duplicated-entries-modal__ok-button'} />
+      </Center>
+    </ModalWindow>
   );
 };
 

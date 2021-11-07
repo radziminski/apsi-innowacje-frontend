@@ -3,6 +3,7 @@ import { Center, FlexBox } from '~/components/Box';
 import { Button } from '~/components/Button';
 import { COLORS } from '~/styles/variables';
 import React from 'react';
+import { ModalWindow } from '~/components/ModalWindow';
 
 interface RemoveFileModalProps {
   handleChoice: (confirmDelete: boolean) => void;
@@ -13,18 +14,20 @@ interface RemoveFileModalProps {
 
 const RemoveFileModalBase = (props: RemoveFileModalProps) => {
   return (
-    <Center className={props.className}>
-      <span>Czy na pewno chcesz usunąć plik {props.filename}?</span>
-      <FlexBox>
-        <Button
-          theme={{ ...props.theme, colors: { ...props.theme.colors, lightGray: COLORS.darkGray } } as DefaultTheme}
-          onClick={() => props.handleChoice(true)}
-          text={'Tak'}
-          id={'remove_file-modal__yes-button'}
-        />
-        <Button onClick={() => props.handleChoice(false)} text={'Anuluj'} id={'remove_file-modal__cancel-button'} />
-      </FlexBox>
-    </Center>
+    <ModalWindow>
+      <Center className={props.className}>
+        <span>Czy na pewno chcesz usunąć plik {props.filename}?</span>
+        <FlexBox>
+          <Button
+            theme={{ ...props.theme, colors: { ...props.theme.colors, lightGray: COLORS.darkGray } } as DefaultTheme}
+            onClick={() => props.handleChoice(true)}
+            text={'Tak'}
+            id={'remove_file-modal__yes-button'}
+          />
+          <Button onClick={() => props.handleChoice(false)} text={'Anuluj'} id={'remove_file-modal__cancel-button'} />
+        </FlexBox>
+      </Center>
+    </ModalWindow>
   );
 };
 
