@@ -1,38 +1,50 @@
 import styled from 'styled-components';
-import { COLORS } from '~/styles/variables';
 import { useFormContext } from 'react-hook-form';
-import { MemoizeFormInput } from '~/pages/dashboard/create-idea-page/util/MemoizeFormInput';
+import { MemoizeFormComponent } from '~/components/forms/util/MemoizeFormComponent';
 import React from 'react';
-import { FormInputProps } from '~/components/forms';
-import { useFocusHandler } from '~/hooks/useFocusHandler';
+import { FormComponentProps } from '~/components/forms';
+import { FlexBox } from '~/components/Box';
 
-const FormTextInputBase = (props: FormInputProps) => {
-  const { id, className, customClassName, onFocusChangeHandler, ...rest } = props;
+const FormTextInputBase = (props: FormComponentProps) => {
+  const { id, className, customClassName, ...rest } = props;
   const methods = useFormContext();
+  const {
+    formState: { errors }
+  } = methods;
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const { ref } = methods.register(id);
-  useFocusHandler(inputRef, onFocusChangeHandler);
 
   return (
-    <MemoizeFormInput {...methods}>
-      <input
-        {...methods.register(id)}
-        type={'text'}
-        ref={e => {
-          ref(e);
-          inputRef.current = e;
-        }}
-        className={`${className} ${customClassName ? customClassName : ''}`}
-        id={id}
-        {...rest}
-      />
-    </MemoizeFormInput>
+    <MemoizeFormComponent {...methods}>
+      <FlexBox className={className}>
+        <input
+          {...methods.register(id)}
+          type={props.type || 'text'}
+          ref={e => {
+            ref(e);
+            inputRef.current = e;
+          }}
+          className={`${customClassName ? customClassName + (errors[id] ? '--error' : '') : ''}`}
+          id={id}
+          {...rest}
+        />
+        {errors[id] && <p>{errors[id].message}</p>}
+      </FlexBox>
+    </MemoizeFormComponent>
   );
 };
 
 export const FormTextInput = styled(FormTextInputBase)`
-  border: 0;
-  border-radius: 999px;
-  background-color: ${COLORS.white};
-  padding: 15px;
+  flex-direction: column;
+  input {
+    border: 0;
+    border-radius: 999px;
+    background-color: ${({ theme }) => theme.colors.white};
+    padding: 0.8rem ${({ theme }) => theme.margins.small};
+
+    width: 100%;
+    ::placeholder {
+      color: ${({ theme }) => theme.colors.lightGray};
+    }
+  }
 `;

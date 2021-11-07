@@ -16,6 +16,7 @@ export interface CustomTheme {
     accent1: string;
     accent2: string;
     accent3: string;
+    error: string;
     darkGray: string;
     gray: string;
     lightGray: string;
@@ -33,6 +34,12 @@ export interface CustomTheme {
   };
   breakpoints: Record<Device, number>;
   mediaQueries: Record<Device, string>;
+  margins: {
+    small: string;
+    medium: string;
+    big: string;
+    large: string;
+  };
   zIndex: {
     backgroundBack: number;
     backgroundMiddle: number;

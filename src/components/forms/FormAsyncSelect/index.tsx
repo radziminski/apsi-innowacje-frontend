@@ -2,11 +2,16 @@ import { Controller, useFormContext } from 'react-hook-form';
 import React from 'react';
 import AsyncSelect from 'react-select/async';
 import styled from 'styled-components';
-import { customSelectStyles, FormInputProps, Option } from '~/components/forms';
+import { customSelectStyles, FormComponentProps, Option } from '~/components/forms';
 
-const FormAsyncSelectBase = (props: FormInputProps) => {
+const FormAsyncSelectBase = (props: FormComponentProps) => {
   const { id, className, customClassName, ...rest } = props;
-  const { control } = useFormContext();
+  const divRef = React.useRef<HTMLDivElement>(null);
+  const {
+    control,
+    formState: { errors }
+  } = useFormContext();
+
   const getFilteredOptions = (fetchedOptions: Option[], inputValue: string) => {
     return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
   };
@@ -30,30 +35,32 @@ const FormAsyncSelectBase = (props: FormInputProps) => {
   // }, []);
 
   return (
-    <div className={className}>
+    <div className={className} ref={divRef}>
       <Controller
         name={id}
         control={control}
         render={({ field }) => (
-          // <MemoizeFormInput {...methods}>
           <AsyncSelect
             loadOptions={fetchOptions}
             cacheOptions
             defaultOptions
-            className={customClassName ? customClassName : ''}
-            styles={customSelectStyles}
+            className={`${customClassName ? customClassName + (errors[id] ? '--error' : '') : ''}`}
+            styles={customSelectStyles(!!errors[id])}
             noOptionsMessage={() => 'Brak opcji'}
             loadingMessage={() => 'Ładowanie opcji...'}
             {...field}
             {...rest}
           />
-          // </MemoizeFormInput>
         )}
       />
+      {errors[id] && <p>{errors[id].message}</p>}
     </div>
   );
 };
 
 export const FormAsyncSelect = styled(FormAsyncSelectBase)`
   width: 100%;
+  p {
+    margin-top: 5px;
+  }
 `;
