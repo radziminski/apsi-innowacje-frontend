@@ -74,7 +74,7 @@ export const FormRow = styled(FormRowBase)`
     box-shadow: none;
     transition: box-shadow 0.15s ease-in-out;
 
-    &--active {
+    &--active:not(div) {
       box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
     }
 
