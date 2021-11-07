@@ -6,7 +6,7 @@ import { FormComponentProps } from '~/components/forms';
 import { FlexBox } from '~/components/Box';
 
 const FormTextAreaBase = (props: FormComponentProps) => {
-  const { id, className, customClassName, ...rest } = props;
+  const { id, className, ...rest } = props;
   const methods = useFormContext();
   const {
     formState: { errors }
@@ -24,7 +24,7 @@ const FormTextAreaBase = (props: FormComponentProps) => {
             ref(e);
             inputRef.current = e;
           }}
-          className={`${customClassName ? customClassName + (errors[id] ? '--error' : '') : ''}`}
+          className={'form-textarea' + (errors[id] ? '--error' : '')}
           id={id}
           {...rest}
         />
@@ -38,12 +38,41 @@ export const FormTextArea = styled(FormTextAreaBase)`
   flex-direction: column;
   width: 100%;
 
-  textarea {
+  .form-textarea,
+  .form-textarea--error {
     border: 0;
     border-radius: 1.5rem;
     background-color: ${({ theme }) => theme.colors.white};
     padding: 15px;
     resize: none;
+    box-shadow: none;
+    transition: box-shadow 0.15s ease-in-out;
+    width: 100%;
+    ::placeholder {
+      color: ${({ theme }) => theme.colors.lightGray};
+    }
+  }
+
+  .form-textarea {
+    &:hover:not(div) {
+      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary};
+    }
+    &--error:hover:not(div) {
+      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.error};
+    }
+
+    &:focus:not(div) {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
+    }
+
+    &--error:focus:not(div) {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error};
+    }
+
+    &:hover:not(div),
+    &--error:hover:not(div) {
+      transition: box-shadow 0.15s ease-in;
+    }
   }
   p {
     margin-top: 5px;

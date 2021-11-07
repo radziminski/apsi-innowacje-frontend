@@ -3,7 +3,6 @@ import { COLORS } from '~/styles/variables';
 export interface FormComponentPropsBase {
   id: string;
   className?: string;
-  customClassName?: string;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any

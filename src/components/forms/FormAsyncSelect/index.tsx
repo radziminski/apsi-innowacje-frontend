@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { customSelectStyles, FormComponentProps, Option } from '~/components/forms';
 
 const FormAsyncSelectBase = (props: FormComponentProps) => {
-  const { id, className, customClassName, ...rest } = props;
+  const { id, className, ...rest } = props;
   const divRef = React.useRef<HTMLDivElement>(null);
   const {
     control,
@@ -44,7 +44,6 @@ const FormAsyncSelectBase = (props: FormComponentProps) => {
             loadOptions={fetchOptions}
             cacheOptions
             defaultOptions
-            className={`${customClassName ? customClassName + (errors[id] ? '--error' : '') : ''}`}
             styles={customSelectStyles(!!errors[id])}
             noOptionsMessage={() => 'Brak opcji'}
             loadingMessage={() => 'Ładowanie opcji...'}
