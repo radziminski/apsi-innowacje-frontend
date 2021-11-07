@@ -77,24 +77,28 @@ export const FormRow = styled(FormRowBase)`
     box-shadow: none;
     transition: box-shadow 0.15s ease-in-out;
 
-    &--active:not(div) {
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
-      &--error {
-        box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error};
-      }
-    }
-
     &:hover:not(div) {
       box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary};
+    }
+    &--error:hover:not(div) {
+      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.error};
+    }
+
+    &:focus:not(div) {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
+    }
+
+    &--error:focus:not(div) {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error};
+    }
+
+    &:hover:not(div),
+    &--error:hover:not(div) {
       transition: box-shadow 0.15s ease-in;
-      &--error {
-        box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error};
-      }
     }
   }
 
-  .form-row_form-component,
-  .form-row_form-component--active {
+  .form-row_form-component {
     width: 100%;
     ::placeholder {
       color: ${({ theme }) => theme.colors.lightGray};

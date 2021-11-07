@@ -3,7 +3,6 @@ import { useFormContext } from 'react-hook-form';
 import { MemoizeFormComponent } from '~/components/forms/util/MemoizeFormComponent';
 import React from 'react';
 import { FormComponentProps } from '~/components/forms';
-import { useClassNameOnFocus } from '~/hooks/useClassNameOnFocus';
 import { FlexBox } from '~/components/Box';
 
 const FormTextInputBase = (props: FormComponentProps) => {
@@ -14,7 +13,6 @@ const FormTextInputBase = (props: FormComponentProps) => {
   } = methods;
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const { ref } = methods.register(id);
-  const classNameSuffix = useClassNameOnFocus('--active', inputRef);
 
   return (
     <MemoizeFormComponent {...methods}>
@@ -26,7 +24,7 @@ const FormTextInputBase = (props: FormComponentProps) => {
             ref(e);
             inputRef.current = e;
           }}
-          className={`${customClassName ? customClassName + classNameSuffix + (errors[id] ? '--error' : '') : ''}`}
+          className={`${customClassName ? customClassName + (errors[id] ? '--error' : '') : ''}`}
           id={id}
           {...rest}
         />

@@ -3,12 +3,10 @@ import CreatableSelect from 'react-select/creatable';
 import styled from 'styled-components';
 import React from 'react';
 import { customSelectStyles, FormComponentProps } from '~/components/forms';
-import { useClassNameOnFocus } from '~/hooks/useClassNameOnFocus';
 
 const FormCreateableSelectBase = (props: FormComponentProps) => {
   const { id, className, customClassName, ...rest } = props;
   const divRef = React.useRef<HTMLDivElement>(null);
-  const classNameSuffix = useClassNameOnFocus('--active', divRef);
   const {
     control,
     formState: { errors }
@@ -25,7 +23,7 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
             noOptionsMessage={() => 'Wpisz słowo by je dodać'}
             formatCreateLabel={(inputValue: string) => `Dodaj "${inputValue}"`}
             isClearable={false}
-            className={`${customClassName ? customClassName + classNameSuffix + (errors[id] ? '--error' : '') : ''}`}
+            className={`${customClassName ? customClassName + (errors[id] ? '--error' : '') : ''}`}
             styles={customSelectStyles(!!errors[id])}
             {...field}
             {...rest}

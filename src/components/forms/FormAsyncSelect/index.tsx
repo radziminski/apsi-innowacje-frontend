@@ -3,12 +3,10 @@ import React from 'react';
 import AsyncSelect from 'react-select/async';
 import styled from 'styled-components';
 import { customSelectStyles, FormComponentProps, Option } from '~/components/forms';
-import { useClassNameOnFocus } from '~/hooks/useClassNameOnFocus';
 
 const FormAsyncSelectBase = (props: FormComponentProps) => {
   const { id, className, customClassName, ...rest } = props;
   const divRef = React.useRef<HTMLDivElement>(null);
-  const classNameSuffix = useClassNameOnFocus('--active', divRef);
   const {
     control,
     formState: { errors }
@@ -46,7 +44,7 @@ const FormAsyncSelectBase = (props: FormComponentProps) => {
             loadOptions={fetchOptions}
             cacheOptions
             defaultOptions
-            className={`${customClassName ? customClassName + classNameSuffix + (errors[id] ? '--error' : '') : ''}`}
+            className={`${customClassName ? customClassName + (errors[id] ? '--error' : '') : ''}`}
             styles={customSelectStyles(!!errors[id])}
             noOptionsMessage={() => 'Brak opcji'}
             loadingMessage={() => 'Ładowanie opcji...'}

@@ -31,11 +31,13 @@ export const CreateIdeaValueRangeComponent = styled(CreateIdeaValueRangeComponen
   }
 
   .value-range_currency-box {
+    align-self: flex-start;
+
     color: ${({ theme }) => theme.colors.darkGray};
     box-shadow: 0 0 0.1rem ${({ theme }) => theme.colors.primaryDark};
     border-radius: 1rem;
     background-color: ${({ theme }) => theme.colors.lightGray};
-    height: 100%;
+    height: 43px;
     width: 20%;
     min-width: 3rem;
     margin: 0 5px;
