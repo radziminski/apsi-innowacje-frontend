@@ -9,7 +9,11 @@ const FormAsyncSelectBase = (props: FormComponentProps) => {
   const { id, className, customClassName, ...rest } = props;
   const divRef = React.useRef<HTMLDivElement>(null);
   const classNameSuffix = useClassNameOnFocus('--active', divRef);
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { errors }
+  } = useFormContext();
+
   const getFilteredOptions = (fetchedOptions: Option[], inputValue: string) => {
     return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
   };
@@ -42,8 +46,8 @@ const FormAsyncSelectBase = (props: FormComponentProps) => {
             loadOptions={fetchOptions}
             cacheOptions
             defaultOptions
-            className={`${customClassName ? customClassName + classNameSuffix : ''}`}
-            styles={customSelectStyles}
+            className={`${customClassName ? customClassName + classNameSuffix + (errors[id] ? '--error' : '') : ''}`}
+            styles={customSelectStyles(!!errors[id])}
             noOptionsMessage={() => 'Brak opcji'}
             loadingMessage={() => 'Ładowanie opcji...'}
             {...field}
@@ -51,10 +55,14 @@ const FormAsyncSelectBase = (props: FormComponentProps) => {
           />
         )}
       />
+      {errors[id] && <p>{errors[id].message}</p>}
     </div>
   );
 };
 
 export const FormAsyncSelect = styled(FormAsyncSelectBase)`
   width: 100%;
+  p {
+    margin-top: 5px;
+  }
 `;

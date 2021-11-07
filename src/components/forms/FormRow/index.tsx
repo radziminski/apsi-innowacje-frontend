@@ -7,6 +7,7 @@ import { FormAsyncSelect } from '~/components/forms/FormAsyncSelect';
 import { FormCreateableSelect } from '~/components/forms/FormCreateableSelect';
 import { FormTextArea } from '~/components/forms/FormTextArea';
 import { FormDropzone } from '~/components/forms/FormDropzone';
+import { Asterisk } from '~/components/forms/Asterisk/Asterisk';
 
 export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
 
@@ -16,13 +17,14 @@ export interface FormRowPropsBase {
   type?: FormType;
   customFormComponent?: JSX.Element;
   className?: string;
+  required?: boolean;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FormRowProps = FormRowPropsBase & any;
 
 const FormRowBase = (props: FormRowProps): JSX.Element => {
-  const { label, formId, className, customFormComponent, ...rest } = props;
+  const { label, formId, className, customFormComponent, required, ...rest } = props;
   const type = props.type || '';
 
   const getFormComponent = (type: FormType): JSX.Element => {
@@ -44,6 +46,7 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
     <FlexBox className={`${className} form-row`}>
       <div>
         <label htmlFor={formId}>{label}</label>
+        {required ? <Asterisk /> : null}
       </div>
       <div>{getFormComponent(type)}</div>
     </FlexBox>
@@ -54,6 +57,7 @@ export const FormRow = styled(FormRowBase)`
   flex-direction: row;
   margin: ${MARGINS.small};
   align-items: flex-start;
+
   > div {
     display: flex;
 
@@ -75,11 +79,17 @@ export const FormRow = styled(FormRowBase)`
 
     &--active:not(div) {
       box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
+      &--error {
+        box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error};
+      }
     }
 
     &:hover:not(div) {
       box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary};
       transition: box-shadow 0.15s ease-in;
+      &--error {
+        box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error};
+      }
     }
   }
 

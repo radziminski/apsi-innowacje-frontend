@@ -11,9 +11,13 @@ import { ModalWindow } from '~/components/ModalWindow';
 import { DuplicatedEntriesModal } from '~/pages/dashboard/create-idea-page/components/DuplicatedEntriesModal';
 import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
+import { schema } from '~/pages/dashboard/create-idea-page/schema';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
-  const methods = useForm();
+  const methods = useForm({
+    resolver: yupResolver(schema)
+  });
   const dispatch = useDispatch();
   const currentFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
   const duplicatedEntriesError = useSelector((state: RootState) => state.addedFiles.duplicationError);
@@ -47,19 +51,22 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                 formId={'topic'}
                 type={'select'}
                 placeholder={'Wybierz tematykę pomysłu'}
+                required
               />
               <FormRow
                 label={'Słowa kluczowe'}
                 formId={'keywords'}
                 type={'createable-select'}
                 placeholder={'Wpisz słowa kluczowe'}
+                required
               />
               <FormRow
                 label={'Opis'}
                 formId={'description'}
                 type={'textarea'}
                 rows={8}
-                placeholder={'Opowiedz nam o swoim pomyśle'}
+                placeholder={'Opowiedz nam o swoim pomyśle. Minimum 30 znaków.'}
+                required
               />
               <FormRow
                 label={'Planowane korzyści'}
@@ -67,11 +74,13 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                 type={'textarea'}
                 rows={4}
                 placeholder={'Jakie korzyści może przynieść twój pomysł?'}
+                required
               />
               <FormRow
                 label={'Planowane koszty'}
                 formId={'costs_from'}
                 customFormComponent={<CreateIdeaValueRangeComponent />}
+                required
               />
               <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} onFilesAdded={onFilesAdded} />
             </FlexBox>

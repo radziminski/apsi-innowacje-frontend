@@ -16,6 +16,7 @@ export interface CustomTheme {
     accent1: string;
     accent2: string;
     accent3: string;
+    error: string;
     darkGray: string;
     gray: string;
     lightGray: string;

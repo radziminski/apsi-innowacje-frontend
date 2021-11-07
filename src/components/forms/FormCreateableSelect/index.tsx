@@ -9,7 +9,10 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
   const { id, className, customClassName, ...rest } = props;
   const divRef = React.useRef<HTMLDivElement>(null);
   const classNameSuffix = useClassNameOnFocus('--active', divRef);
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { errors }
+  } = useFormContext();
 
   return (
     <div className={className} ref={divRef}>
@@ -22,17 +25,21 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
             noOptionsMessage={() => 'Wpisz słowo by je dodać'}
             formatCreateLabel={(inputValue: string) => `Dodaj "${inputValue}"`}
             isClearable={false}
-            className={`${customClassName ? customClassName + classNameSuffix : ''}`}
-            styles={customSelectStyles}
+            className={`${customClassName ? customClassName + classNameSuffix + (errors[id] ? '--error' : '') : ''}`}
+            styles={customSelectStyles(!!errors[id])}
             {...field}
             {...rest}
           />
         )}
       />
+      {errors[id] && <p>{errors[id].message}</p>}
     </div>
   );
 };
 
 export const FormCreateableSelect = styled(FormCreateableSelectBase)`
   width: 100%;
+  p {
+    margin-top: 5px;
+  }
 `;
