@@ -9,9 +9,13 @@ export interface FormSelectProps extends FormComponentProps {
 }
 
 // Not needed now, but since I already created it, let it sit here
-const FormSelectBase = (props: FormComponentProps) => {
+const FormSelectBase = (props: FormSelectProps) => {
   const { id, options, customClassName, className, ...rest } = props;
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+    register
+  } = useFormContext();
 
   return (
     <div className={className}>
@@ -19,13 +23,24 @@ const FormSelectBase = (props: FormComponentProps) => {
         name={id}
         control={control}
         render={({ field }) => (
-          <Select {...{ options }} className={customClassName || ''} styles={customSelectStyles} {...field} {...rest} />
+          <Select
+            {...{ options }}
+            className={customClassName || ''}
+            styles={customSelectStyles(!!errors[id])}
+            {...register(id)}
+            {...field}
+            {...rest}
+          />
         )}
       />
+      {errors[id] && <p>{errors[id].message}</p>}
     </div>
   );
 };
 
 export const FormSelect = styled(FormSelectBase)`
   width: 100%;
+  p {
+    margin-top: 5px;
+  }
 `;

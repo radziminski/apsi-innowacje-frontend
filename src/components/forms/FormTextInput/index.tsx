@@ -11,8 +11,6 @@ const FormTextInputBase = (props: FormComponentProps) => {
   const {
     formState: { errors }
   } = methods;
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
-  const { ref } = methods.register(id);
 
   return (
     <MemoizeFormComponent {...methods}>
@@ -20,10 +18,6 @@ const FormTextInputBase = (props: FormComponentProps) => {
         <input
           {...methods.register(id)}
           type={props.type || 'text'}
-          ref={e => {
-            ref(e);
-            inputRef.current = e;
-          }}
           className={'form_input' + (errors[id] ? '--error' : '')}
           id={id}
           {...rest}

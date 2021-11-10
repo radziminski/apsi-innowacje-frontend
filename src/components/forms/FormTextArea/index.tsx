@@ -11,8 +11,6 @@ const FormTextAreaBase = (props: FormComponentProps) => {
   const {
     formState: { errors }
   } = methods;
-  const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
-  const { ref } = methods.register(id);
 
   return (
     <MemoizeFormComponent {...methods}>
@@ -20,10 +18,6 @@ const FormTextAreaBase = (props: FormComponentProps) => {
         <textarea
           {...methods.register(id)}
           maxLength={1000}
-          ref={e => {
-            ref(e);
-            inputRef.current = e;
-          }}
           className={'form-textarea' + (errors[id] ? '--error' : '')}
           id={id}
           {...rest}

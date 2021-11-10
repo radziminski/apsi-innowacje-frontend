@@ -10,6 +10,13 @@ import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
 import { schema } from '~/pages/dashboard/create-idea-page/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Option } from '~/components/forms';
+
+const AUDIENCE_OPTIONS = [
+  { value: 'lecturers', label: 'Wykładowcy' },
+  { value: 'Students', label: 'Studenci' },
+  { value: 'All', label: 'Wszyscy' }
+];
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm({
@@ -37,17 +44,41 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     }
   }, []);
 
+  const fetchTopics = React.useCallback((): Promise<Option[]> => {
+    // TODO fetch from backend
+    return new Promise(resolve =>
+      setTimeout(() => {
+        const fetchedOptions = [
+          { value: 'first_topic', label: 'Drugi temat' },
+          { value: 'second_topic', label: 'Pierwszy temat' },
+          { value: 'other', label: 'Inne' }
+        ];
+        resolve(fetchedOptions);
+      }, 2000)
+    );
+  }, []);
+
   return (
     <div className={props.className}>
       <FormProvider {...methods}>
         <div className={'create-idea-form'}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <FlexBox>
+              <FormRow label={'Dodaj anonimowo'} formId={'isAnonymous'} type={'checkbox'} />
               <FormRow
                 label={'Tematyka pomysłu'}
                 formId={'topic'}
-                type={'select'}
+                type={'async-select'}
                 placeholder={'Wybierz tematykę pomysłu'}
+                fetchOptions={fetchTopics}
+                required
+              />
+              <FormRow
+                label={'Grupa odbiorców'}
+                formId={'audience'}
+                type={'select'}
+                options={AUDIENCE_OPTIONS}
+                placeholder={'Wybierz grupę odbiorców'}
                 required
               />
               <FormRow

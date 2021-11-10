@@ -7,13 +7,16 @@ import { FormCreateableSelect } from '~/components/forms/FormCreateableSelect';
 import { FormTextArea } from '~/components/forms/FormTextArea';
 import { FormDropzone } from '~/components/forms/FormDropzone';
 import { Asterisk } from '~/components/forms/Asterisk/Asterisk';
+import { FormCheckbox } from '~/components/forms/FormCheckbox';
+import { FormSelect } from '~/components/forms/FormSelect';
 
-export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
+export type FormType = 'text' | 'select' | 'textarea' | 'createable-select' | 'async-select';
 
 export interface FormRowPropsBase {
   label: string;
   formId: string;
   type?: FormType;
+  tooltip?: string;
   customFormComponent?: JSX.Element;
   className?: string;
   required?: boolean;
@@ -33,9 +36,11 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
     };
     if (type == 'text') return <FormTextInput {...component_props} />;
     else if (type == 'textarea') return <FormTextArea {...component_props} />;
-    else if (type == 'select') return <FormAsyncSelect {...component_props} />;
+    else if (type == 'async-select') return <FormAsyncSelect {...component_props} />;
+    else if (type == 'select') return <FormSelect {...component_props} />;
     else if (type == 'createable-select') return <FormCreateableSelect {...component_props} />;
     else if (type == 'dropzone') return <FormDropzone {...component_props} />;
+    else if (type == 'checkbox') return <FormCheckbox {...component_props} />;
     else if (customFormComponent) return React.cloneElement(customFormComponent, component_props);
     else return <FormTextInput {...component_props} />;
   };
@@ -61,6 +66,7 @@ export const FormRow = styled(FormRowBase)`
 
     label {
       margin-top: 10px;
+      font-weight: 400;
     }
 
     &:first-child {

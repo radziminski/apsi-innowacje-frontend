@@ -3,6 +3,7 @@ import * as yup from 'yup';
 export const schema = yup
   .object({
     topic: yup.object().required('Proszę wybrać temat.'),
+    audience: yup.object().required('Proszę wybrać grupę odbiorców.'),
     keywords: yup
       .array()
       .min(1, 'Propszę wpisać przynajmniej jedno słowo kluczowe.')
