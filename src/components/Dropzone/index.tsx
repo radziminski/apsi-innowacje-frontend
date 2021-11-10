@@ -6,6 +6,10 @@ import { Center, FlexBox } from '~/components/Box';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/store/store';
 import { AddedFilesList } from '~/components/Dropzone/AddedFilesList';
+import { ModalOverlay } from '~/components/ModalOverlay';
+import { DuplicatedEntriesModal } from '~/components/Dropzone/DuplicatedEntriesModal';
+import { FilesToLargeModal } from '~/components/Dropzone/FileToLargeModal';
+import { FileErrorsModal } from '~/components/Dropzone/FileErrorModal';
 
 export interface DropzoneProps {
   onFilesAdded: (files) => void;
@@ -14,26 +18,52 @@ export interface DropzoneProps {
   className?: string;
 }
 
+interface FileErrors {
+  filesToLarge: string[];
+  erroredFiles: string[];
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: ForwardedRef<HTMLDivElement>) => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const duplicatedEntriesError = useSelector((state: RootState) => state.addedFiles.duplicationError);
+  const [fileErrors, setFileErrors] = React.useState<FileErrors>({ filesToLarge: [], erroredFiles: [] });
+  const hasErrors = fileErrors.filesToLarge.length || fileErrors.erroredFiles.length || duplicatedEntriesError;
 
-  React.useEffect(() => {
-    if (acceptedFiles.length > 0) {
-      props.onFilesAdded(acceptedFiles);
-    }
-  }, [acceptedFiles]);
+  const onFilesAdded = React.useCallback(
+    (addedFiles: File[], fileRejections) => {
+      if (fileRejections.length > 0) {
+        const toLargeFiles = fileRejections
+          .filter(file => file.errors.some(err => err.code === 'file-too-large'))
+          .map(file => file.file.name);
+        const erroredFiles = fileRejections
+          .filter(file => file.errors.some(err => err.code !== 'file-too-large'))
+          .map(file => file.file.name);
+        setFileErrors({
+          filesToLarge: [...(fileErrors.filesToLarge || []), ...toLargeFiles],
+          erroredFiles: [...(fileErrors.erroredFiles || []), ...erroredFiles]
+        });
+
+        return;
+      }
+      props.onFilesAdded(addedFiles);
+    },
+    [props.accept, props.onFilesAdded]
+  );
 
   const addedFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    multiple: true,
+    onDrop: onFilesAdded,
+    accept: props.accept,
+    maxSize: 10 * 1024 * 1024
+  });
 
   return (
     <div className={props.className}>
       <FlexBox
         {...getRootProps({
-          className: 'dropzone',
-          multiple: true,
-          accept: props.accept,
-          onDrop: props.onFilesAdded
+          className: 'dropzone'
         })}
         ref={ref}>
         <input {...getInputProps()} />
@@ -41,7 +71,24 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
           <Paragraph>{props.placeholder ? props.placeholder : 'Upuść pliki lub kliknij, by wybrać'}</Paragraph>
         </Center>
       </FlexBox>
-      {addedFiles.length > 0 ? <AddedFilesList {...{ addedFiles }} /> : null}
+      {addedFiles.length ? <AddedFilesList {...{ addedFiles }} /> : null}
+      {hasErrors ? ( // need to render it conditionally, because otherwise fade-out appears temporarily on rerenders
+        <ModalOverlay isVisible={!!hasErrors}>
+          {duplicatedEntriesError && <DuplicatedEntriesModal filename={duplicatedEntriesError} />}
+          {fileErrors.filesToLarge.length && !duplicatedEntriesError && (
+            <FilesToLargeModal
+              files={fileErrors.filesToLarge}
+              onClick={() => setFileErrors({ ...fileErrors, filesToLarge: [] })}
+            />
+          )}
+          {fileErrors.erroredFiles.length && !fileErrors.filesToLarge.length && !duplicatedEntriesError && (
+            <FileErrorsModal
+              files={fileErrors.erroredFiles}
+              onClick={() => setFileErrors({ ...fileErrors, erroredFiles: [] })}
+            />
+          )}
+        </ModalOverlay>
+      ) : null}
     </div>
   );
 });

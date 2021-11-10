@@ -6,8 +6,6 @@ import { FormRow } from '~/components/forms/FormRow';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFiles, FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice';
 import { RootState } from '~/store/store';
-import { ModalOverlay } from '~/components/ModalOverlay';
-import { DuplicatedEntriesModal } from '~/pages/dashboard/create-idea-page/components/DuplicatedEntriesModal';
 import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
 import { schema } from '~/pages/dashboard/create-idea-page/schema';
@@ -19,7 +17,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   });
   const dispatch = useDispatch();
   const currentFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
-  const duplicatedEntriesError = useSelector((state: RootState) => state.addedFiles.duplicationError);
+
   const onSubmit = React.useCallback(
     data => {
       // eslint-disable-next-line no-console
@@ -89,11 +87,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
           </form>
         </div>
       </FormProvider>
-      {duplicatedEntriesError ? ( // need to render it conditionally, because otherwise fade-out appears temporarily on rerenders
-        <ModalOverlay isVisible={!!duplicatedEntriesError}>
-          <DuplicatedEntriesModal filename={duplicatedEntriesError} />
-        </ModalOverlay>
-      ) : null}
     </div>
   );
 };
@@ -108,6 +101,8 @@ export default styled(CreateIdeaForm)`
 
     .create-idea-form__submit-button {
       align-items: flex-end;
+      margin-right: ${({ theme }) => theme.margins.small};
+      margin-top: ${({ theme }) => theme.margins.small};
     }
   }
 `;

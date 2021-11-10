@@ -3,7 +3,10 @@ import * as yup from 'yup';
 export const schema = yup
   .object({
     topic: yup.object().required('Proszę wybrać temat.'),
-    keywords: yup.array().required('Propszę wpisać przynajmniej jedno słowo kluczowe.'),
+    keywords: yup
+      .array()
+      .min(1, 'Propszę wpisać przynajmniej jedno słowo kluczowe.')
+      .required('Propszę wpisać przynajmniej jedno słowo kluczowe.'),
     description: yup.string().required('Proszę opisać pomysł.').min(30, 'Proszę użyć przynajmniej 30 znaków.'),
     benefits: yup.string().required('Proszę opisać planowane korzyści.'),
     costs_from: yup

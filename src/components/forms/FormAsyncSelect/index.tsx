@@ -9,7 +9,8 @@ const FormAsyncSelectBase = (props: FormComponentProps) => {
   const divRef = React.useRef<HTMLDivElement>(null);
   const {
     control,
-    formState: { errors }
+    formState: { errors },
+    register
   } = useFormContext();
 
   const getFilteredOptions = (fetchedOptions: Option[], inputValue: string) => {
@@ -47,6 +48,7 @@ const FormAsyncSelectBase = (props: FormComponentProps) => {
             styles={customSelectStyles(!!errors[id])}
             noOptionsMessage={() => 'Brak opcji'}
             loadingMessage={() => 'Ładowanie opcji...'}
+            {...register(id)}
             {...field}
             {...rest}
           />

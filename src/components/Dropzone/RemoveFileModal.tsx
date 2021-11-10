@@ -36,16 +36,21 @@ export const RemoveFileModal = withTheme(styled(RemoveFileModalBase)`
   min-height: 20%;
   flex-direction: column;
 
-  span {
-    margin: ${({ theme }) => theme.margins.medium} ${({ theme }) => theme.margins.small};
-  }
+  // span {
+  //   margin: ${({ theme }) => theme.margins.medium} ${({ theme }) => theme.margins.small};
+  // }
 
   > div {
     align-self: flex-end;
+    margin-top: ${({ theme }) => theme.margins.medium};
   }
 
   #remove_file-modal__yes-button,
   #remove_file-modal__cancel-button {
     align-self: flex-end;
+  }
+
+  #remove_file-modal__yes-button {
+    margin-right: ${({ theme }) => theme.margins.small};
   }
 `);

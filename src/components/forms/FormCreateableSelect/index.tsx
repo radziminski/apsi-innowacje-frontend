@@ -9,7 +9,8 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
   const divRef = React.useRef<HTMLDivElement>(null);
   const {
     control,
-    formState: { errors }
+    formState: { errors },
+    register
   } = useFormContext();
 
   return (
@@ -24,6 +25,7 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
             formatCreateLabel={(inputValue: string) => `Dodaj "${inputValue}"`}
             isClearable={false}
             styles={customSelectStyles(!!errors[id])}
+            {...register(id)}
             {...field}
             {...rest}
           />
