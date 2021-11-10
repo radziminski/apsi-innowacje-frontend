@@ -31,11 +31,8 @@ export const DuplicatedEntriesModal = styled(DuplicatedEntriesModalBase)`
   min-height: 20%;
   flex-direction: column;
 
-  span {
-    margin: ${({ theme }) => theme.margins.medium} ${({ theme }) => theme.margins.small};
-  }
-
   #duplicated-entries-modal__ok-button {
     align-self: flex-end;
+    margin-top: ${({ theme }) => theme.margins.small};
   }
 `;

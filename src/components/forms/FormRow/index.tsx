@@ -1,20 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import { MARGINS } from '~/styles/variables';
 import { FormTextInput } from '~/components/forms/FormTextInput';
 import { FormAsyncSelect } from '~/components/forms/FormAsyncSelect';
 import { FormCreateableSelect } from '~/components/forms/FormCreateableSelect';
 import { FormTextArea } from '~/components/forms/FormTextArea';
 import { FormDropzone } from '~/components/forms/FormDropzone';
 import { Asterisk } from '~/components/forms/Asterisk/Asterisk';
+import { FormCheckbox } from '~/components/forms/FormCheckbox';
+import { FormSelect } from '~/components/forms/FormSelect';
 
-export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
+export type FormType = 'text' | 'select' | 'textarea' | 'createable-select' | 'async-select';
 
 export interface FormRowPropsBase {
   label: string;
   formId: string;
   type?: FormType;
+  tooltip?: string;
   customFormComponent?: JSX.Element;
   className?: string;
   required?: boolean;
@@ -30,14 +32,15 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
   const getFormComponent = (type: FormType): JSX.Element => {
     const component_props = {
       id: formId,
-      customClassName: 'form-row_form-component',
       ...rest
     };
     if (type == 'text') return <FormTextInput {...component_props} />;
     else if (type == 'textarea') return <FormTextArea {...component_props} />;
-    else if (type == 'select') return <FormAsyncSelect {...component_props} />;
+    else if (type == 'async-select') return <FormAsyncSelect {...component_props} />;
+    else if (type == 'select') return <FormSelect {...component_props} />;
     else if (type == 'createable-select') return <FormCreateableSelect {...component_props} />;
     else if (type == 'dropzone') return <FormDropzone {...component_props} />;
+    else if (type == 'checkbox') return <FormCheckbox {...component_props} />;
     else if (customFormComponent) return React.cloneElement(customFormComponent, component_props);
     else return <FormTextInput {...component_props} />;
   };
@@ -55,7 +58,7 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
 
 export const FormRow = styled(FormRowBase)`
   flex-direction: row;
-  margin: ${MARGINS.small};
+  margin: ${({ theme }) => theme.margins.small};
   align-items: flex-start;
 
   > div {
@@ -63,6 +66,7 @@ export const FormRow = styled(FormRowBase)`
 
     label {
       margin-top: 10px;
+      font-weight: 400;
     }
 
     &:first-child {
@@ -70,38 +74,6 @@ export const FormRow = styled(FormRowBase)`
     }
     &:nth-child(2) {
       width: 60%;
-    }
-  }
-
-  .form-row_form-component {
-    box-shadow: none;
-    transition: box-shadow 0.15s ease-in-out;
-
-    &:hover:not(div) {
-      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary};
-    }
-    &--error:hover:not(div) {
-      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.error};
-    }
-
-    &:focus:not(div) {
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
-    }
-
-    &--error:focus:not(div) {
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error};
-    }
-
-    &:hover:not(div),
-    &--error:hover:not(div) {
-      transition: box-shadow 0.15s ease-in;
-    }
-  }
-
-  .form-row_form-component {
-    width: 100%;
-    ::placeholder {
-      color: ${({ theme }) => theme.colors.lightGray};
     }
   }
 `;

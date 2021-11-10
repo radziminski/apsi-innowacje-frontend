@@ -1,5 +1,5 @@
 import React from 'react';
-import { Center } from '~/components/Box';
+import { FlexBox } from '~/components/Box';
 import { Heading1 } from '~/components/Text';
 import styled from 'styled-components';
 import { MARGINS } from '~/styles/variables';
@@ -11,9 +11,9 @@ export interface HeaderProps {
 
 const HeaderBase = (props: HeaderProps) => {
   return (
-    <Center className={props.className}>
+    <FlexBox className={props.className}>
       <Heading1>{props.text}</Heading1>
-    </Center>
+    </FlexBox>
   );
 };
 

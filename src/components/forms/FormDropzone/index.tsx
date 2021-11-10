@@ -8,24 +8,28 @@ export interface FormDropzoneProps extends FormComponentProps {
 }
 
 const FormDropzoneBase = (props: FormDropzoneProps) => {
-  const { id, customClassName, className, ...rest } = props;
+  const { id, className, ...rest } = props;
   const dropzoneContainerRef = React.useRef<HTMLDivElement>(null);
 
-  return <Dropzone className={`${customClassName || ''} ${className}`} id={id} {...rest} ref={dropzoneContainerRef} />;
+  return <Dropzone className={`${className}`} id={id} {...rest} ref={dropzoneContainerRef} />;
 };
 
 export const FormDropzone = styled(FormDropzoneBase)`
-  &.form-row_form-component:focus {
-    .dropzone {
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
-    }
+  box-shadow: none;
+  transition: box-shadow 0.15s ease-in-out;
+  width: 100%;
+  ::placeholder {
+    color: ${({ theme }) => theme.colors.lightGray};
   }
 
   .dropzone {
-    box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary}AF;
     &:hover {
       cursor: pointer;
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
+    }
+    &:focus {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
     }
   }
 `;

@@ -5,11 +5,12 @@ import React from 'react';
 import { customSelectStyles, FormComponentProps } from '~/components/forms';
 
 const FormCreateableSelectBase = (props: FormComponentProps) => {
-  const { id, className, customClassName, ...rest } = props;
+  const { id, className, ...rest } = props;
   const divRef = React.useRef<HTMLDivElement>(null);
   const {
     control,
-    formState: { errors }
+    formState: { errors },
+    register
   } = useFormContext();
 
   return (
@@ -23,8 +24,8 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
             noOptionsMessage={() => 'Wpisz słowo by je dodać'}
             formatCreateLabel={(inputValue: string) => `Dodaj "${inputValue}"`}
             isClearable={false}
-            className={`${customClassName ? customClassName + (errors[id] ? '--error' : '') : ''}`}
             styles={customSelectStyles(!!errors[id])}
+            {...register(id)}
             {...field}
             {...rest}
           />

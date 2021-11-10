@@ -6,12 +6,17 @@ import { FormRow } from '~/components/forms/FormRow';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFiles, FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice';
 import { RootState } from '~/store/store';
-import { ModalOverlay } from '~/components/ModalOverlay';
-import { DuplicatedEntriesModal } from '~/pages/dashboard/create-idea-page/components/DuplicatedEntriesModal';
 import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
 import { schema } from '~/pages/dashboard/create-idea-page/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Option } from '~/components/forms';
+
+const AUDIENCE_OPTIONS = [
+  { value: 'lecturers', label: 'Wykładowcy' },
+  { value: 'Students', label: 'Studenci' },
+  { value: 'All', label: 'Wszyscy' }
+];
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm({
@@ -19,7 +24,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   });
   const dispatch = useDispatch();
   const currentFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
-  const duplicatedEntriesError = useSelector((state: RootState) => state.addedFiles.duplicationError);
+
   const onSubmit = React.useCallback(
     data => {
       // eslint-disable-next-line no-console
@@ -39,17 +44,41 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     }
   }, []);
 
+  const fetchTopics = React.useCallback((): Promise<Option[]> => {
+    // TODO fetch from backend
+    return new Promise(resolve =>
+      setTimeout(() => {
+        const fetchedOptions = [
+          { value: 'first_topic', label: 'Drugi temat' },
+          { value: 'second_topic', label: 'Pierwszy temat' },
+          { value: 'other', label: 'Inne' }
+        ];
+        resolve(fetchedOptions);
+      }, 2000)
+    );
+  }, []);
+
   return (
     <div className={props.className}>
       <FormProvider {...methods}>
         <div className={'create-idea-form'}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <FlexBox>
+              <FormRow label={'Dodaj anonimowo'} formId={'isAnonymous'} type={'checkbox'} />
               <FormRow
                 label={'Tematyka pomysłu'}
                 formId={'topic'}
-                type={'select'}
+                type={'async-select'}
                 placeholder={'Wybierz tematykę pomysłu'}
+                fetchOptions={fetchTopics}
+                required
+              />
+              <FormRow
+                label={'Grupa odbiorców'}
+                formId={'audience'}
+                type={'select'}
+                options={AUDIENCE_OPTIONS}
+                placeholder={'Wybierz grupę odbiorców'}
                 required
               />
               <FormRow
@@ -89,11 +118,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
           </form>
         </div>
       </FormProvider>
-      {duplicatedEntriesError ? ( // need to render it conditionally, because otherwise fade-out appears temporarily on rerenders
-        <ModalOverlay isVisible={!!duplicatedEntriesError}>
-          <DuplicatedEntriesModal filename={duplicatedEntriesError} />
-        </ModalOverlay>
-      ) : null}
     </div>
   );
 };
@@ -108,6 +132,8 @@ export default styled(CreateIdeaForm)`
 
     .create-idea-form__submit-button {
       align-items: flex-end;
+      margin-right: ${({ theme }) => theme.margins.small};
+      margin-top: ${({ theme }) => theme.margins.small};
     }
   }
 `;
