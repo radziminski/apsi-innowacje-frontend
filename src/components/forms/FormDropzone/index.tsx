@@ -23,13 +23,13 @@ export const FormDropzone = styled(FormDropzoneBase)`
   }
 
   .dropzone {
-    box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary}AF;
     &:hover {
       cursor: pointer;
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
     }
     &:focus {
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
     }
   }
 `;

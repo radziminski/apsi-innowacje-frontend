@@ -51,23 +51,23 @@ export const FormTextInput = styled(FormTextInputBase)`
   }
 
   .form_input {
-    &:hover:not(div) {
-      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary};
+    &:hover {
+      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary}AF;
     }
-    &--error:hover:not(div) {
-      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.error};
-    }
-
-    &:focus:not(div) {
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary};
+    &--error:hover {
+      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.error}AF;
     }
 
-    &--error:focus:not(div) {
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error};
+    &:focus {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
     }
 
-    &:hover:not(div),
-    &--error:hover:not(div) {
+    &--error:focus {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error}AF;
+    }
+
+    &:hover,
+    &--error:hover {
       transition: box-shadow 0.15s ease-in;
     }
   }

@@ -17,6 +17,12 @@ export const schema = yup
       .positive()
       .integer()
       .required('Proszę wpisać dodatnią wartosć.')
+      .when(['costs_from'], costs_from => {
+        return yup
+          .number()
+          .min(costs_from, 'Wartość nie może być niższa niż w pierwszym polu.')
+          .typeError('Proszę wpisać dodatnią wartość.');
+      })
       .typeError('Proszę wpisać dodatnią wartość.')
   })
   .required();
