@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import AppRoutes from './pages';
-import { QueryClientProvider } from './queries/QueryClientProvider';
 import { GlobalStyles } from './styles/global';
 import { defaultTheme } from './styles/theme';
 import { store } from '~/store/store';
