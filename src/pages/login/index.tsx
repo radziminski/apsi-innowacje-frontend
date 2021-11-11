@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react';
 import { Center } from '~/components/Box';
-import useLogin from '~/queries/useLogin';
 
 export const LoginPage: React.FC = () => {
-  const { login, isError, isLoading } = useLogin();
-
   // example how TO NOT IMPLEMENT login form
+  const isError = false;
+  const isLoading = false;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const login = a => null;
+
   const onSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.target;
