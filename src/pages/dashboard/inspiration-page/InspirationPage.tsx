@@ -2,21 +2,27 @@ import React from 'react';
 import { CreateInspiration } from '~/pages/dashboard/inspiration-page/CreateInspiration';
 import { Inspiration } from './components/Inspiration';
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
+import { AuthorInfo } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
+import styled from 'styled-components';
 
 export interface InspirationModel {
   // TODO use proper DTO
   id: number;
-  title: string;
   content: string;
+  author: AuthorInfo;
+}
+
+interface InspirationPageProps {
+  className?: string;
 }
 
 let id = 3;
 
-export const InspirationPage = () => {
+const InspirationPageBase = (props: InspirationPageProps) => {
   const [inspirations, setInspirations] = React.useState<InspirationModel[]>([
-    { id: 0, title: 'aaaa', content: 'aaaa' },
-    { id: 1, title: 'aaaa', content: 'aaaa' },
-    { id: 2, title: 'aaaa', content: 'aaaa' }
+    { id: 0, content: 'aaaa', author: { firstName: 'Michal', lastName: 'Belniak' } },
+    { id: 1, content: 'aaaa', author: { firstName: 'Michal', lastName: 'Belniak' } },
+    { id: 2, content: 'aaaa', author: { firstName: 'Michal', lastName: 'Belniak' } }
   ]);
 
   const fetchData = React.useCallback(
@@ -26,9 +32,9 @@ export const InspirationPage = () => {
       const newInspirations: InspirationModel[] = await new Promise(resolve => {
         setTimeout(() => {
           resolve([
-            { id: id++, title: 'aaaa', content: 'aaaa' },
-            { id: id++, title: 'aaaa', content: 'aaaa' },
-            { id: id++, title: 'aaaa', content: 'aaaa' }
+            { id: id++, content: 'aaaa', author: { firstName: 'Michal', lastName: 'Belniak' } },
+            { id: id++, content: 'aaaa', author: { firstName: 'Michal', lastName: 'Belniak' } },
+            { id: id++, content: 'aaaa', author: { firstName: 'Michal', lastName: 'Belniak' } }
           ]);
         }, 1000);
       });
@@ -40,7 +46,7 @@ export const InspirationPage = () => {
   );
 
   const loader = (
-    <div className="loader" key={0}>
+    <div className="inspiration-list__loader" key={0}>
       Ładowanie...
     </div>
   );
@@ -49,7 +55,7 @@ export const InspirationPage = () => {
   const [InfiniteScrollWrapper, lastElementRef] = useInfiniteScroll(fetchData, loader, errorComponent);
 
   return (
-    <>
+    <div className={props.className}>
       <CreateInspiration />
       <InfiniteScrollWrapper>
         {inspirations.map((inspiration, index) => (
@@ -60,6 +66,12 @@ export const InspirationPage = () => {
           />
         ))}
       </InfiniteScrollWrapper>
-    </>
+    </div>
   );
 };
+
+export const InspirationPage = styled(InspirationPageBase)`
+  .inspiration-list__loader {
+    margin: ${({ theme }) => theme.margins.medium};
+  }
+`;
