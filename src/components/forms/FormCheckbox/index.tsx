@@ -13,12 +13,21 @@ const FormCheckboxBase = (props: FormComponentProps) => {
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const [checked, setChecked] = React.useState<boolean>(false);
   const { ref } = register(id);
-  const onClick = React.useCallback(() => {
+  const onDivClick = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (inputRef.current) {
+        inputRef.current.click();
+      }
+      e.stopPropagation();
+    },
+    [inputRef.current]
+  );
+
+  const onInputClick = React.useCallback(() => {
     if (inputRef.current) {
-      inputRef.current.click();
       setChecked(inputRef.current.checked);
     }
-  }, [inputRef.current, checked]);
+  }, [inputRef.current]);
 
   return (
     <FlexBox className={className}>
@@ -31,6 +40,7 @@ const FormCheckboxBase = (props: FormComponentProps) => {
             className={'form_input'}
             id={id}
             defaultValue={false}
+            onClick={onInputClick}
             {...field}
             ref={e => {
               ref(e);
@@ -40,7 +50,7 @@ const FormCheckboxBase = (props: FormComponentProps) => {
           />
         )}
       />
-      <div className={`form_checkbox${checked ? '--checked' : ''}`} onClick={onClick}>
+      <div className={`form_checkbox${checked ? '--checked' : ''}`} onClick={onDivClick}>
         <AiOutlineCheck size={13} color={checked ? COLORS.white : COLORS.gray} />
       </div>
     </FlexBox>
