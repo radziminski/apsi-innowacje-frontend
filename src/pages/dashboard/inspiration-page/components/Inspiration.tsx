@@ -4,17 +4,24 @@ import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
 import { AuthorInfo } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
 import { InspirationContent } from '~/pages/dashboard/inspiration-page/components/InspirationContent';
+import { InspirationFooter } from '~/pages/dashboard/inspiration-page/components/InspirationFooter';
 
 interface InspirationProps {
   inspiration: InspirationModel;
+  onClick: () => void;
   className?: string;
 }
 
 const InspirationBase = React.forwardRef((props: InspirationProps, ref: ForwardedRef<HTMLDivElement>) => {
   return (
-    <FlexBox className={props.className} ref={ref}>
+    <FlexBox className={props.className} ref={ref} onClick={props.onClick}>
       <AuthorInfo authorInfo={props.inspiration.author} />
       <InspirationContent inspiration={props.inspiration} />
+      <InspirationFooter
+        upvotes={props.inspiration.upvotes}
+        downvotes={props.inspiration.downvotes}
+        comments={props.inspiration.comments.length}
+      />
     </FlexBox>
   );
 });
