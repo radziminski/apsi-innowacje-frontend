@@ -11,6 +11,7 @@ export const COLORS = {
   accent1: '#e8246b',
   accent2: '#fcbf59',
   accent3: '#00b7fd',
+  error: '#DD0000',
   darkGray: '#757f9a',
   gray: '#959fba',
   lightGray: '#c4cfda'

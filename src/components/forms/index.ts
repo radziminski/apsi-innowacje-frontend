@@ -1,29 +1,27 @@
 import { COLORS } from '~/styles/variables';
 
-export interface FormInputPropsBase {
+export interface FormComponentPropsBase {
   id: string;
-  onFocusChangeHandler: (isGainedFocus: boolean) => void;
   className?: string;
-  customClassName?: string;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type FormInputProps = FormInputPropsBase & any;
+export type FormComponentProps = FormComponentPropsBase & any;
 
 export interface Option {
   label: string;
   value: string;
 }
 
-export const customSelectStyles = {
+export const customSelectStyles = (isError: boolean) => ({
   control: (provided, state) => ({
     ...provided,
     borderColor: 'transparent',
-    boxShadow: state.isFocused ? `0 0 0.25rem ${COLORS.primary}` : 0,
+    boxShadow: state.isFocused ? `0 0 0.25rem ${isError ? COLORS.error : COLORS.primary}AF` : 0,
     '&:hover': {
       boxShadow: state.isFocused
-        ? `0 0 0.25rem ${COLORS.primary} !important`
-        : `0 0 0.15rem ${COLORS.primary} !important`,
+        ? `0 0 0.25rem ${isError ? COLORS.error : COLORS.primary}AF !important`
+        : `0 0 0.15rem ${isError ? COLORS.error : COLORS.primary}AF !important`,
       transition: 'box-shadow 0.15s ease-in-out'
     },
     borderRadius: '1rem'
@@ -41,4 +39,4 @@ export const customSelectStyles = {
     ...styles,
     color: COLORS.lightGray
   })
-};
+});

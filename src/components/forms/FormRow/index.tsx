@@ -1,65 +1,71 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import { COLORS, MARGINS } from '~/styles/variables';
 import { FormTextInput } from '~/components/forms/FormTextInput';
 import { FormAsyncSelect } from '~/components/forms/FormAsyncSelect';
 import { FormCreateableSelect } from '~/components/forms/FormCreateableSelect';
 import { FormTextArea } from '~/components/forms/FormTextArea';
-import { Dropzone } from '~/components/Dropzone';
+import { FormDropzone } from '~/components/forms/FormDropzone';
+import { Asterisk } from '~/components/forms/Asterisk/Asterisk';
+import { FormCheckbox } from '~/components/forms/FormCheckbox';
+import { FormSelect } from '~/components/forms/FormSelect';
 
-export type FormType = 'text' | 'select' | 'textarea' | 'createable-select';
+export type FormType = 'text' | 'select' | 'textarea' | 'createable-select' | 'async-select';
 
 export interface FormRowPropsBase {
   label: string;
   formId: string;
-  type: FormType;
+  type?: FormType;
+  tooltip?: string;
+  customFormComponent?: JSX.Element;
   className?: string;
+  required?: boolean;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FormRowProps = FormRowPropsBase & any;
 
-const FormRow = (props: FormRowProps): JSX.Element => {
-  const { label, formId, type, className, ...rest } = props;
-  const [isActive, setIsActive] = React.useState<boolean>(false);
+const FormRowBase = (props: FormRowProps): JSX.Element => {
+  const { label, formId, className, customFormComponent, required, ...rest } = props;
+  const type = props.type || '';
 
   const getFormComponent = (type: FormType): JSX.Element => {
     const component_props = {
       id: formId,
-      customClassName: `form-row_form-component${isActive ? '--active' : ''}`,
-      onFocusChangeHandler: (gained: boolean) => {
-        setIsActive(gained);
-      },
       ...rest
     };
     if (type == 'text') return <FormTextInput {...component_props} />;
     else if (type == 'textarea') return <FormTextArea {...component_props} />;
-    else if (type == 'select') return <FormAsyncSelect {...component_props} />;
+    else if (type == 'async-select') return <FormAsyncSelect {...component_props} />;
+    else if (type == 'select') return <FormSelect {...component_props} />;
     else if (type == 'createable-select') return <FormCreateableSelect {...component_props} />;
-    else if (type == 'dropzone') return <Dropzone {...component_props} />;
-    else return <FormTextInput id={formId} />;
+    else if (type == 'dropzone') return <FormDropzone {...component_props} />;
+    else if (type == 'checkbox') return <FormCheckbox {...component_props} />;
+    else if (customFormComponent) return React.cloneElement(customFormComponent, component_props);
+    else return <FormTextInput {...component_props} />;
   };
 
   return (
     <FlexBox className={`${className} form-row`}>
       <div>
         <label htmlFor={formId}>{label}</label>
+        {required ? <Asterisk /> : null}
       </div>
       <div>{getFormComponent(type)}</div>
     </FlexBox>
   );
 };
 
-export default styled(FormRow)`
+export const FormRow = styled(FormRowBase)`
   flex-direction: row;
-  margin: ${MARGINS.small};
-  align-items: flex-start;
+  margin: ${({ theme }) => theme.margins.small};
+  align-items: center;
+
   > div {
     display: flex;
 
     label {
-      margin-top: 10px;
+      font-weight: 400;
     }
 
     &:first-child {
@@ -67,28 +73,6 @@ export default styled(FormRow)`
     }
     &:nth-child(2) {
       width: 60%;
-    }
-  }
-
-  .form-row_form-component {
-    box-shadow: none;
-    transition: box-shadow 0.15s ease-in-out;
-
-    &--active {
-      box-shadow: 0 0 0.25rem ${COLORS.primary};
-    }
-
-    &:hover:not(div) {
-      box-shadow: 0 0 0.15rem ${COLORS.primary};
-      transition: box-shadow 0.15s ease-in;
-    }
-  }
-
-  .form-row_form-component,
-  .form-row_form-component--active {
-    width: 100%;
-    ::placeholder {
-      color: ${COLORS.lightGray};
     }
   }
 `;

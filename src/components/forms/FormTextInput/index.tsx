@@ -1,38 +1,68 @@
 import styled from 'styled-components';
-import { COLORS } from '~/styles/variables';
 import { useFormContext } from 'react-hook-form';
-import { MemoizeFormInput } from '~/pages/dashboard/create-idea-page/util/MemoizeFormInput';
+import { MemoizeFormComponent } from '~/components/forms/util/MemoizeFormComponent';
 import React from 'react';
-import { FormInputProps } from '~/components/forms';
-import { useFocusHandler } from '~/hooks/useFocusHandler';
+import { FormComponentProps } from '~/components/forms';
+import { FlexBox } from '~/components/Box';
 
-const FormTextInputBase = (props: FormInputProps) => {
-  const { id, className, customClassName, onFocusChangeHandler, ...rest } = props;
+const FormTextInputBase = (props: FormComponentProps) => {
+  const { id, className, ...rest } = props;
   const methods = useFormContext();
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
-  const { ref } = methods.register(id);
-  useFocusHandler(inputRef, onFocusChangeHandler);
+  const {
+    formState: { errors }
+  } = methods;
 
   return (
-    <MemoizeFormInput {...methods}>
-      <input
-        {...methods.register(id)}
-        type={'text'}
-        ref={e => {
-          ref(e);
-          inputRef.current = e;
-        }}
-        className={`${className} ${customClassName ? customClassName : ''}`}
-        id={id}
-        {...rest}
-      />
-    </MemoizeFormInput>
+    <MemoizeFormComponent {...methods}>
+      <FlexBox className={className}>
+        <input
+          {...methods.register(id)}
+          type={props.type || 'text'}
+          className={'form_input' + (errors[id] ? '--error' : '')}
+          id={id}
+          {...rest}
+        />
+        {errors[id] && <p>{errors[id].message}</p>}
+      </FlexBox>
+    </MemoizeFormComponent>
   );
 };
 
 export const FormTextInput = styled(FormTextInputBase)`
-  border: 0;
-  border-radius: 999px;
-  background-color: ${COLORS.white};
-  padding: 15px;
+  flex-direction: column;
+  .form_input,
+  .form_input--error {
+    box-shadow: none;
+    transition: box-shadow 0.15s ease-in-out;
+    width: 100%;
+    ::placeholder {
+      color: ${({ theme }) => theme.colors.lightGray};
+    }
+    border: 0;
+    border-radius: 999px;
+    background-color: ${({ theme }) => theme.colors.white};
+    padding: 0.8rem ${({ theme }) => theme.margins.small};
+  }
+
+  .form_input {
+    &:hover {
+      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary}AF;
+    }
+    &--error:hover {
+      box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.error}AF;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
+    }
+
+    &--error:focus {
+      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error}AF;
+    }
+
+    &:hover,
+    &--error:hover {
+      transition: box-shadow 0.15s ease-in;
+    }
+  }
 `;
