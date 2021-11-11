@@ -1,9 +1,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { getCreateIdeaPath, getExamplePagePath } from '~/constants/paths';
+import { getCreateIdeaPath, getExamplePagePath, getInspirationsPagePath } from '~/constants/paths';
 import ExamplePage from './example-page';
 import DashboardLayout from './layout';
 import CreateIdeaPage from './create-idea-page/CreateIdeaPage';
+import { InspirationPage } from '~/pages/dashboard/inspiration-page/InspirationPage';
 
 export const DashboardRoutes: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ export const DashboardRoutes: React.FC = () => {
       <Switch>
         <Route path={getExamplePagePath()} component={ExamplePage} />
         <Route path={getCreateIdeaPath()} component={CreateIdeaPage} />
+        <Route path={getInspirationsPagePath()} component={InspirationPage} />
         {/* Rest of dashboard routes here */}
       </Switch>
     </DashboardLayout>

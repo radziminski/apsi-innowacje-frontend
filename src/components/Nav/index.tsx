@@ -4,12 +4,12 @@ import {
   MdOutlineRateReview,
   MdOutlineDashboard,
   MdLogout,
-  MdOutlineAccountCircle,
+  MdOutlineAccountCircle
 } from 'react-icons/md';
 import { BiMessageDetail } from 'react-icons/bi';
 import { useLocation } from 'react-router-dom';
 
-import { getIdeasPath, getCreateIdeaPath, getInspirationsPath, getVotingPath } from '~/constants/paths';
+import { getIdeasPath, getCreateIdeaPath, getInspirationsPagePath, getVotingPath } from '~/constants/paths';
 import { COLORS } from '~/styles/variables';
 import Box, { FlexBox } from '../Box';
 import NavItem from '../NavItem';
@@ -21,23 +21,23 @@ const NAV_LINKS = [
   {
     icon: <MdOutlineDashboard size={ICON_SIZE} />,
     to: getIdeasPath(),
-    label: 'Pomysły',
+    label: 'Pomysły'
   },
   {
     icon: <MdOutlineDashboardCustomize size={ICON_SIZE} />,
     to: getCreateIdeaPath(),
-    label: 'Nowy pomysł',
+    label: 'Nowy pomysł'
   },
   {
     icon: <MdOutlineRateReview size={ICON_SIZE} />,
     to: getVotingPath(),
-    label: 'Głosowanie',
+    label: 'Głosowanie'
   },
   {
     icon: <BiMessageDetail size={ICON_SIZE} />,
-    to: getInspirationsPath(),
-    label: 'Inspiracje',
-  },
+    to: getInspirationsPagePath(),
+    label: 'Inspiracje'
+  }
 ];
 
 export const Nav: React.FC = () => {
@@ -45,7 +45,7 @@ export const Nav: React.FC = () => {
 
   const getLocationOffset = () => {
     return Math.max(
-      NAV_LINKS.findIndex((link) => location.pathname.startsWith(link.to)),
+      NAV_LINKS.findIndex(link => location.pathname.startsWith(link.to)),
       0
     );
   };
@@ -53,7 +53,7 @@ export const Nav: React.FC = () => {
   return (
     <FlexBox flexDirection="column" as="nav" padding="0 3.5rem" position="relative" height="100%">
       <FlexBox as="ul" flexDirection="column" color={COLORS.gray}>
-        {NAV_LINKS.map((link) => (
+        {NAV_LINKS.map(link => (
           <Box as="li" paddingY="1.25rem" key={link.label}>
             <NavItem {...link} isActive={location.pathname.startsWith(link.to)} />
           </Box>

@@ -12,6 +12,6 @@ export const getExamplePagePathWithParams = (queryParam: string) => `${getExampl
 
 export const getIdeasPath = () => `${getDashboardPath()}/pomysly`;
 
-export const getInspirationsPath = () => `${getDashboardPath()}/inspiracje`;
+export const getInspirationsPagePath = () => `${getDashboardPath()}/inspiracje`;
 
 export const getVotingPath = () => `${getDashboardPath()}/glosowanie`;
