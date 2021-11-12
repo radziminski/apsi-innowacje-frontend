@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import addedFilesReducer from './slices/CreateIdeaAddedFilesSlice';
+import userReducer from './slices/CreateUserSlice';
 
 export const store = configureStore({
   reducer: {
-    addedFiles: addedFilesReducer
+    addedFiles: addedFilesReducer,
+    user: userReducer
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

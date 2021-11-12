@@ -1,12 +1,19 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Center } from '~/components/Box';
+import { getDashboardPath } from '~/constants/paths';
+import { useSelector } from '~/store/hooks';
+import { login } from '~/store/slices/CreateUserSlice';
 
 export const LoginPage: React.FC = () => {
-  // example how TO NOT IMPLEMENT login form
-  const isError = false;
-  const isLoading = false;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const login = a => null;
+  const { isLoading, isAuthenticated, isError } = useSelector(state => state.user);
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAuthenticated) history.push(getDashboardPath());
+  }, [isAuthenticated]);
 
   const onSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -15,7 +22,7 @@ export const LoginPage: React.FC = () => {
     const username: string = form[0].value;
     const password: string = form[1].value;
 
-    login({ username, password });
+    dispatch(login({ username, password }));
   }, []);
 
   return (
