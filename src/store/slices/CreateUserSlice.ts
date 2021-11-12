@@ -1,10 +1,10 @@
-import { setAuthTokensInStorage } from './../../hooks/useAuthorizationInterceptor/index';
+import { clearAuthTokensInStorage, setAuthTokensInStorage } from './../../hooks/useAuthorizationInterceptor/index';
 import { UserDto, LoggedUserDto } from './../../api-client/dotnet/api';
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import apiClient from '~/api-client';
 
 export interface UserState {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | null;
   currentUser: UserDto | null;
   isLoading: boolean;
   isError: boolean;
@@ -12,7 +12,7 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-  isAuthenticated: false,
+  isAuthenticated: null,
   currentUser: null,
   isLoading: false,
   isError: false,
@@ -50,13 +50,47 @@ const createLoginReducers = (builder: ActionReducerMapBuilder<UserState>) => {
   });
 };
 
+export const getMe = createAsyncThunk<LoggedUserDto, void>('user/getMe', async () => {
+  const response = await apiClient.authGetLoggedUserGet();
+  return response.data;
+});
+
+const createGetMeReducers = (builder: ActionReducerMapBuilder<UserState>) => {
+  builder.addCase(getMe.fulfilled, (state, action) => {
+    state.currentUser = action.payload;
+    state.isAuthenticated = true;
+    state.isLoading = false;
+    state.isError = false;
+    state.error = null;
+  });
+  builder.addCase(getMe.pending, state => {
+    state.isError = false;
+    state.error = null;
+    state.isLoading = true;
+  });
+  builder.addCase(getMe.rejected, (state, action) => {
+    state.isLoading = false;
+    state.isAuthenticated = false;
+    state.isError = true;
+    state.error = action.error;
+  });
+};
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: state => {
+      clearAuthTokensInStorage();
+      state.isAuthenticated = false;
+    }
+  },
   extraReducers: builder => {
     createLoginReducers(builder);
+    createGetMeReducers(builder);
   }
 });
+
+export const { logout } = userSlice.actions;
 
 export default userSlice.reducer;
