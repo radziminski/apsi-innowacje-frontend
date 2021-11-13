@@ -59,6 +59,16 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
     maxSize: 10 * 1024 * 1024
   });
 
+  const onFilesErrorModalClose = React.useCallback(
+    () => setFileErrors({ ...fileErrors, erroredFiles: [] }),
+    [fileErrors]
+  );
+
+  const onFilesToLargeModalClose = React.useCallback(
+    () => setFileErrors({ ...fileErrors, filesToLarge: [] }),
+    [fileErrors]
+  );
+
   return (
     <div className={props.className}>
       <FlexBox
@@ -76,16 +86,10 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
         <ModalOverlay isVisible={!!hasErrors}>
           {duplicatedEntriesError && <DuplicatedEntriesModal filename={duplicatedEntriesError} />}
           {fileErrors.filesToLarge.length && !duplicatedEntriesError && (
-            <FilesToLargeModal
-              files={fileErrors.filesToLarge}
-              onClick={() => setFileErrors({ ...fileErrors, filesToLarge: [] })}
-            />
+            <FilesToLargeModal files={fileErrors.filesToLarge} onClick={onFilesToLargeModalClose} />
           )}
           {fileErrors.erroredFiles.length && !fileErrors.filesToLarge.length && !duplicatedEntriesError && (
-            <FileErrorsModal
-              files={fileErrors.erroredFiles}
-              onClick={() => setFileErrors({ ...fileErrors, erroredFiles: [] })}
-            />
+            <FileErrorsModal files={fileErrors.erroredFiles} onClick={onFilesErrorModalClose} />
           )}
         </ModalOverlay>
       ) : null}

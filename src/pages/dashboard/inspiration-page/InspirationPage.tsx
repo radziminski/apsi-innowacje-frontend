@@ -113,7 +113,7 @@ export const InspirationPage = styled(InspirationPageBase)`
 
   width: 100%;
   cursor: pointer;
-  > div:first-child {
+  .inspiration-list {
     width: 100%;
   }
   .inspiration-details {

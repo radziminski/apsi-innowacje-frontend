@@ -55,6 +55,9 @@ export const addedFilesSlice = createSlice({
         state.addedFiles.splice(index, 1);
       }
     },
+    clearFiles: state => {
+      state.addedFiles = [];
+    },
     removeDuplicationError: state => {
       state.duplicationError = null;
     }
@@ -62,6 +65,6 @@ export const addedFilesSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addFiles, removeFile, removeDuplicationError } = addedFilesSlice.actions;
+export const { addFiles, removeFile, clearFiles, removeDuplicationError } = addedFilesSlice.actions;
 
 export default addedFilesSlice.reducer;
