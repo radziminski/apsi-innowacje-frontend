@@ -133,10 +133,10 @@ export interface UserDto {
  */
 
 export enum UserRole {
-    NUMBER_0 = 0,
-    NUMBER_1 = 1,
-    NUMBER_2 = 2,
-    NUMBER_3 = 3
+    Student = 'Student',
+    Employee = 'Employee',
+    Committee = 'Committee',
+    Admin = 'Admin'
 }
 
 
@@ -171,12 +171,45 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(authenticateDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authGetLoggedUserGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Auth/GetLoggedUser`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -203,6 +236,15 @@ export const AuthApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.authAuthenticatePost(authenticateDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authGetLoggedUserGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authGetLoggedUserGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -221,6 +263,14 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          */
         authAuthenticatePost(authenticateDto?: AuthenticateDto, options?: any): AxiosPromise<LoggedUserDto> {
             return localVarFp.authAuthenticatePost(authenticateDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authGetLoggedUserGet(options?: any): AxiosPromise<UserDto> {
+            return localVarFp.authGetLoggedUserGet(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -255,6 +305,16 @@ export class AuthApi extends BaseAPI {
      */
     public authAuthenticatePost(requestParameters: AuthApiAuthAuthenticatePostRequest = {}, options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).authAuthenticatePost(requestParameters.authenticateDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public authGetLoggedUserGet(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).authGetLoggedUserGet(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

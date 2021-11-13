@@ -5,8 +5,8 @@ import { ThemeProvider } from 'styled-components';
 import AppRoutes from './pages';
 import { GlobalStyles } from './styles/global';
 import { defaultTheme } from './styles/theme';
-import { store } from '~/store/store';
 import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 function App() {
   return (

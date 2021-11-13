@@ -14,6 +14,8 @@ import { COLORS } from '~/styles/variables';
 import Box, { FlexBox } from '../Box';
 import NavItem from '../NavItem';
 import { Pill } from './parts';
+import { useDispatch } from 'react-redux';
+import { logout } from '~/store/slices/CreateUserSlice';
 
 const ICON_SIZE = 22;
 
@@ -42,6 +44,7 @@ const NAV_LINKS = [
 
 export const Nav: React.FC = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const getLocationOffset = () => {
     return Math.max(
@@ -68,7 +71,7 @@ export const Nav: React.FC = () => {
           <NavItem to="" icon={<MdOutlineAccountCircle size={ICON_SIZE} />} label="Dane użytkownika" />
         </Box>
         <Box paddingY="1.25rem">
-          <NavItem to="" icon={<MdLogout size={ICON_SIZE} />} label="Wyloguj" />
+          <NavItem onClick={() => dispatch(logout())} icon={<MdLogout size={ICON_SIZE} />} label="Wyloguj" />
         </Box>
       </Box>
     </FlexBox>
