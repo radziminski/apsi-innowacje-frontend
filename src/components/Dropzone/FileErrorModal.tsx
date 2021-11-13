@@ -1,8 +1,6 @@
 import React from 'react';
+import { Modal } from '~/components/Modal';
 import styled from 'styled-components';
-import { Center } from '~/components/Box';
-import { Button } from '~/components/Button';
-import { ModalWindow } from '~/components/ModalWindow';
 
 export interface FileErrorsModalProps {
   files: string[];
@@ -10,37 +8,27 @@ export interface FileErrorsModalProps {
   className?: string;
 }
 
-const FileErrorsModalBase = (props: FileErrorsModalProps) => {
-  const { files } = props;
+export const FileErrorsModal = styled((props: FileErrorsModalProps) => {
   return (
-    <ModalWindow>
-      <Center className={props.className}>
-        <span>Nie udało się dodać plik{files.length > 1 ? 'ów' : 'u'}:</span>
-        <ul>
-          {files.map((filename, index) => {
-            return <li key={index}>{filename}</li>;
-          })}
-        </ul>
-        <Button onClick={props.onClick} text={'Ok'} id={'file-errors-modal__ok-button'} />
-      </Center>
-    </ModalWindow>
+    <Modal
+      textContent={
+        <>
+          <span>Nie udało się dodać plik{props.files.length > 1 ? 'ów' : 'u'}:</span>
+          <ul className={props.className}>
+            {props.files.map((filename, index) => {
+              return <li key={index}>{filename}</li>;
+            })}
+          </ul>
+        </>
+      }
+      buttons={[
+        {
+          text: 'Ok',
+          onClick: props.onClick
+        }
+      ]}
+    />
   );
-};
-
-export const FileErrorsModal = styled(FileErrorsModalBase)`
-  max-width: 50%;
-  min-height: 20%;
-  flex-direction: column;
-
-  span {
-    margin: ${({ theme }) => theme.margins.medium} ${({ theme }) => theme.margins.small};
-  }
-
-  #file-errors-modal__ok-button {
-    align-self: flex-end;
-  }
-
-  button {
-    margin-top: ${({ theme }) => theme.margins.small};
-  }
+})`
+  margin-top: ${({ theme }) => theme.margins.small};
 `;

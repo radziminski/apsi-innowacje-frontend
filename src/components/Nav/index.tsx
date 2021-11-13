@@ -9,7 +9,7 @@ import {
 import { BiMessageDetail } from 'react-icons/bi';
 import { useLocation } from 'react-router-dom';
 
-import { getIdeasPath, getCreateIdeaPath, getInspirationsPath, getVotingPath } from '~/constants/paths';
+import { getIdeasPath, getCreateIdeaPath, getInspirationsPagePath, getVotingPath } from '~/constants/paths';
 import { COLORS } from '~/styles/variables';
 import Box, { FlexBox } from '../Box';
 import NavItem from '../NavItem';
@@ -37,7 +37,7 @@ const NAV_LINKS = [
   },
   {
     icon: <BiMessageDetail size={ICON_SIZE} />,
-    to: getInspirationsPath(),
+    to: getInspirationsPagePath(),
     label: 'Inspiracje'
   }
 ];

@@ -24,34 +24,145 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
- * @interface BenefitEntity
+ * @interface BenefitDto
  */
-export interface BenefitEntity {
+export interface BenefitDto {
     /**
      * 
      * @type {string}
-     * @memberof BenefitEntity
+     * @memberof BenefitDto
      */
     'description'?: string;
     /**
      * 
      * @type {number}
-     * @memberof BenefitEntity
+     * @memberof BenefitDto
      */
     'id'?: number;
     /**
      * 
-     * @type {number}
-     * @memberof BenefitEntity
-     */
-    'ideaId'?: number;
-    /**
-     * 
      * @type {string}
-     * @memberof BenefitEntity
+     * @memberof BenefitDto
      */
     'title'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface CostDto
+ */
+export interface CostDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof CostDto
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CostDto
+     */
+    'title'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CostDto
+     */
+    'value'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface IdeaDto
+ */
+export interface IdeaDto {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IdeaDto
+     */
+    'anonymous'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof IdeaDto
+     */
+    'authorId'?: number;
+    /**
+     * 
+     * @type {Array<BenefitDto>}
+     * @memberof IdeaDto
+     */
+    'benefits'?: Array<BenefitDto>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IdeaDto
+     */
+    'blocked'?: boolean;
+    /**
+     * 
+     * @type {Array<CostDto>}
+     * @memberof IdeaDto
+     */
+    'costs'?: Array<CostDto>;
+    /**
+     * 
+     * @type {string}
+     * @memberof IdeaDto
+     */
+    'date'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IdeaDto
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof IdeaDto
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof IdeaDto
+     */
+    'status'?: IdeaDtoStatusEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof IdeaDto
+     */
+    'statusDescription'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof IdeaDto
+     */
+    'subjectId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof IdeaDto
+     */
+    'title'?: string;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum IdeaDtoStatusEnum {
+    New = 'New',
+    Accepted = 'Accepted',
+    Rejected = 'Rejected',
+    ReuqestForDetails = 'ReuqestForDetails',
+    PutAway = 'PutAway'
+}
+
 /**
  * 
  * @export
@@ -108,10 +219,10 @@ export interface IdeaEntity {
     'statusDescription'?: string;
     /**
      * 
-     * @type {SubjectEntity}
+     * @type {number}
      * @memberof IdeaEntity
      */
-    'subject'?: SubjectEntity;
+    'subjectId'?: number;
     /**
      * 
      * @type {string}
@@ -122,28 +233,350 @@ export interface IdeaEntity {
 /**
  * 
  * @export
- * @interface SubjectEntity
+ * @interface SubjectDto
  */
-export interface SubjectEntity {
+export interface SubjectDto {
     /**
      * 
-     * @type {number}
-     * @memberof SubjectEntity
+     * @type {string}
+     * @memberof SubjectDto
      */
-    'audience'?: number;
+    'audience'?: SubjectDtoAudienceEnum;
     /**
      * 
      * @type {number}
-     * @memberof SubjectEntity
+     * @memberof SubjectDto
      */
     'id'?: number;
     /**
      * 
      * @type {string}
-     * @memberof SubjectEntity
+     * @memberof SubjectDto
      */
     'name'?: string;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum SubjectDtoAudienceEnum {
+    Student = 'Student',
+    Employee = 'Employee',
+    Committee = 'Committee',
+    Admin = 'Admin'
+}
+
+
+/**
+ * AttachmentControllerApi - axios parameter creator
+ * @export
+ */
+export const AttachmentControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary downloadAttachment
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        downloadAttachmentUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('downloadAttachmentUsingGET', 'id', id)
+            const localVarPath = `/attachments/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get list of attachment id\'s belonging to given idea.
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAttachmentIdsUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getAttachmentIdsUsingGET', 'id', id)
+            const localVarPath = `/ideas/{id}/attachments`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Save attachment for given ideaId
+         * @param {number} id id
+         * @param {any} file file
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveAttachmentUsingPOST: async (id: number, file: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('saveAttachmentUsingPOST', 'id', id)
+            // verify required parameter 'file' is not null or undefined
+            assertParamExists('saveAttachmentUsingPOST', 'file', file)
+            const localVarPath = `/attachments/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AttachmentControllerApi - functional programming interface
+ * @export
+ */
+export const AttachmentControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AttachmentControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary downloadAttachment
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async downloadAttachmentUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAttachmentUsingGET(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get list of attachment id\'s belonging to given idea.
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAttachmentIdsUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAttachmentIdsUsingGET(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Save attachment for given ideaId
+         * @param {number} id id
+         * @param {any} file file
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveAttachmentUsingPOST(id: number, file: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveAttachmentUsingPOST(id, file, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * AttachmentControllerApi - factory interface
+ * @export
+ */
+export const AttachmentControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AttachmentControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary downloadAttachment
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        downloadAttachmentUsingGET(id: number, options?: any): AxiosPromise<void> {
+            return localVarFp.downloadAttachmentUsingGET(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get list of attachment id\'s belonging to given idea.
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAttachmentIdsUsingGET(id: number, options?: any): AxiosPromise<Array<number>> {
+            return localVarFp.getAttachmentIdsUsingGET(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Save attachment for given ideaId
+         * @param {number} id id
+         * @param {any} file file
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveAttachmentUsingPOST(id: number, file: any, options?: any): AxiosPromise<number> {
+            return localVarFp.saveAttachmentUsingPOST(id, file, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for downloadAttachmentUsingGET operation in AttachmentControllerApi.
+ * @export
+ * @interface AttachmentControllerApiDownloadAttachmentUsingGETRequest
+ */
+export interface AttachmentControllerApiDownloadAttachmentUsingGETRequest {
+    /**
+     * id
+     * @type {number}
+     * @memberof AttachmentControllerApiDownloadAttachmentUsingGET
+     */
+    readonly id: number
+}
+
+/**
+ * Request parameters for getAttachmentIdsUsingGET operation in AttachmentControllerApi.
+ * @export
+ * @interface AttachmentControllerApiGetAttachmentIdsUsingGETRequest
+ */
+export interface AttachmentControllerApiGetAttachmentIdsUsingGETRequest {
+    /**
+     * id
+     * @type {number}
+     * @memberof AttachmentControllerApiGetAttachmentIdsUsingGET
+     */
+    readonly id: number
+}
+
+/**
+ * Request parameters for saveAttachmentUsingPOST operation in AttachmentControllerApi.
+ * @export
+ * @interface AttachmentControllerApiSaveAttachmentUsingPOSTRequest
+ */
+export interface AttachmentControllerApiSaveAttachmentUsingPOSTRequest {
+    /**
+     * id
+     * @type {number}
+     * @memberof AttachmentControllerApiSaveAttachmentUsingPOST
+     */
+    readonly id: number
+
+    /**
+     * file
+     * @type {any}
+     * @memberof AttachmentControllerApiSaveAttachmentUsingPOST
+     */
+    readonly file: any
+}
+
+/**
+ * AttachmentControllerApi - object-oriented interface
+ * @export
+ * @class AttachmentControllerApi
+ * @extends {BaseAPI}
+ */
+export class AttachmentControllerApi extends BaseAPI {
+    /**
+     * 
+     * @summary downloadAttachment
+     * @param {AttachmentControllerApiDownloadAttachmentUsingGETRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AttachmentControllerApi
+     */
+    public downloadAttachmentUsingGET(requestParameters: AttachmentControllerApiDownloadAttachmentUsingGETRequest, options?: AxiosRequestConfig) {
+        return AttachmentControllerApiFp(this.configuration).downloadAttachmentUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get list of attachment id\'s belonging to given idea.
+     * @param {AttachmentControllerApiGetAttachmentIdsUsingGETRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AttachmentControllerApi
+     */
+    public getAttachmentIdsUsingGET(requestParameters: AttachmentControllerApiGetAttachmentIdsUsingGETRequest, options?: AxiosRequestConfig) {
+        return AttachmentControllerApiFp(this.configuration).getAttachmentIdsUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Save attachment for given ideaId
+     * @param {AttachmentControllerApiSaveAttachmentUsingPOSTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AttachmentControllerApi
+     */
+    public saveAttachmentUsingPOST(requestParameters: AttachmentControllerApiSaveAttachmentUsingPOSTRequest, options?: AxiosRequestConfig) {
+        return AttachmentControllerApiFp(this.configuration).saveAttachmentUsingPOST(requestParameters.id, requestParameters.file, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
 
 /**
  * IdeaControllerApi - axios parameter creator
@@ -153,7 +586,44 @@ export const IdeaControllerApiAxiosParamCreator = function (configuration?: Conf
     return {
         /**
          * 
-         * @summary getAllIdeas
+         * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteIdeaUsingDELETE: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteIdeaUsingDELETE', 'id', id)
+            const localVarPath = `/ideas/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get simplified DTO\'s of all ideas in database (without costs, benefits or attachments)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -170,39 +640,8 @@ export const IdeaControllerApiAxiosParamCreator = function (configuration?: Conf
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary getBenefitsForIdea
-         * @param {number} id id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getBenefitsForIdeaUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getBenefitsForIdeaUsingGET', 'id', id)
-            const localVarPath = `/ideas/{id}/benefits`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -217,7 +656,7 @@ export const IdeaControllerApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
-         * @summary getIdeaById
+         * @summary Get idea with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -238,6 +677,9 @@ export const IdeaControllerApiAxiosParamCreator = function (configuration?: Conf
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -251,14 +693,14 @@ export const IdeaControllerApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
-         * @summary getIdeasBySubject
-         * @param {string} subject subject
+         * @summary Get all ideas with given subject
+         * @param {number} subjectId subjectId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getIdeasBySubjectUsingGET: async (subject: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'subject' is not null or undefined
-            assertParamExists('getIdeasBySubjectUsingGET', 'subject', subject)
+        getIdeasBySubjectUsingGET: async (subjectId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'subjectId' is not null or undefined
+            assertParamExists('getIdeasBySubjectUsingGET', 'subjectId', subjectId)
             const localVarPath = `/ideas/by-subject`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -271,8 +713,11 @@ export const IdeaControllerApiAxiosParamCreator = function (configuration?: Conf
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            if (subject !== undefined) {
-                localVarQueryParameter['subject'] = subject;
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (subjectId !== undefined) {
+                localVarQueryParameter['subjectId'] = subjectId;
             }
 
 
@@ -280,6 +725,84 @@ export const IdeaControllerApiAxiosParamCreator = function (configuration?: Conf
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Save Idea in database, returns id of saved entity
+         * @param {IdeaDto} ideaDto ideaDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveIdeaUsingPOST: async (ideaDto: IdeaDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaDto' is not null or undefined
+            assertParamExists('saveIdeaUsingPOST', 'ideaDto', ideaDto)
+            const localVarPath = `/ideas`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ideaDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update Idea in database, returns true if updated or false if saved new entity
+         * @param {IdeaDto} ideaDto ideaDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateIdeaUsingPUT: async (ideaDto: IdeaDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaDto' is not null or undefined
+            assertParamExists('updateIdeaUsingPUT', 'ideaDto', ideaDto)
+            const localVarPath = `/ideas`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ideaDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -298,45 +821,67 @@ export const IdeaControllerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary getAllIdeas
+         * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllIdeasUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<IdeaEntity>>> {
+        async deleteIdeaUsingDELETE(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteIdeaUsingDELETE(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get simplified DTO\'s of all ideas in database (without costs, benefits or attachments)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllIdeasUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<IdeaDto>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllIdeasUsingGET(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @summary getBenefitsForIdea
+         * @summary Get idea with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getBenefitsForIdeaUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BenefitEntity>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getBenefitsForIdeaUsingGET(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary getIdeaById
-         * @param {number} id id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getIdeaByIdUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IdeaEntity>> {
+        async getIdeaByIdUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IdeaDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getIdeaByIdUsingGET(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @summary getIdeasBySubject
-         * @param {string} subject subject
+         * @summary Get all ideas with given subject
+         * @param {number} subjectId subjectId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getIdeasBySubjectUsingGET(subject: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<IdeaEntity>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getIdeasBySubjectUsingGET(subject, options);
+        async getIdeasBySubjectUsingGET(subjectId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<IdeaEntity>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getIdeasBySubjectUsingGET(subjectId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Save Idea in database, returns id of saved entity
+         * @param {IdeaDto} ideaDto ideaDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveIdeaUsingPOST(ideaDto: IdeaDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveIdeaUsingPOST(ideaDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update Idea in database, returns true if updated or false if saved new entity
+         * @param {IdeaDto} ideaDto ideaDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateIdeaUsingPUT(ideaDto: IdeaDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateIdeaUsingPUT(ideaDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -351,56 +896,76 @@ export const IdeaControllerApiFactory = function (configuration?: Configuration,
     return {
         /**
          * 
-         * @summary getAllIdeas
+         * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllIdeasUsingGET(options?: any): AxiosPromise<Array<IdeaEntity>> {
+        deleteIdeaUsingDELETE(id: number, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteIdeaUsingDELETE(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get simplified DTO\'s of all ideas in database (without costs, benefits or attachments)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllIdeasUsingGET(options?: any): AxiosPromise<Array<IdeaDto>> {
             return localVarFp.getAllIdeasUsingGET(options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary getBenefitsForIdea
+         * @summary Get idea with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getBenefitsForIdeaUsingGET(id: number, options?: any): AxiosPromise<Array<BenefitEntity>> {
-            return localVarFp.getBenefitsForIdeaUsingGET(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary getIdeaById
-         * @param {number} id id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getIdeaByIdUsingGET(id: number, options?: any): AxiosPromise<IdeaEntity> {
+        getIdeaByIdUsingGET(id: number, options?: any): AxiosPromise<IdeaDto> {
             return localVarFp.getIdeaByIdUsingGET(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary getIdeasBySubject
-         * @param {string} subject subject
+         * @summary Get all ideas with given subject
+         * @param {number} subjectId subjectId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getIdeasBySubjectUsingGET(subject: string, options?: any): AxiosPromise<Array<IdeaEntity>> {
-            return localVarFp.getIdeasBySubjectUsingGET(subject, options).then((request) => request(axios, basePath));
+        getIdeasBySubjectUsingGET(subjectId: number, options?: any): AxiosPromise<Array<IdeaEntity>> {
+            return localVarFp.getIdeasBySubjectUsingGET(subjectId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Save Idea in database, returns id of saved entity
+         * @param {IdeaDto} ideaDto ideaDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveIdeaUsingPOST(ideaDto: IdeaDto, options?: any): AxiosPromise<number> {
+            return localVarFp.saveIdeaUsingPOST(ideaDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update Idea in database, returns true if updated or false if saved new entity
+         * @param {IdeaDto} ideaDto ideaDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateIdeaUsingPUT(ideaDto: IdeaDto, options?: any): AxiosPromise<boolean> {
+            return localVarFp.updateIdeaUsingPUT(ideaDto, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for getBenefitsForIdeaUsingGET operation in IdeaControllerApi.
+ * Request parameters for deleteIdeaUsingDELETE operation in IdeaControllerApi.
  * @export
- * @interface IdeaControllerApiGetBenefitsForIdeaUsingGETRequest
+ * @interface IdeaControllerApiDeleteIdeaUsingDELETERequest
  */
-export interface IdeaControllerApiGetBenefitsForIdeaUsingGETRequest {
+export interface IdeaControllerApiDeleteIdeaUsingDELETERequest {
     /**
      * id
      * @type {number}
-     * @memberof IdeaControllerApiGetBenefitsForIdeaUsingGET
+     * @memberof IdeaControllerApiDeleteIdeaUsingDELETE
      */
     readonly id: number
 }
@@ -426,11 +991,39 @@ export interface IdeaControllerApiGetIdeaByIdUsingGETRequest {
  */
 export interface IdeaControllerApiGetIdeasBySubjectUsingGETRequest {
     /**
-     * subject
-     * @type {string}
+     * subjectId
+     * @type {number}
      * @memberof IdeaControllerApiGetIdeasBySubjectUsingGET
      */
-    readonly subject: string
+    readonly subjectId: number
+}
+
+/**
+ * Request parameters for saveIdeaUsingPOST operation in IdeaControllerApi.
+ * @export
+ * @interface IdeaControllerApiSaveIdeaUsingPOSTRequest
+ */
+export interface IdeaControllerApiSaveIdeaUsingPOSTRequest {
+    /**
+     * ideaDto
+     * @type {IdeaDto}
+     * @memberof IdeaControllerApiSaveIdeaUsingPOST
+     */
+    readonly ideaDto: IdeaDto
+}
+
+/**
+ * Request parameters for updateIdeaUsingPUT operation in IdeaControllerApi.
+ * @export
+ * @interface IdeaControllerApiUpdateIdeaUsingPUTRequest
+ */
+export interface IdeaControllerApiUpdateIdeaUsingPUTRequest {
+    /**
+     * ideaDto
+     * @type {IdeaDto}
+     * @memberof IdeaControllerApiUpdateIdeaUsingPUT
+     */
+    readonly ideaDto: IdeaDto
 }
 
 /**
@@ -442,7 +1035,19 @@ export interface IdeaControllerApiGetIdeasBySubjectUsingGETRequest {
 export class IdeaControllerApi extends BaseAPI {
     /**
      * 
-     * @summary getAllIdeas
+     * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
+     * @param {IdeaControllerApiDeleteIdeaUsingDELETERequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IdeaControllerApi
+     */
+    public deleteIdeaUsingDELETE(requestParameters: IdeaControllerApiDeleteIdeaUsingDELETERequest, options?: AxiosRequestConfig) {
+        return IdeaControllerApiFp(this.configuration).deleteIdeaUsingDELETE(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get simplified DTO\'s of all ideas in database (without costs, benefits or attachments)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof IdeaControllerApi
@@ -453,19 +1058,7 @@ export class IdeaControllerApi extends BaseAPI {
 
     /**
      * 
-     * @summary getBenefitsForIdea
-     * @param {IdeaControllerApiGetBenefitsForIdeaUsingGETRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IdeaControllerApi
-     */
-    public getBenefitsForIdeaUsingGET(requestParameters: IdeaControllerApiGetBenefitsForIdeaUsingGETRequest, options?: AxiosRequestConfig) {
-        return IdeaControllerApiFp(this.configuration).getBenefitsForIdeaUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary getIdeaById
+     * @summary Get idea with given id
      * @param {IdeaControllerApiGetIdeaByIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -477,14 +1070,336 @@ export class IdeaControllerApi extends BaseAPI {
 
     /**
      * 
-     * @summary getIdeasBySubject
+     * @summary Get all ideas with given subject
      * @param {IdeaControllerApiGetIdeasBySubjectUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof IdeaControllerApi
      */
     public getIdeasBySubjectUsingGET(requestParameters: IdeaControllerApiGetIdeasBySubjectUsingGETRequest, options?: AxiosRequestConfig) {
-        return IdeaControllerApiFp(this.configuration).getIdeasBySubjectUsingGET(requestParameters.subject, options).then((request) => request(this.axios, this.basePath));
+        return IdeaControllerApiFp(this.configuration).getIdeasBySubjectUsingGET(requestParameters.subjectId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Save Idea in database, returns id of saved entity
+     * @param {IdeaControllerApiSaveIdeaUsingPOSTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IdeaControllerApi
+     */
+    public saveIdeaUsingPOST(requestParameters: IdeaControllerApiSaveIdeaUsingPOSTRequest, options?: AxiosRequestConfig) {
+        return IdeaControllerApiFp(this.configuration).saveIdeaUsingPOST(requestParameters.ideaDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update Idea in database, returns true if updated or false if saved new entity
+     * @param {IdeaControllerApiUpdateIdeaUsingPUTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IdeaControllerApi
+     */
+    public updateIdeaUsingPUT(requestParameters: IdeaControllerApiUpdateIdeaUsingPUTRequest, options?: AxiosRequestConfig) {
+        return IdeaControllerApiFp(this.configuration).updateIdeaUsingPUT(requestParameters.ideaDto, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * SubjectControllerApi - axios parameter creator
+ * @export
+ */
+export const SubjectControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Get all subjects
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllUsingGET: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/subjects`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get subject with given id
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getByIdUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getByIdUsingGET', 'id', id)
+            const localVarPath = `/subjects/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Save subject in database, returns id of saved entity
+         * @param {'Student' | 'Employee' | 'Committee' | 'Admin'} [audience] 
+         * @param {number} [id] 
+         * @param {string} [name] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveUsingPOST: async (audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/subjects`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (audience !== undefined) {
+                localVarQueryParameter['audience'] = audience;
+            }
+
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * SubjectControllerApi - functional programming interface
+ * @export
+ */
+export const SubjectControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = SubjectControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Get all subjects
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SubjectDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsingGET(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get subject with given id
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getByIdUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SubjectDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getByIdUsingGET(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Save subject in database, returns id of saved entity
+         * @param {'Student' | 'Employee' | 'Committee' | 'Admin'} [audience] 
+         * @param {number} [id] 
+         * @param {string} [name] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveUsingPOST(audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveUsingPOST(audience, id, name, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * SubjectControllerApi - factory interface
+ * @export
+ */
+export const SubjectControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = SubjectControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Get all subjects
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllUsingGET(options?: any): AxiosPromise<Array<SubjectDto>> {
+            return localVarFp.getAllUsingGET(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get subject with given id
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getByIdUsingGET(id: number, options?: any): AxiosPromise<SubjectDto> {
+            return localVarFp.getByIdUsingGET(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Save subject in database, returns id of saved entity
+         * @param {'Student' | 'Employee' | 'Committee' | 'Admin'} [audience] 
+         * @param {number} [id] 
+         * @param {string} [name] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveUsingPOST(audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options?: any): AxiosPromise<number> {
+            return localVarFp.saveUsingPOST(audience, id, name, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for getByIdUsingGET operation in SubjectControllerApi.
+ * @export
+ * @interface SubjectControllerApiGetByIdUsingGETRequest
+ */
+export interface SubjectControllerApiGetByIdUsingGETRequest {
+    /**
+     * id
+     * @type {number}
+     * @memberof SubjectControllerApiGetByIdUsingGET
+     */
+    readonly id: number
+}
+
+/**
+ * Request parameters for saveUsingPOST operation in SubjectControllerApi.
+ * @export
+ * @interface SubjectControllerApiSaveUsingPOSTRequest
+ */
+export interface SubjectControllerApiSaveUsingPOSTRequest {
+    /**
+     * 
+     * @type {'Student' | 'Employee' | 'Committee' | 'Admin'}
+     * @memberof SubjectControllerApiSaveUsingPOST
+     */
+    readonly audience?: 'Student' | 'Employee' | 'Committee' | 'Admin'
+
+    /**
+     * 
+     * @type {number}
+     * @memberof SubjectControllerApiSaveUsingPOST
+     */
+    readonly id?: number
+
+    /**
+     * 
+     * @type {string}
+     * @memberof SubjectControllerApiSaveUsingPOST
+     */
+    readonly name?: string
+}
+
+/**
+ * SubjectControllerApi - object-oriented interface
+ * @export
+ * @class SubjectControllerApi
+ * @extends {BaseAPI}
+ */
+export class SubjectControllerApi extends BaseAPI {
+    /**
+     * 
+     * @summary Get all subjects
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SubjectControllerApi
+     */
+    public getAllUsingGET(options?: AxiosRequestConfig) {
+        return SubjectControllerApiFp(this.configuration).getAllUsingGET(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get subject with given id
+     * @param {SubjectControllerApiGetByIdUsingGETRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SubjectControllerApi
+     */
+    public getByIdUsingGET(requestParameters: SubjectControllerApiGetByIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return SubjectControllerApiFp(this.configuration).getByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Save subject in database, returns id of saved entity
+     * @param {SubjectControllerApiSaveUsingPOSTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SubjectControllerApi
+     */
+    public saveUsingPOST(requestParameters: SubjectControllerApiSaveUsingPOSTRequest = {}, options?: AxiosRequestConfig) {
+        return SubjectControllerApiFp(this.configuration).saveUsingPOST(requestParameters.audience, requestParameters.id, requestParameters.name, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -6,7 +6,6 @@ import { customSelectStyles, FormComponentProps } from '~/components/forms';
 
 const FormCreateableSelectBase = (props: FormComponentProps) => {
   const { id, className, ...rest } = props;
-  const divRef = React.useRef<HTMLDivElement>(null);
   const {
     control,
     formState: { errors },
@@ -14,7 +13,7 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
   } = useFormContext();
 
   return (
-    <div className={className} ref={divRef}>
+    <div className={className}>
       <Controller
         name={id}
         control={control}
