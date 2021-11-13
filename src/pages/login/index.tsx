@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -6,14 +5,13 @@ import { getDashboardPath } from '~/constants/paths';
 import { useSelector } from '~/store/hooks';
 import { login } from '~/store/slices/CreateUserSlice';
 import { LoginLayout } from './layout';
-import { LoginForm, formData } from './components/LoginForm';
-import styled from 'styled-components';
-import { Center, FlexBox } from '~/components/Box';
+import { LoginForm, LoginFormData } from './components/LoginForm';
+import { Center } from '~/components/Box';
 import Logo from '~/components/Logo';
 import { COLORS } from '~/styles/variables';
 import { defaultTheme } from '~/styles/theme';
 
-const Page: React.FC = () => {
+export const LoginPage: React.FC = () => {
   const { isAuthenticated } = useSelector(state => state.user);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -22,7 +20,7 @@ const Page: React.FC = () => {
     if (isAuthenticated) history.push(getDashboardPath());
   }, [isAuthenticated]);
 
-  const onSubmit = useCallback((data: formData) => {
+  const onSubmit = useCallback((data: LoginFormData) => {
     dispatch(login(data));
   }, []);
 
@@ -42,13 +40,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default styled(Page)`
-  > div {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-height: 60%;
-    max-width: 60%;
-  }
-`;
+export default LoginPage;

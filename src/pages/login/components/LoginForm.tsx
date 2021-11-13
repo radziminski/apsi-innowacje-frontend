@@ -1,20 +1,18 @@
-/* eslint-disable */
 import React from 'react';
-import { Center, FlexBox } from '~/components/Box';
+import { FlexBox } from '~/components/Box';
 import { useSelector } from '~/store/hooks';
 import { FormRow } from '~/components/forms/FormRow';
 import { Button } from '~/components/Button';
 import { FormProvider, useForm } from 'react-hook-form';
-import Logo from '~/components/Logo';
-import styled from 'styled-components';
+import { Heading5 } from '~/components/Text';
 
-export interface formData {
+export interface LoginFormData {
   username: string;
   password: string;
 }
 
 interface Props {
-  onSubmit: (data: formData) => void;
+  onSubmit: (data: LoginFormData) => void;
 }
 
 export const LoginForm: React.FC<Props> = ({ onSubmit }) => {
@@ -27,10 +25,11 @@ export const LoginForm: React.FC<Props> = ({ onSubmit }) => {
         <FormRow label="Nazwa Uzytkownika" formId={'username'} type={'text'} placeholder={'Nazwa Uzytkownika'} />
         <FormRow label="Haslo" formId={'password'} type={'password'} placeholder={'Haslo'} />
         <FlexBox justifyContent="flex-end">
-          <Button type={'submit'} text={'Zaloguj'} width="20%" />
+          <Button type={'submit'} text={'Zaloguj'} width="20%">
+            {isLoading && <Heading5 textAlign="center">Something went wrong</Heading5>}
+          </Button>
         </FlexBox>
-        {isError && <h5>ERROR!!!</h5>}
-        {isLoading && <h5>Loading....</h5>}
+        {isError && <Heading5 textAlign="center">Something went wrong</Heading5>}
       </form>
     </FormProvider>
   );
