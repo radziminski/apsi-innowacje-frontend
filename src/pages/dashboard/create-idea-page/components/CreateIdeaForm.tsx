@@ -47,10 +47,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     setRequestStatus(undefined);
   }, []);
 
-  React.useEffect(() => {
-    setIsLoading(false);
-  }, [requestStatus]);
-
   const onSubmit = React.useCallback(
     async (data: CreateIdeaFormSchema) => {
       if (currentUser && currentUser.id) {
@@ -66,13 +62,16 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
             Promise.all(attachmentResponses).then(() => {
               setRequestStatus('success');
+              setIsLoading(false);
             });
           } else {
             // TODO proper error handling
             setRequestStatus('error');
+            setIsLoading(false);
           }
         } catch (e) {
           setRequestStatus('error');
+          setIsLoading(false);
         }
         return;
       }

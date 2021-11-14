@@ -5,6 +5,8 @@ import { useInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
 import { AuthorInfo } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
+import { InspirationDetails } from '~/pages/dashboard/inspiration-page/InspirationDetails';
+import { MARGINS } from '~/styles/variables';
 
 export interface CommentModel {
   // TODO use proper DTO
@@ -17,8 +19,8 @@ export interface InspirationModel {
   id: number;
   content: string;
   author: AuthorInfo;
-  upvotes: number;
-  downvotes: number;
+  // upvotes: number;
+  // downvotes: number;
   comments: CommentModel[];
 }
 
@@ -34,9 +36,13 @@ function* inspirationGeneratorFn() {
       id: id++,
       content: 'aaaa',
       author: { firstName: 'Michal', lastName: 'Belniak' },
-      upvotes: 10,
-      downvotes: 5,
-      comments: [{ author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' }]
+      // upvotes: 10,
+      // downvotes: 5,
+      comments: [
+        { author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
+        { author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
+        { author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' }
+      ]
     };
   }
 }
@@ -44,7 +50,8 @@ function* inspirationGeneratorFn() {
 const inspirationGenerator = inspirationGeneratorFn();
 
 const InspirationPageBase = (props: InspirationPageProps) => {
-  const [openedInspiration, setOpenedInspiration] = React.useState<InspirationModel | undefined>(undefined);
+  const [chosenInspiration, setChosenInspiration] = React.useState<InspirationModel | undefined>(undefined);
+  const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
   const [inspirations, setInspirations] = React.useState<InspirationModel[]>([
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     inspirationGenerator.next().value!,
@@ -52,6 +59,16 @@ const InspirationPageBase = (props: InspirationPageProps) => {
     inspirationGenerator.next().value!
     /* eslint-enable @typescript-eslint/no-non-null-assertion */
   ]);
+
+  const closeInspirationDetails = React.useCallback(() => {
+    setIsDetailsOpened(false);
+    setTimeout(() => setChosenInspiration(undefined), 500);
+  }, []);
+
+  const onInspirationClick = React.useCallback((inspiration: InspirationModel) => {
+    setChosenInspiration(inspiration);
+    setIsDetailsOpened(true);
+  }, []);
 
   const fetchData = React.useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -93,14 +110,17 @@ const InspirationPageBase = (props: InspirationPageProps) => {
             <Inspiration
               key={inspiration.id}
               {...(inspirations.length === index + 1 ? { ref: lastElementRef } : {})}
-              onClick={() => setOpenedInspiration(inspiration)}
+              onClick={() => onInspirationClick(inspiration)}
+              customClassName={`inspiration-list-item${
+                chosenInspiration && chosenInspiration.id === inspiration.id ? '--chosen-inspiration' : ''
+              }`}
               {...{ inspiration }}
             />
           ))}
         </InfiniteScrollWrapper>
       </div>
-      <div className={`inspiration-details${openedInspiration ? '' : '--hidden'}`}>
-        {openedInspiration && openedInspiration.id}
+      <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
+        {chosenInspiration && <InspirationDetails inspiration={chosenInspiration} onClose={closeInspirationDetails} />}
       </div>
     </FlexBox>
   );
@@ -112,16 +132,36 @@ export const InspirationPage = styled(InspirationPageBase)`
   }
 
   width: 100%;
-  cursor: pointer;
+
   .inspiration-list {
     width: 100%;
   }
+
   .inspiration-details {
-    transition: width 0.5s ease-in-out;
-    width: 90%;
+    margin-left: 0;
+    margin-right: ${MARGINS.medium};
+    transform: translateX(0%);
   }
   .inspiration-details--hidden {
-    transition: width 0.5s ease-in-out;
-    width: 0%;
+    margin-left: -100%;
+    transform: translateX(100%);
+  }
+
+  .inspiration-details,
+  .inspiration-details--hidden {
+    width: 100%;
+    transition: 0.5s ease-in-out;
+  }
+
+  .inspiration-list-item,
+  .inspiration-list-item:hover,
+  .inspiration-list-item--chosen-inspiration {
+    transition: box-shadow 0.15s ease-in-out;
+  }
+  .inspiration-list-item:hover {
+    box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary}AF;
+  }
+  .inspiration-list-item--chosen-inspiration {
+    box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
   }
 `;

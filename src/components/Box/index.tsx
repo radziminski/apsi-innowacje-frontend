@@ -20,7 +20,7 @@ import {
   SpaceProps,
   system,
   textAlign,
-  TextAlignProps,
+  TextAlignProps
 } from 'styled-system';
 
 type BoxProps = FlexboxProps &
@@ -48,7 +48,7 @@ export const boxStyledSystem = compose(
     transition: true,
     cursor: true,
     pointerEvents: true,
-    transform: true,
+    transform: true
   })
 );
 
@@ -63,4 +63,11 @@ export const FlexBox = styled(Box)`
 export const Center = styled(FlexBox)`
   align-items: center;
   justify-content: center;
+`;
+
+export const Card = styled(FlexBox)`
+  border-radius: 1.5rem;
+  background-color: ${({ theme }) => theme.colors.white};
+  margin: ${({ theme }) => theme.margins.small};
+  padding: ${({ theme }) => theme.margins.small};
 `;
