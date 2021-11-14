@@ -15,7 +15,7 @@ interface InspirationProps {
 
 const InspirationBase = React.forwardRef((props: InspirationProps, ref: ForwardedRef<HTMLDivElement>) => {
   return (
-    <Card className={`${props.className} ${props.customClassName}`} ref={ref} onClick={props.onClick}>
+    <Card className={`${props.className} ${props.customClassName || ''}`} ref={ref} onClick={props.onClick}>
       <AuthorInfoComponent authorInfo={props.inspiration.author} />
       <InspirationContent inspiration={props.inspiration} />
       <InspirationFooter

@@ -133,10 +133,6 @@ export const InspirationPage = styled(InspirationPageBase)`
 
   width: 100%;
 
-  .inspiration-list {
-    width: 100%;
-  }
-
   .inspiration-details {
     margin-left: 0;
     margin-right: ${MARGINS.medium};
@@ -153,15 +149,27 @@ export const InspirationPage = styled(InspirationPageBase)`
     transition: 0.5s ease-in-out;
   }
 
-  .inspiration-list-item,
-  .inspiration-list-item:hover,
-  .inspiration-list-item--chosen-inspiration {
-    transition: box-shadow 0.15s ease-in-out;
+  .inspiration-list {
+    width: 100%;
   }
-  .inspiration-list-item:hover {
-    box-shadow: 0 0 0.15rem ${({ theme }) => theme.colors.primary}AF;
+
+  .inspiration-list-item {
   }
-  .inspiration-list-item--chosen-inspiration {
-    box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
+
+  .inspiration-list-item {
+    box-shadow: 0 0 0 ${({ theme }) => theme.colors.primary}AF;
+    transform: translate(0%, 0%);
+    transition: 0.5s ease-in-out;
+
+    &:hover {
+      box-shadow: 2px 2px 0.2rem ${({ theme }) => theme.colors.primary}8F;
+      transform: translate(-2%, -2%);
+      transition: transform 0.5s ease-in-out;
+    }
+    &--chosen-inspiration,
+    &--chosen-inspiration:hover {
+      box-shadow: 2px 2px 0.2rem ${({ theme }) => theme.colors.primary}8F;
+      transform: translate(-2%, -2%);
+    }
   }
 `;
