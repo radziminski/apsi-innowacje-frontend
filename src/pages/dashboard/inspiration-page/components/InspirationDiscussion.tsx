@@ -17,10 +17,10 @@ const InspirationDiscussionBase = (props: InspirationDiscussionProps) => {
       <span>Dyskusja:</span>
       <FlexBox className={'inspiration-details__discussion-list'}>
         {props.comments.map((comment, index) => (
-          <>
-            <DiscussionItem key={index} comment={comment} />
+          <div key={comment.id}>
+            <DiscussionItem comment={comment} />
             {props.comments.length !== index + 1 && <HorizontalRuler />}
-          </>
+          </div>
         ))}
       </FlexBox>
     </FlexBox>
