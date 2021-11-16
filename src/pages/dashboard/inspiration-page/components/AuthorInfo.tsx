@@ -22,7 +22,7 @@ const AuthorInfoBase = (props: AuthorInfoProps) => {
   );
 };
 
-export const AuthorInfo = styled(AuthorInfoBase)`
+export const AuthorInfoComponent = styled(AuthorInfoBase)`
   align-items: center;
   span {
     margin-left: ${({ theme }) => theme.margins.small};

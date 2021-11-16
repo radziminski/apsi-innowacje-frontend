@@ -1,13 +1,18 @@
 import React from 'react';
 import { CreateInspiration } from '~/pages/dashboard/inspiration-page/CreateInspiration';
-import { Inspiration } from './components/Inspiration';
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
 import { AuthorInfo } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
 import styled from 'styled-components';
-import { FlexBox } from '~/components/Box';
+import Box, { FlexBox } from '~/components/Box';
+import { InspirationDetails } from '~/pages/dashboard/inspiration-page/InspirationDetails';
+import { MARGINS } from '~/styles/variables';
+import { CSSTransition } from 'react-transition-group';
+import { Inspiration } from '~/pages/dashboard/inspiration-page/components/Inspiration';
+import { useOutsideClick } from '~/hooks/useOutsideClick';
 
 export interface CommentModel {
   // TODO use proper DTO
+  id: number;
   author: AuthorInfo;
   content: string;
 }
@@ -17,14 +22,16 @@ export interface InspirationModel {
   id: number;
   content: string;
   author: AuthorInfo;
-  upvotes: number;
-  downvotes: number;
+  // upvotes: number;
+  // downvotes: number;
   comments: CommentModel[];
 }
 
 interface InspirationPageProps {
   className?: string;
 }
+
+const HAS_MORE = true;
 
 function* inspirationGeneratorFn() {
   let id = 0;
@@ -34,9 +41,13 @@ function* inspirationGeneratorFn() {
       id: id++,
       content: 'aaaa',
       author: { firstName: 'Michal', lastName: 'Belniak' },
-      upvotes: 10,
-      downvotes: 5,
-      comments: [{ author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' }]
+      // upvotes: 10,
+      // downvotes: 5,
+      comments: [
+        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
+        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
+        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' }
+      ]
     };
   }
 }
@@ -44,7 +55,8 @@ function* inspirationGeneratorFn() {
 const inspirationGenerator = inspirationGeneratorFn();
 
 const InspirationPageBase = (props: InspirationPageProps) => {
-  const [openedInspiration, setOpenedInspiration] = React.useState<InspirationModel | undefined>(undefined);
+  const [chosenInspiration, setChosenInspiration] = React.useState<InspirationModel | undefined>(undefined);
+  const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
   const [inspirations, setInspirations] = React.useState<InspirationModel[]>([
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     inspirationGenerator.next().value!,
@@ -52,6 +64,23 @@ const InspirationPageBase = (props: InspirationPageProps) => {
     inspirationGenerator.next().value!
     /* eslint-enable @typescript-eslint/no-non-null-assertion */
   ]);
+
+  const chosenInspirationRef = React.useRef<HTMLDivElement>();
+  const inspirationDetailsRef = React.useRef<HTMLDivElement>(null);
+
+  useOutsideClick([chosenInspirationRef, inspirationDetailsRef], () => {
+    isDetailsOpened && closeInspirationDetails();
+  });
+
+  const closeInspirationDetails = React.useCallback(() => {
+    setIsDetailsOpened(false);
+    setTimeout(() => setChosenInspiration(undefined), 500);
+  }, []);
+
+  const onInspirationClick = React.useCallback((inspiration: InspirationModel) => {
+    setChosenInspiration(inspiration);
+    setIsDetailsOpened(true);
+  }, []);
 
   const fetchData = React.useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -70,11 +99,12 @@ const InspirationPageBase = (props: InspirationPageProps) => {
       });
 
       setInspirations(inspirations.concat(newInspirations));
-      return true;
+      return HAS_MORE;
     },
     [inspirations]
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loader = (
     <div className="inspiration-list__loader" key={0}>
       Ładowanie...
@@ -82,25 +112,47 @@ const InspirationPageBase = (props: InspirationPageProps) => {
   );
   const errorComponent = <div>Wystąpił błąd podczas ładowania.</div>;
 
-  const [InfiniteScrollWrapper, lastElementRef] = useInfiniteScroll(fetchData, loader, errorComponent);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isLoading, isError, lastElementRef] = useInfiniteScroll(fetchData);
 
   return (
     <FlexBox className={props.className}>
       <div className={'inspiration-list'}>
         <CreateInspiration />
-        <InfiniteScrollWrapper>
+        <Box>
           {inspirations.map((inspiration, index) => (
-            <Inspiration
+            <CSSTransition
+              in={chosenInspiration === inspiration}
               key={inspiration.id}
-              {...(inspirations.length === index + 1 ? { ref: lastElementRef } : {})}
-              onClick={() => setOpenedInspiration(inspiration)}
-              {...{ inspiration }}
-            />
+              timeout={500}
+              classNames="inspiration-list-item">
+              <Inspiration
+                inspiration={inspiration}
+                onClick={() => {
+                  onInspirationClick(inspiration);
+                }}
+                ref={ref => {
+                  if (inspirations.length === index + 1) {
+                    lastElementRef(ref);
+                  }
+                  if (inspiration === chosenInspiration) {
+                    chosenInspirationRef.current = ref || undefined;
+                  }
+                }}
+                customClassName={'inspiration-list-item'}
+              />
+            </CSSTransition>
           ))}
-        </InfiniteScrollWrapper>
+        </Box>
+        {isLoading && loader}
+        {isError && errorComponent}
       </div>
-      <div className={`inspiration-details${openedInspiration ? '' : '--hidden'}`}>
-        {openedInspiration && openedInspiration.id}
+      <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
+        {chosenInspiration && (
+          <div ref={inspirationDetailsRef}>
+            <InspirationDetails inspiration={chosenInspiration} onClose={closeInspirationDetails} />
+          </div>
+        )}
       </div>
     </FlexBox>
   );
@@ -112,16 +164,49 @@ export const InspirationPage = styled(InspirationPageBase)`
   }
 
   width: 100%;
-  cursor: pointer;
+
+  .inspiration-details {
+    margin-left: 0;
+    margin-right: ${MARGINS.medium};
+    transform: translateX(0%);
+  }
+  .inspiration-details--hidden {
+    margin-left: -100%;
+    transform: translateX(100%);
+  }
+
+  .inspiration-details,
+  .inspiration-details--hidden {
+    width: 100%;
+    transition: 0.5s ease-in-out;
+  }
+
   .inspiration-list {
     width: 100%;
   }
-  .inspiration-details {
-    transition: width 0.5s ease-in-out;
-    width: 90%;
+
+  .inspiration-list-item {
+    &-enter-active,
+    &-enter-active:hover,
+    &-enter-done,
+    &-enter-done:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 2px 2px 0.5rem ${({ theme }) => theme.colors.primary}8F;
+    }
+
+    &-exit-active,
+    &-exit-active:hover {
+      transform: translate(0, 0);
+      transition: transform 0.2s ease-out;
+    }
   }
-  .inspiration-details--hidden {
-    transition: width 0.5s ease-in-out;
-    width: 0%;
+
+  .inspiration-list-item {
+    transition: 0.3s ease-in-out;
+  }
+  .inspiration-list-item:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 2px 2px 0.5rem ${({ theme }) => theme.colors.primary}8F;
+    transition: 0.2s ease-in-out;
   }
 `;
