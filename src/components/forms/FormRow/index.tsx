@@ -70,6 +70,7 @@ export const FormRow = styled(FormRowBase)`
 
     &:first-child {
       width: 40%;
+      display: inline;
     }
     &:nth-child(2) {
       width: 60%;

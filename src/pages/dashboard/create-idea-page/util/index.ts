@@ -7,7 +7,8 @@ export const formSchemaToIdeaDTO = (formData: CreateIdeaFormSchema, currentUserI
   return {
     anonymous,
     authorId: currentUserId,
-    subjectId: parseInt(subjectId.value),
+    subjectId: undefined, // TODO parseInt(subjectId.value),
+    keywords: keywords.map(keyword => keyword.label),
     benefits: [
       {
         description: benefits,
