@@ -1,12 +1,7 @@
 import { AuthApiFactory, UsersApiFactory } from './dotnet';
 import { Configuration as DotnetConfiguration } from './dotnet/configuration';
 import { DOTNET_API_URL, JAVA_API_URL } from '~/constants/constants';
-import {
-  AttachmentControllerApiFactory,
-  Configuration as JavaConfiguration,
-  IdeaControllerApiFactory,
-  SubjectControllerApiFactory
-} from '~/api-client/java';
+import { Configuration as JavaConfiguration, InnowacjaAPIApiFactory } from '~/api-client/java';
 
 export * from './dotnet/api';
 export * from './java/api';
@@ -27,9 +22,7 @@ const javaConfig = new JavaConfiguration({ baseOptions: globalAxiosOptions, base
 const apiClient = {
   ...AuthApiFactory(dotnetConfig),
   ...UsersApiFactory(dotnetConfig),
-  ...IdeaControllerApiFactory(javaConfig),
-  ...SubjectControllerApiFactory(javaConfig),
-  ...AttachmentControllerApiFactory(javaConfig)
+  ...InnowacjaAPIApiFactory(javaConfig)
 };
 
 export default apiClient;
