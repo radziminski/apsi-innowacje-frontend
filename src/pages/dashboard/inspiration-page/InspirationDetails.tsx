@@ -6,6 +6,7 @@ import { AuthorInfoComponent } from '~/pages/dashboard/inspiration-page/componen
 import { AiOutlineClose } from 'react-icons/ai';
 import { InspirationContent } from '~/pages/dashboard/inspiration-page/components/InspirationContent';
 import { InspirationDiscussion } from '~/pages/dashboard/inspiration-page/components/InspirationDiscussion';
+import useDevice from '~/hooks/useDevice';
 
 interface InspirationDetailsProps {
   inspiration: InspirationModel;
@@ -16,11 +17,12 @@ interface InspirationDetailsProps {
 const InspirationDetailsBase = (props: InspirationDetailsProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { inspiration, onClose, className } = props;
+  const { isTab } = useDevice();
   return (
-    <Card className={props.className}>
+    <Card className={className}>
       <FlexBox className={'inspiration-details__pre-header'}>
         <span>11/11/2021 12:45 TODO proper date</span>
-        <AiOutlineClose className={'inspiration-details--close-icon'} size={25} onClick={onClose} />
+        <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
       </FlexBox>
       <AuthorInfoComponent authorInfo={inspiration.author} />
       <InspirationContent inspiration={props.inspiration} />
@@ -46,9 +48,5 @@ export const InspirationDetails = styled(InspirationDetailsBase)`
         color: ${({ theme }) => theme.colors.primary};
       }
     }
-  }
-
-  .inspiration-details--close-icon {
-    margin-right: 10px;
   }
 `;

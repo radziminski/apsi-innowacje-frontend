@@ -208,6 +208,10 @@ export default styled(CreateIdeaForm)`
   .create-idea-form {
     margin: ${({ theme }) => theme.margins.small};
 
+    @media ${({ theme }) => theme.mediaQueries.mobile} {
+      margin: 0;
+    }
+
     > form > div {
       flex-direction: column;
     }
