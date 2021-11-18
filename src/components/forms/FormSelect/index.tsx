@@ -2,10 +2,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import React from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
-import { customSelectStyles, FormComponentProps, Option } from '~/components/forms';
+import { customSelectStyles, FormComponentProps, SelectOption } from '~/components/forms';
 
 export interface FormSelectProps extends FormComponentProps {
-  options: Option[];
+  options: SelectOption[];
 }
 
 // Not needed now, but since I already created it, let it sit here

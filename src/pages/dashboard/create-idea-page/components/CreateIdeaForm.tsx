@@ -10,18 +10,19 @@ import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
 import { schema } from '~/pages/dashboard/create-idea-page/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Option } from '~/components/forms';
+import { SelectOption } from '~/components/forms';
 import { IdeaSavedModal } from '~/pages/dashboard/create-idea-page/components/IdeaSavedModal';
-import apiClient from '~/api-client';
+import apiClient, { SubjectDto, SubjectDtoAudienceEnum } from '~/api-client';
 import { AxiosResponse } from 'axios';
 import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea-page/util';
 import { IdeaErrorModal } from '~/pages/dashboard/create-idea-page/components/IdeaErrorModal';
 import { LoadingModal } from '~/components/Modal/LoadingModal';
+import { components } from 'react-select';
 
 export interface CreateIdeaFormSchema {
   anonymous: boolean;
-  subjectId: Option;
-  keywords: Option[];
+  subjectId: SelectOption;
+  keywords: SelectOption[];
   description: string;
   benefits: string;
   costs_from: number;
@@ -29,6 +30,43 @@ export interface CreateIdeaFormSchema {
 }
 
 type PostStatus = 'success' | 'error';
+
+export const CustomSubjectSelectOption = ({ innerRef, innerProps, ...restProps }) => {
+  return (
+    <div ref={innerRef} {...innerProps}>
+      <components.Option {...innerProps} {...restProps} getStyles={() => restProps.getStyles('option', restProps)}>
+        <span>{restProps.data.label}</span>
+        <br />
+        <span style={{ fontSize: '12px' }}>Grupa docelowa: {restProps.data.details}</span>
+      </components.Option>
+      {restProps.value !== restProps.options[restProps.options.length - 1].value && (
+        <div style={{ borderBottom: 'solid 1px rgba(0, 0, 0, 0.2)', height: '1px', margin: '0 5px' }} />
+      )}
+    </div>
+  );
+};
+
+function subjectDTOAudienceToSelectText(
+  audience:
+    | SubjectDtoAudienceEnum.Student
+    | SubjectDtoAudienceEnum.Employee
+    | SubjectDtoAudienceEnum.Committee
+    | SubjectDtoAudienceEnum.Admin
+    | null
+    | undefined
+): string {
+  switch (audience) {
+    case SubjectDtoAudienceEnum.Student:
+      return 'Studenci';
+    case SubjectDtoAudienceEnum.Employee:
+      return 'Wykładowcy';
+    case SubjectDtoAudienceEnum.Committee:
+      return 'Komisja';
+    case SubjectDtoAudienceEnum.Admin:
+      return 'Administratorzy';
+  }
+  return 'Nieznana';
+}
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm({
@@ -85,18 +123,16 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     }
   }, []);
 
-  const fetchSubjects = React.useCallback((): Promise<Option[]> => {
-    // TODO fetch from backend
-    return new Promise(resolve =>
-      setTimeout(() => {
-        const fetchedOptions = [
-          { value: '0', label: 'Drugi temat' },
-          { value: '1', label: 'Pierwszy temat' },
-          { value: '2', label: 'Inne' }
-        ];
-        resolve(fetchedOptions);
-      }, 2000)
-    );
+  const fetchSubjects = React.useCallback(async (): Promise<SelectOption[]> => {
+    const fetchedSubjects: SubjectDto[] = (await apiClient.getAllUsingGET()).data;
+    // eslint-disable-next-line no-console
+    console.log(fetchedSubjects);
+    return fetchedSubjects.map(subject => ({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      value: `${subject.id!}`,
+      label: subject.name ?? 'Nieznany',
+      details: subjectDTOAudienceToSelectText(subject.audience)
+    }));
   }, []);
 
   return (
@@ -124,6 +160,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                   placeholder={'Wybierz tematykę pomysłu'}
                   fetchOptions={fetchSubjects}
                   required
+                  components={{ Option: CustomSubjectSelectOption }}
                 />
                 <FormRow
                   label={'Słowa kluczowe'}
