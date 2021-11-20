@@ -21,5 +21,6 @@ export const Container = styled.aside<{ isOpened: boolean }>`
   @media ${({ theme }) => theme.mediaQueries.mobile} {
     width: 100%;
     overflow-y: auto;
+    padding: 3rem 0;
   }
 `;
