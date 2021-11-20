@@ -1,10 +1,10 @@
 import React, { ForwardedRef } from 'react';
-import { InspirationModel } from '~/pages/dashboard/inspiration-page/InspirationPage';
+import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
 import styled from 'styled-components';
 import { Card } from '~/components/Box';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
-import { InspirationContent } from '~/pages/dashboard/inspiration-page/components/InspirationContent';
-import { InspirationFooter } from '~/pages/dashboard/inspiration-page/components/InspirationFooter';
+import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
+import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
+import { InspirationFooter } from '~/pages/dashboard/inspirations/components/InspirationFooter';
 
 interface InspirationProps {
   inspiration: InspirationModel;

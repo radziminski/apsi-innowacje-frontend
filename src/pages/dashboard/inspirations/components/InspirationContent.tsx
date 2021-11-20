@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { InspirationModel } from '~/pages/dashboard/inspiration-page/InspirationPage';
+import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
 import React from 'react';
 
 interface InspirationContentProps {

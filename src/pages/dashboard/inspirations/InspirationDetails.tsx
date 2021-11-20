@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { Card, FlexBox } from '~/components/Box';
 import React, { useEffect } from 'react';
-import { InspirationModel } from '~/pages/dashboard/inspiration-page/InspirationPage';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
+import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
+import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
 import { AiOutlineClose } from 'react-icons/ai';
-import { InspirationContent } from '~/pages/dashboard/inspiration-page/components/InspirationContent';
-import { InspirationDiscussion } from '~/pages/dashboard/inspiration-page/components/InspirationDiscussion';
+import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
+import { InspirationDiscussion } from '~/pages/dashboard/inspirations/components/InspirationDiscussion';
 import useDevice from '~/hooks/useDevice';
 
 interface InspirationDetailsProps {
