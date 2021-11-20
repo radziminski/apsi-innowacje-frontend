@@ -74,7 +74,7 @@ const InspirationPageBase = (props: InspirationPageProps) => {
   const inspirationDetailsRef = React.useRef<HTMLDivElement>(null);
 
   useOutsideClick([chosenInspirationRef, inspirationDetailsRef], () => {
-    isDetailsOpened && closeInspirationDetails();
+    isDetailsOpened && !isTab && closeInspirationDetails();
   });
 
   const closeInspirationDetails = React.useCallback(() => {
@@ -155,7 +155,11 @@ const InspirationPageBase = (props: InspirationPageProps) => {
       <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
         {chosenInspiration && (
           <FlexBox ref={inspirationDetailsRef}>
-            <InspirationDetails inspiration={chosenInspiration} onClose={closeInspirationDetails} />
+            <InspirationDetails
+              inspiration={chosenInspiration}
+              onClose={closeInspirationDetails}
+              isOpened={isDetailsOpened}
+            />
           </FlexBox>
         )}
       </div>
@@ -181,7 +185,10 @@ export const InspirationPage = styled(InspirationPageBase)`
 
   .inspiration-details,
   .inspiration-details--hidden {
+    position: sticky;
+    top: 0;
     width: 100%;
+    height: 100%;
     transition: 0.5s ease-in-out;
   }
 
