@@ -220,9 +220,9 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteIdeaUsingDELETE: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteIdeaByIdUsingDELETE: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('deleteIdeaUsingDELETE', 'id', id)
+            assertParamExists('deleteIdeaByIdUsingDELETE', 'id', id)
             const localVarPath = `/ideas/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -252,14 +252,14 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary downloadAttachment
+         * @summary downloadAttachmentById
          * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        downloadAttachmentUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        downloadAttachmentByIdUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('downloadAttachmentUsingGET', 'id', id)
+            assertParamExists('downloadAttachmentByIdUsingGET', 'id', id)
             const localVarPath = `/attachments/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -326,7 +326,7 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllUsingGET: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllSubjectsUsingGET: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/subjects`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -360,47 +360,10 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAttachmentIdsUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAttachmentIdsByIdeaIdUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('getAttachmentIdsUsingGET', 'id', id)
+            assertParamExists('getAttachmentIdsByIdeaIdUsingGET', 'id', id)
             const localVarPath = `/ideas/{id}/attachments`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Get subject with given id
-         * @param {number} id id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getByIdUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getByIdUsingGET', 'id', id)
-            const localVarPath = `/subjects/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -471,9 +434,9 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getIdeasBySubjectUsingGET: async (subjectId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getIdeasBySubjectIdUsingGET: async (subjectId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'subjectId' is not null or undefined
-            assertParamExists('getIdeasBySubjectUsingGET', 'subjectId', subjectId)
+            assertParamExists('getIdeasBySubjectIdUsingGET', 'subjectId', subjectId)
             const localVarPath = `/ideas/by-subject`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -492,6 +455,43 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
             if (subjectId !== undefined) {
                 localVarQueryParameter['subjectId'] = subjectId;
             }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get subject with given id
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSubjectByIdUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getSubjectByIdUsingGET', 'id', id)
+            const localVarPath = `/subjects/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -600,7 +600,7 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveUsingPOST: async (audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        saveSubjectUsingPOST: async (audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/subjects`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -695,19 +695,19 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteIdeaUsingDELETE(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteIdeaUsingDELETE(id, options);
+        async deleteIdeaByIdUsingDELETE(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteIdeaByIdUsingDELETE(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @summary downloadAttachment
+         * @summary downloadAttachmentById
          * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async downloadAttachmentUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAttachmentUsingGET(id, options);
+        async downloadAttachmentByIdUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAttachmentByIdUsingGET(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -726,8 +726,8 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SubjectDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsingGET(options);
+        async getAllSubjectsUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SubjectDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllSubjectsUsingGET(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -737,19 +737,8 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAttachmentIdsUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAttachmentIdsUsingGET(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get subject with given id
-         * @param {number} id id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getByIdUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SubjectDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getByIdUsingGET(id, options);
+        async getAttachmentIdsByIdeaIdUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAttachmentIdsByIdeaIdUsingGET(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -770,8 +759,19 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getIdeasBySubjectUsingGET(subjectId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<IdeaDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getIdeasBySubjectUsingGET(subjectId, options);
+        async getIdeasBySubjectIdUsingGET(subjectId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<IdeaDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getIdeasBySubjectIdUsingGET(subjectId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get subject with given id
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSubjectByIdUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SubjectDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSubjectByIdUsingGET(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -806,8 +806,8 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveUsingPOST(audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.saveUsingPOST(audience, id, name, options);
+        async saveSubjectUsingPOST(audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveSubjectUsingPOST(audience, id, name, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -838,18 +838,18 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteIdeaUsingDELETE(id: number, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteIdeaUsingDELETE(id, options).then((request) => request(axios, basePath));
+        deleteIdeaByIdUsingDELETE(id: number, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteIdeaByIdUsingDELETE(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary downloadAttachment
+         * @summary downloadAttachmentById
          * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        downloadAttachmentUsingGET(id: number, options?: any): AxiosPromise<void> {
-            return localVarFp.downloadAttachmentUsingGET(id, options).then((request) => request(axios, basePath));
+        downloadAttachmentByIdUsingGET(id: number, options?: any): AxiosPromise<void> {
+            return localVarFp.downloadAttachmentByIdUsingGET(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -866,8 +866,8 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllUsingGET(options?: any): AxiosPromise<Array<SubjectDto>> {
-            return localVarFp.getAllUsingGET(options).then((request) => request(axios, basePath));
+        getAllSubjectsUsingGET(options?: any): AxiosPromise<Array<SubjectDto>> {
+            return localVarFp.getAllSubjectsUsingGET(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -876,18 +876,8 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAttachmentIdsUsingGET(id: number, options?: any): AxiosPromise<Array<number>> {
-            return localVarFp.getAttachmentIdsUsingGET(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get subject with given id
-         * @param {number} id id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getByIdUsingGET(id: number, options?: any): AxiosPromise<SubjectDto> {
-            return localVarFp.getByIdUsingGET(id, options).then((request) => request(axios, basePath));
+        getAttachmentIdsByIdeaIdUsingGET(id: number, options?: any): AxiosPromise<Array<number>> {
+            return localVarFp.getAttachmentIdsByIdeaIdUsingGET(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -906,8 +896,18 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getIdeasBySubjectUsingGET(subjectId: number, options?: any): AxiosPromise<Array<IdeaDto>> {
-            return localVarFp.getIdeasBySubjectUsingGET(subjectId, options).then((request) => request(axios, basePath));
+        getIdeasBySubjectIdUsingGET(subjectId: number, options?: any): AxiosPromise<Array<IdeaDto>> {
+            return localVarFp.getIdeasBySubjectIdUsingGET(subjectId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get subject with given id
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSubjectByIdUsingGET(id: number, options?: any): AxiosPromise<SubjectDto> {
+            return localVarFp.getSubjectByIdUsingGET(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -939,8 +939,8 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveUsingPOST(audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options?: any): AxiosPromise<number> {
-            return localVarFp.saveUsingPOST(audience, id, name, options).then((request) => request(axios, basePath));
+        saveSubjectUsingPOST(audience?: 'Student' | 'Employee' | 'Committee' | 'Admin', id?: number, name?: string, options?: any): AxiosPromise<number> {
+            return localVarFp.saveSubjectUsingPOST(audience, id, name, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -956,57 +956,43 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
 };
 
 /**
- * Request parameters for deleteIdeaUsingDELETE operation in InnowacjaAPIApi.
+ * Request parameters for deleteIdeaByIdUsingDELETE operation in InnowacjaAPIApi.
  * @export
- * @interface InnowacjaAPIApiDeleteIdeaUsingDELETERequest
+ * @interface InnowacjaAPIApiDeleteIdeaByIdUsingDELETERequest
  */
-export interface InnowacjaAPIApiDeleteIdeaUsingDELETERequest {
+export interface InnowacjaAPIApiDeleteIdeaByIdUsingDELETERequest {
     /**
      * id
      * @type {number}
-     * @memberof InnowacjaAPIApiDeleteIdeaUsingDELETE
+     * @memberof InnowacjaAPIApiDeleteIdeaByIdUsingDELETE
      */
     readonly id: number
 }
 
 /**
- * Request parameters for downloadAttachmentUsingGET operation in InnowacjaAPIApi.
+ * Request parameters for downloadAttachmentByIdUsingGET operation in InnowacjaAPIApi.
  * @export
- * @interface InnowacjaAPIApiDownloadAttachmentUsingGETRequest
+ * @interface InnowacjaAPIApiDownloadAttachmentByIdUsingGETRequest
  */
-export interface InnowacjaAPIApiDownloadAttachmentUsingGETRequest {
+export interface InnowacjaAPIApiDownloadAttachmentByIdUsingGETRequest {
     /**
      * id
      * @type {number}
-     * @memberof InnowacjaAPIApiDownloadAttachmentUsingGET
+     * @memberof InnowacjaAPIApiDownloadAttachmentByIdUsingGET
      */
     readonly id: number
 }
 
 /**
- * Request parameters for getAttachmentIdsUsingGET operation in InnowacjaAPIApi.
+ * Request parameters for getAttachmentIdsByIdeaIdUsingGET operation in InnowacjaAPIApi.
  * @export
- * @interface InnowacjaAPIApiGetAttachmentIdsUsingGETRequest
+ * @interface InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGETRequest
  */
-export interface InnowacjaAPIApiGetAttachmentIdsUsingGETRequest {
+export interface InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGETRequest {
     /**
      * id
      * @type {number}
-     * @memberof InnowacjaAPIApiGetAttachmentIdsUsingGET
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getByIdUsingGET operation in InnowacjaAPIApi.
- * @export
- * @interface InnowacjaAPIApiGetByIdUsingGETRequest
- */
-export interface InnowacjaAPIApiGetByIdUsingGETRequest {
-    /**
-     * id
-     * @type {number}
-     * @memberof InnowacjaAPIApiGetByIdUsingGET
+     * @memberof InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGET
      */
     readonly id: number
 }
@@ -1026,17 +1012,31 @@ export interface InnowacjaAPIApiGetIdeaByIdUsingGETRequest {
 }
 
 /**
- * Request parameters for getIdeasBySubjectUsingGET operation in InnowacjaAPIApi.
+ * Request parameters for getIdeasBySubjectIdUsingGET operation in InnowacjaAPIApi.
  * @export
- * @interface InnowacjaAPIApiGetIdeasBySubjectUsingGETRequest
+ * @interface InnowacjaAPIApiGetIdeasBySubjectIdUsingGETRequest
  */
-export interface InnowacjaAPIApiGetIdeasBySubjectUsingGETRequest {
+export interface InnowacjaAPIApiGetIdeasBySubjectIdUsingGETRequest {
     /**
      * subjectId
      * @type {number}
-     * @memberof InnowacjaAPIApiGetIdeasBySubjectUsingGET
+     * @memberof InnowacjaAPIApiGetIdeasBySubjectIdUsingGET
      */
     readonly subjectId: number
+}
+
+/**
+ * Request parameters for getSubjectByIdUsingGET operation in InnowacjaAPIApi.
+ * @export
+ * @interface InnowacjaAPIApiGetSubjectByIdUsingGETRequest
+ */
+export interface InnowacjaAPIApiGetSubjectByIdUsingGETRequest {
+    /**
+     * id
+     * @type {number}
+     * @memberof InnowacjaAPIApiGetSubjectByIdUsingGET
+     */
+    readonly id: number
 }
 
 /**
@@ -1075,29 +1075,29 @@ export interface InnowacjaAPIApiSaveIdeaUsingPOSTRequest {
 }
 
 /**
- * Request parameters for saveUsingPOST operation in InnowacjaAPIApi.
+ * Request parameters for saveSubjectUsingPOST operation in InnowacjaAPIApi.
  * @export
- * @interface InnowacjaAPIApiSaveUsingPOSTRequest
+ * @interface InnowacjaAPIApiSaveSubjectUsingPOSTRequest
  */
-export interface InnowacjaAPIApiSaveUsingPOSTRequest {
+export interface InnowacjaAPIApiSaveSubjectUsingPOSTRequest {
     /**
      * 
      * @type {'Student' | 'Employee' | 'Committee' | 'Admin'}
-     * @memberof InnowacjaAPIApiSaveUsingPOST
+     * @memberof InnowacjaAPIApiSaveSubjectUsingPOST
      */
     readonly audience?: 'Student' | 'Employee' | 'Committee' | 'Admin'
 
     /**
      * 
      * @type {number}
-     * @memberof InnowacjaAPIApiSaveUsingPOST
+     * @memberof InnowacjaAPIApiSaveSubjectUsingPOST
      */
     readonly id?: number
 
     /**
      * 
      * @type {string}
-     * @memberof InnowacjaAPIApiSaveUsingPOST
+     * @memberof InnowacjaAPIApiSaveSubjectUsingPOST
      */
     readonly name?: string
 }
@@ -1126,25 +1126,25 @@ export class InnowacjaAPIApi extends BaseAPI {
     /**
      * 
      * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
-     * @param {InnowacjaAPIApiDeleteIdeaUsingDELETERequest} requestParameters Request parameters.
+     * @param {InnowacjaAPIApiDeleteIdeaByIdUsingDELETERequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof InnowacjaAPIApi
      */
-    public deleteIdeaUsingDELETE(requestParameters: InnowacjaAPIApiDeleteIdeaUsingDELETERequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).deleteIdeaUsingDELETE(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public deleteIdeaByIdUsingDELETE(requestParameters: InnowacjaAPIApiDeleteIdeaByIdUsingDELETERequest, options?: AxiosRequestConfig) {
+        return InnowacjaAPIApiFp(this.configuration).deleteIdeaByIdUsingDELETE(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary downloadAttachment
-     * @param {InnowacjaAPIApiDownloadAttachmentUsingGETRequest} requestParameters Request parameters.
+     * @summary downloadAttachmentById
+     * @param {InnowacjaAPIApiDownloadAttachmentByIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof InnowacjaAPIApi
      */
-    public downloadAttachmentUsingGET(requestParameters: InnowacjaAPIApiDownloadAttachmentUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).downloadAttachmentUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public downloadAttachmentByIdUsingGET(requestParameters: InnowacjaAPIApiDownloadAttachmentByIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return InnowacjaAPIApiFp(this.configuration).downloadAttachmentByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1165,32 +1165,20 @@ export class InnowacjaAPIApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InnowacjaAPIApi
      */
-    public getAllUsingGET(options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getAllUsingGET(options).then((request) => request(this.axios, this.basePath));
+    public getAllSubjectsUsingGET(options?: AxiosRequestConfig) {
+        return InnowacjaAPIApiFp(this.configuration).getAllSubjectsUsingGET(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Get list of attachment id\'s belonging to given idea.
-     * @param {InnowacjaAPIApiGetAttachmentIdsUsingGETRequest} requestParameters Request parameters.
+     * @param {InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof InnowacjaAPIApi
      */
-    public getAttachmentIdsUsingGET(requestParameters: InnowacjaAPIApiGetAttachmentIdsUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getAttachmentIdsUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Get subject with given id
-     * @param {InnowacjaAPIApiGetByIdUsingGETRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
-     */
-    public getByIdUsingGET(requestParameters: InnowacjaAPIApiGetByIdUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getAttachmentIdsByIdeaIdUsingGET(requestParameters: InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return InnowacjaAPIApiFp(this.configuration).getAttachmentIdsByIdeaIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1208,13 +1196,25 @@ export class InnowacjaAPIApi extends BaseAPI {
     /**
      * 
      * @summary Get all ideas with given subject
-     * @param {InnowacjaAPIApiGetIdeasBySubjectUsingGETRequest} requestParameters Request parameters.
+     * @param {InnowacjaAPIApiGetIdeasBySubjectIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof InnowacjaAPIApi
      */
-    public getIdeasBySubjectUsingGET(requestParameters: InnowacjaAPIApiGetIdeasBySubjectUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getIdeasBySubjectUsingGET(requestParameters.subjectId, options).then((request) => request(this.axios, this.basePath));
+    public getIdeasBySubjectIdUsingGET(requestParameters: InnowacjaAPIApiGetIdeasBySubjectIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return InnowacjaAPIApiFp(this.configuration).getIdeasBySubjectIdUsingGET(requestParameters.subjectId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get subject with given id
+     * @param {InnowacjaAPIApiGetSubjectByIdUsingGETRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof InnowacjaAPIApi
+     */
+    public getSubjectByIdUsingGET(requestParameters: InnowacjaAPIApiGetSubjectByIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return InnowacjaAPIApiFp(this.configuration).getSubjectByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1244,13 +1244,13 @@ export class InnowacjaAPIApi extends BaseAPI {
     /**
      * 
      * @summary Save subject in database, returns id of saved entity
-     * @param {InnowacjaAPIApiSaveUsingPOSTRequest} requestParameters Request parameters.
+     * @param {InnowacjaAPIApiSaveSubjectUsingPOSTRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof InnowacjaAPIApi
      */
-    public saveUsingPOST(requestParameters: InnowacjaAPIApiSaveUsingPOSTRequest = {}, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).saveUsingPOST(requestParameters.audience, requestParameters.id, requestParameters.name, options).then((request) => request(this.axios, this.basePath));
+    public saveSubjectUsingPOST(requestParameters: InnowacjaAPIApiSaveSubjectUsingPOSTRequest = {}, options?: AxiosRequestConfig) {
+        return InnowacjaAPIApiFp(this.configuration).saveSubjectUsingPOST(requestParameters.audience, requestParameters.id, requestParameters.name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
