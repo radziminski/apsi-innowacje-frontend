@@ -15,3 +15,4 @@ export const getIdeasPath = () => `${getDashboardPath()}/pomysly`;
 export const getInspirationsPagePath = () => `${getDashboardPath()}/inspiracje`;
 
 export const getVotingPath = () => `${getDashboardPath()}/glosowanie`;
+export const getAccountDetailsPath = () => `${getDashboardPath()}/zarzadzanie-kontem`;

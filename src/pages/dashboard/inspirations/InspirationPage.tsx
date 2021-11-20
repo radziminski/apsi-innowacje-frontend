@@ -1,14 +1,17 @@
 import React from 'react';
-import { CreateInspiration } from '~/pages/dashboard/inspiration-page/CreateInspiration';
+import { CreateInspiration } from '~/pages/dashboard/inspirations/CreateInspiration';
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
-import { AuthorInfo } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
+import { AuthorInfo } from '~/pages/dashboard/inspirations/components/AuthorInfo';
 import styled from 'styled-components';
 import Box, { FlexBox } from '~/components/Box';
-import { InspirationDetails } from '~/pages/dashboard/inspiration-page/InspirationDetails';
+import { InspirationDetails } from '~/pages/dashboard/inspirations/InspirationDetails';
 import { CSSTransition } from 'react-transition-group';
-import { Inspiration } from '~/pages/dashboard/inspiration-page/components/Inspiration';
+import { Inspiration } from '~/pages/dashboard/inspirations/components/Inspiration';
 import { useOutsideClick } from '~/hooks/useOutsideClick';
 import useDevice from '~/hooks/useDevice';
+import DashboardContent from '~/components/DashboardContent/DashboardContent';
+import { BiMessageDetail } from 'react-icons/bi';
+import { CenteredLoader } from '~/components/Loader';
 
 export interface CommentModel {
   // TODO use proper DTO
@@ -112,7 +115,7 @@ const InspirationPageBase = (props: InspirationPageProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loader = (
     <div className="inspiration-list__loader" key={0}>
-      Ładowanie...
+      <CenteredLoader />
     </div>
   );
   const errorComponent = <div>Wystąpił błąd podczas ładowania.</div>;
@@ -121,49 +124,51 @@ const InspirationPageBase = (props: InspirationPageProps) => {
   const [isLoading, isError, lastElementRef] = useInfiniteScroll(fetchData);
 
   return (
-    <FlexBox className={props.className}>
-      <div className={`inspiration-list${isDetailsOpened && isTab ? '--hidden' : ''}`}>
-        <CreateInspiration />
-        <Box>
-          {inspirations.map((inspiration, index) => (
-            <CSSTransition
-              in={chosenInspiration === inspiration}
-              key={inspiration.id}
-              timeout={500}
-              classNames="inspiration-list-item">
-              <Inspiration
-                inspiration={inspiration}
-                onClick={() => {
-                  onInspirationClick(inspiration);
-                }}
-                ref={ref => {
-                  if (inspirations.length === index + 1) {
-                    lastElementRef(ref);
-                  }
-                  if (inspiration === chosenInspiration) {
-                    chosenInspirationRef.current = ref || undefined;
-                  }
-                }}
-                customClassName={'inspiration-list-item'}
+    <DashboardContent title="Portal Inspiracji" icon={<BiMessageDetail size={28} />}>
+      <FlexBox className={props.className}>
+        <div className={`inspiration-list${isDetailsOpened && isTab ? '--hidden' : ''}`}>
+          <CreateInspiration />
+          <Box>
+            {inspirations.map((inspiration, index) => (
+              <CSSTransition
+                in={chosenInspiration === inspiration}
+                key={inspiration.id}
+                timeout={500}
+                classNames="inspiration-list-item">
+                <Inspiration
+                  inspiration={inspiration}
+                  onClick={() => {
+                    onInspirationClick(inspiration);
+                  }}
+                  ref={ref => {
+                    if (inspirations.length === index + 1) {
+                      lastElementRef(ref);
+                    }
+                    if (inspiration === chosenInspiration) {
+                      chosenInspirationRef.current = ref || undefined;
+                    }
+                  }}
+                  customClassName={'inspiration-list-item'}
+                />
+              </CSSTransition>
+            ))}
+          </Box>
+          {isLoading && loader}
+          {isError && errorComponent}
+        </div>
+        <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
+          {chosenInspiration && (
+            <FlexBox ref={inspirationDetailsRef}>
+              <InspirationDetails
+                inspiration={chosenInspiration}
+                onClose={closeInspirationDetails}
+                isOpened={isDetailsOpened}
               />
-            </CSSTransition>
-          ))}
-        </Box>
-        {isLoading && loader}
-        {isError && errorComponent}
-      </div>
-      <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
-        {chosenInspiration && (
-          <FlexBox ref={inspirationDetailsRef}>
-            <InspirationDetails
-              inspiration={chosenInspiration}
-              onClose={closeInspirationDetails}
-              isOpened={isDetailsOpened}
-            />
-          </FlexBox>
-        )}
-      </div>
-    </FlexBox>
+            </FlexBox>
+          )}
+        </div>
+      </FlexBox>
+    </DashboardContent>
   );
 };
 

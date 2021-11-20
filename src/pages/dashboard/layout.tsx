@@ -5,7 +5,7 @@ import { COLORS } from '~/styles/variables';
 
 export const DashboardLayout: React.FC = ({ children }) => {
   return (
-    <FlexBox height="100%" width="100%">
+    <FlexBox width="100%" minHeight="100vh">
       <SideBar />
       <Box flex={1} background={COLORS.background}>
         {children}

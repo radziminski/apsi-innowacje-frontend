@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
-import { ProfilePicture } from '~/pages/dashboard/inspiration-page/components/ProfilePicture';
+import { ProfilePicture } from '~/pages/dashboard/inspirations/components/ProfilePicture';
 import { FlexBox } from '~/components/Box';
 
 export interface AuthorInfo {

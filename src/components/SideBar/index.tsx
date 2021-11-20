@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IoMdMenu } from 'react-icons/io';
+import { IoMdClose, IoMdMenu } from 'react-icons/io';
 
 import useDevice from '~/hooks/useDevice';
 import { useOutsideClick } from '~/hooks/useOutsideClick';
@@ -12,7 +12,7 @@ import { Container } from './parts';
 
 export const SideBar: React.FC = () => {
   const [isOpened, setIsOpened] = useState<boolean | null>(false);
-  const { isTab } = useDevice();
+  const { isTab, isMobile } = useDevice();
   const ref = useRef(null);
 
   useOutsideClick(ref, () => isOpened && setIsOpened(false));
@@ -24,6 +24,14 @@ export const SideBar: React.FC = () => {
           <Logo />
         </Box>
         <Nav />
+
+        {isMobile && (
+          <Box position="absolute" right="2rem" top="3.8rem">
+            <button onClick={() => setIsOpened(false)}>
+              <IoMdClose size={32} />
+            </button>
+          </Box>
+        )}
       </Container>
 
       {isTab && (
@@ -33,7 +41,7 @@ export const SideBar: React.FC = () => {
               <IoMdMenu size={48} />
             </button>
           </Box>
-          <ModalOverlay isVisible={isOpened} />
+          <ModalOverlay isVisible={isOpened} onClick={() => setIsOpened(true)} />
         </>
       )}
     </>
