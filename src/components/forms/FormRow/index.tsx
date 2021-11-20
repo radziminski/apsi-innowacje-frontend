@@ -10,7 +10,7 @@ import { Asterisk } from '~/components/forms/Asterisk/Asterisk';
 import { FormCheckbox } from '~/components/forms/FormCheckbox';
 import { FormSelect } from '~/components/forms/FormSelect';
 
-export type FormType = 'text' | 'select' | 'textarea' | 'createable-select' | 'async-select';
+export type FormType = 'text' | 'select' | 'textarea' | 'createable-select' | 'async-select' | 'password';
 
 export interface FormRowPropsBase {
   label: string;
@@ -34,13 +34,14 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
       id: formId,
       ...rest
     };
-    if (type == 'text') return <FormTextInput {...component_props} />;
-    else if (type == 'textarea') return <FormTextArea {...component_props} />;
-    else if (type == 'async-select') return <FormAsyncSelect {...component_props} />;
-    else if (type == 'select') return <FormSelect {...component_props} />;
-    else if (type == 'createable-select') return <FormCreateableSelect {...component_props} />;
-    else if (type == 'dropzone') return <FormDropzone {...component_props} />;
-    else if (type == 'checkbox') return <FormCheckbox {...component_props} />;
+    if (type === 'text') return <FormTextInput {...component_props} />;
+    else if (type === 'password') return <FormTextInput {...component_props} />;
+    else if (type === 'textarea') return <FormTextArea {...component_props} />;
+    else if (type === 'async-select') return <FormAsyncSelect {...component_props} />;
+    else if (type === 'select') return <FormSelect {...component_props} />;
+    else if (type === 'createable-select') return <FormCreateableSelect {...component_props} />;
+    else if (type === 'dropzone') return <FormDropzone {...component_props} />;
+    else if (type === 'checkbox') return <FormCheckbox {...component_props} />;
     else if (customFormComponent) return React.cloneElement(customFormComponent, component_props);
     else return <FormTextInput {...component_props} />;
   };

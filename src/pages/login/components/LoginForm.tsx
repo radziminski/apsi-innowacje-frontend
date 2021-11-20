@@ -1,0 +1,38 @@
+import React from 'react';
+import { FlexBox } from '~/components/Box';
+import { useSelector } from '~/store/hooks';
+import { FormRow } from '~/components/forms/FormRow';
+import { Button } from '~/components/Button';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Heading5 } from '~/components/Text';
+
+export interface LoginFormData {
+  username: string;
+  password: string;
+}
+
+interface Props {
+  onSubmit: (data: LoginFormData) => void;
+}
+
+export const LoginForm: React.FC<Props> = ({ onSubmit }) => {
+  const { isError, isLoading } = useSelector(state => state.user);
+  const methods = useForm();
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <FormRow label="Nazwa Uzytkownika" formId={'username'} type={'text'} placeholder={'Nazwa Uzytkownika'} />
+        <FormRow label="Haslo" formId={'password'} type={'password'} placeholder={'Haslo'} />
+        <FlexBox justifyContent="flex-end">
+          <Button type={'submit'} text={'Zaloguj'} width="20%">
+            {isLoading && <Heading5 textAlign="center">Something went wrong</Heading5>}
+          </Button>
+        </FlexBox>
+        {isError && <Heading5 textAlign="center">Something went wrong</Heading5>}
+      </form>
+    </FormProvider>
+  );
+};
+
+export default LoginForm;
