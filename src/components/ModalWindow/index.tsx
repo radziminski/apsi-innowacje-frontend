@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { ForwardedRef } from 'react';
 import styled from 'styled-components';
 
-const ModalWindowBase = (props: React.PropsWithChildren<{ className?: string }>) => {
-  return <div className={props.className}>{props.children}</div>;
-};
+const ModalWindowBase = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{ className?: string }>>(
+  (props: React.PropsWithChildren<{ className?: string }>, ref: ForwardedRef<HTMLDivElement>) => {
+    return (
+      <div ref={ref} className={props.className}>
+        {props.children}
+      </div>
+    );
+  }
+);
 
 export const ModalWindow = styled(ModalWindowBase)`
   > div {
