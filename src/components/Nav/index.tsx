@@ -22,6 +22,7 @@ import NavItem from '../NavItem';
 import { Pill } from './parts';
 import { useDispatch } from 'react-redux';
 import { logout } from '~/store/slices/CreateUserSlice';
+import useDevice from '~/hooks/useDevice';
 
 const ICON_SIZE = 22;
 
@@ -52,6 +53,7 @@ export const Nav: React.FC = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const isInAccountPage = location.pathname.startsWith(getAccountDetailsPath());
+  const { isTab } = useDevice();
 
   const getLocationOffset = () => {
     if (isInAccountPage) {
@@ -64,7 +66,7 @@ export const Nav: React.FC = () => {
   };
 
   return (
-    <FlexBox flexDirection="column" as="nav" padding="0 3.5rem" position="relative" height="100%">
+    <FlexBox flexDirection="column" as="nav" padding={isTab ? '0 2rem' : '0 3.5rem'} position="relative" height="100%">
       <FlexBox as="ul" flexDirection="column" color={COLORS.gray}>
         {NAV_LINKS.map(link => (
           <Box as="li" paddingY="1.25rem" key={link.label}>
