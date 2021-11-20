@@ -12,13 +12,13 @@ export const schema = yup
     costs_from: yup
       .number()
       .required('Proszę wpisać dodatnią wartość.')
-      .positive()
-      .integer()
+      .positive('Proszę wpisać dodatnią wartosć.')
+      .integer('Proszę wpisać liczbę.')
       .typeError('Proszę wpisać dodatnią wartość.'),
     costs_to: yup
       .number()
-      .positive()
-      .integer()
+      .positive('Proszę wpisać dodatnią wartosć.')
+      .integer('Proszę wpisać liczbę.')
       .required('Proszę wpisać dodatnią wartosć.')
       .when(['costs_from'], costs_from => {
         return yup

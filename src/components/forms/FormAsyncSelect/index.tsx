@@ -2,10 +2,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import React from 'react';
 import AsyncSelect from 'react-select/async';
 import styled from 'styled-components';
-import { customSelectStyles, FormComponentProps, Option } from '~/components/forms';
+import { customSelectStyles, FormComponentProps, SelectOption } from '~/components/forms';
 
 interface FormAsyncSelectProps extends FormComponentProps {
-  fetchOptions: () => Promise<Option[]>;
+  fetchOptions: () => Promise<SelectOption[]>;
 }
 
 const FormAsyncSelectBase = (props: FormAsyncSelectProps) => {
@@ -17,7 +17,7 @@ const FormAsyncSelectBase = (props: FormAsyncSelectProps) => {
     register
   } = useFormContext();
 
-  const getFilteredOptions = (fetchedOptions: Option[], inputValue: string) => {
+  const getFilteredOptions = (fetchedOptions: SelectOption[], inputValue: string) => {
     return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
   };
 

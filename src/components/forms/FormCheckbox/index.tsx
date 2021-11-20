@@ -82,6 +82,7 @@ export const FormCheckbox = styled(FormCheckboxBase)`
     &:hover,
     &--checked:hover {
       box-shadow: 0 0 0.6rem ${({ theme }) => theme.colors.primary}AF;
+      cursor: pointer;
     }
 
     &--checked {

@@ -5,10 +5,10 @@ import { AuthorInfo } from '~/pages/dashboard/inspiration-page/components/Author
 import styled from 'styled-components';
 import Box, { FlexBox } from '~/components/Box';
 import { InspirationDetails } from '~/pages/dashboard/inspiration-page/InspirationDetails';
-import { MARGINS } from '~/styles/variables';
 import { CSSTransition } from 'react-transition-group';
 import { Inspiration } from '~/pages/dashboard/inspiration-page/components/Inspiration';
 import { useOutsideClick } from '~/hooks/useOutsideClick';
+import useDevice from '~/hooks/useDevice';
 
 export interface CommentModel {
   // TODO use proper DTO
@@ -46,6 +46,10 @@ function* inspirationGeneratorFn() {
       comments: [
         { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
         { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
+        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
+        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
+        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
+        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
         { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' }
       ]
     };
@@ -64,12 +68,13 @@ const InspirationPageBase = (props: InspirationPageProps) => {
     inspirationGenerator.next().value!
     /* eslint-enable @typescript-eslint/no-non-null-assertion */
   ]);
+  const { isTab } = useDevice();
 
   const chosenInspirationRef = React.useRef<HTMLDivElement>();
   const inspirationDetailsRef = React.useRef<HTMLDivElement>(null);
 
   useOutsideClick([chosenInspirationRef, inspirationDetailsRef], () => {
-    isDetailsOpened && closeInspirationDetails();
+    isDetailsOpened && !isTab && closeInspirationDetails();
   });
 
   const closeInspirationDetails = React.useCallback(() => {
@@ -117,7 +122,7 @@ const InspirationPageBase = (props: InspirationPageProps) => {
 
   return (
     <FlexBox className={props.className}>
-      <div className={'inspiration-list'}>
+      <div className={`inspiration-list${isDetailsOpened && isTab ? '--hidden' : ''}`}>
         <CreateInspiration />
         <Box>
           {inspirations.map((inspiration, index) => (
@@ -149,9 +154,13 @@ const InspirationPageBase = (props: InspirationPageProps) => {
       </div>
       <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
         {chosenInspiration && (
-          <div ref={inspirationDetailsRef}>
-            <InspirationDetails inspiration={chosenInspiration} onClose={closeInspirationDetails} />
-          </div>
+          <FlexBox ref={inspirationDetailsRef}>
+            <InspirationDetails
+              inspiration={chosenInspiration}
+              onClose={closeInspirationDetails}
+              isOpened={isDetailsOpened}
+            />
+          </FlexBox>
         )}
       </div>
     </FlexBox>
@@ -159,15 +168,14 @@ const InspirationPageBase = (props: InspirationPageProps) => {
 };
 
 export const InspirationPage = styled(InspirationPageBase)`
+  width: 100%;
+
   .inspiration-list__loader {
     margin: ${({ theme }) => theme.margins.medium};
   }
 
-  width: 100%;
-
   .inspiration-details {
     margin-left: 0;
-    margin-right: ${MARGINS.medium};
     transform: translateX(0%);
   }
   .inspiration-details--hidden {
@@ -177,12 +185,22 @@ export const InspirationPage = styled(InspirationPageBase)`
 
   .inspiration-details,
   .inspiration-details--hidden {
+    position: sticky;
+    top: 0;
     width: 100%;
+    height: 100%;
     transition: 0.5s ease-in-out;
   }
 
-  .inspiration-list {
+  .inspiration-list--hidden {
+    margin-left: -100%;
+    transform: translateX(-100%);
+  }
+
+  .inspiration-list,
+  .inspiration-list--hidden {
     width: 100%;
+    transition: 0.5s ease-in-out;
   }
 
   .inspiration-list-item {

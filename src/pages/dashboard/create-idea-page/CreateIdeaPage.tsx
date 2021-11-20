@@ -35,6 +35,9 @@ export default styled(CreateIdeaPage)`
   }
   .required-field-info {
     margin: 15px 0 10px 30px;
+    @media ${({ theme }) => theme.mediaQueries.mobile} {
+      margin: 15px 0 10px 10px;
+    }
     font-weight: 400;
   }
 `;

@@ -8,9 +8,10 @@ export interface FormComponentPropsBase {
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FormComponentProps = FormComponentPropsBase & any;
 
-export interface Option {
+export interface SelectOption {
   label: string;
   value: string;
+  details?: string;
 }
 
 export const customSelectStyles = (isError: boolean) => ({
@@ -29,9 +30,9 @@ export const customSelectStyles = (isError: boolean) => ({
   option: (provided, state) => ({
     ...provided,
     color: COLORS.black,
-    backgroundColor: state.isActive ? COLORS.gray : COLORS.white,
+    backgroundColor: state.isSelected ? COLORS.lightGray : COLORS.white,
     '&:hover': {
-      backgroundColor: '#eee',
+      backgroundColor: state.isSelected ? COLORS.lightGray : '#eee',
       transition: 'background-color 0.15s ease-in-out'
     }
   }),
