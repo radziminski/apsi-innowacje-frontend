@@ -22,6 +22,11 @@ export interface CustomTheme {
     gray: string;
     lightGray: string;
   };
+  borderRadiuses: {
+    normal: string;
+    small: string;
+    large: string;
+  };
   fontWeights: {
     thin: number;
     extraLight: number;

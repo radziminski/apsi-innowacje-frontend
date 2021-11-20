@@ -66,8 +66,9 @@ export const Center = styled(FlexBox)`
 `;
 
 export const Card = styled(FlexBox)`
-  border-radius: 1.5rem;
+  border-radius: ${({ theme }) => theme.borderRadiuses.normal};
   background-color: ${({ theme }) => theme.colors.white};
   margin: ${({ theme }) => theme.margins.small};
   padding: ${({ theme }) => theme.margins.small};
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.02);
 `;
