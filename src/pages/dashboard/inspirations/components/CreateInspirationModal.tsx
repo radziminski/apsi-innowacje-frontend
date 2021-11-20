@@ -1,6 +1,6 @@
+import React from 'react';
 import styled from 'styled-components';
 import { Center } from '~/components/Box';
-import React from 'react';
 import { ModalWindow } from '~/components/ModalWindow';
 import { ModalOverlay } from '~/components/ModalOverlay';
 import { useOutsideClick } from '~/hooks/useOutsideClick';

@@ -8,14 +8,14 @@ import { addFiles, clearFiles, FileEntry } from '~/store/slices/CreateIdeaAddedF
 import { RootState } from '~/store/store';
 import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
-import { schema } from '~/pages/dashboard/create-idea-page/schema';
+import { schema } from '~/pages/dashboard/create-idea/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SelectOption } from '~/components/forms';
-import { IdeaSavedModal } from '~/pages/dashboard/create-idea-page/components/IdeaSavedModal';
+import { IdeaSavedModal } from '~/pages/dashboard/create-idea/components/IdeaSavedModal';
 import apiClient, { SubjectDto, SubjectDtoAudienceEnum } from '~/api-client';
 import { AxiosResponse } from 'axios';
-import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea-page/util';
-import { IdeaErrorModal } from '~/pages/dashboard/create-idea-page/components/IdeaErrorModal';
+import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea/util';
+import { IdeaErrorModal } from '~/pages/dashboard/create-idea/components/IdeaErrorModal';
 import { LoadingModal } from '~/components/Modal/LoadingModal';
 import { components } from 'react-select';
 
@@ -125,8 +125,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
   const fetchSubjects = React.useCallback(async (): Promise<SelectOption[]> => {
     const fetchedSubjects: SubjectDto[] = (await apiClient.getAllUsingGET()).data;
-    // eslint-disable-next-line no-console
-    console.log(fetchedSubjects);
     return fetchedSubjects.map(subject => ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value: `${subject.id!}`,

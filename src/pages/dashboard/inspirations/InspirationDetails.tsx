@@ -1,7 +1,7 @@
 import React from 'react';
 import { FixedMenuWrapper } from '~/components/FixedMenuWrapper';
-import { InspirationDetailsContent } from '~/pages/dashboard/inspiration-page/components/InspirationDetailsContent';
-import { InspirationModel } from '~/pages/dashboard/inspiration-page/InspirationPage';
+import { InspirationDetailsContent } from '~/pages/dashboard/inspirations/components/InspirationDetailsContent';
+import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
 
 export interface InspirationDetailsProps {
   inspiration: InspirationModel;

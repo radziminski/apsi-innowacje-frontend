@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card } from '~/components/Box';
-import { ProfilePicture } from '~/pages/dashboard/inspiration-page/components/ProfilePicture';
-import { TextInput } from '~/components/forms/FormTextInput/TextInput';
 import styled from 'styled-components';
-import { CreateInspirationModal } from '~/pages/dashboard/inspiration-page/components/CreateInspirationModal';
+import { Card } from '~/components/Box';
+import { TextInput } from '~/components/forms/FormTextInput/TextInput';
+import { ProfilePicture } from '~/pages/dashboard/inspirations/components/ProfilePicture';
+import { CreateInspirationModal } from '~/pages/dashboard/inspirations/components/CreateInspirationModal';
 
 const CreateInspirationBase = (props: { className?: string }) => {
   const [modalOpened, setModalOpened] = React.useState<boolean>(false);

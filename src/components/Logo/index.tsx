@@ -3,10 +3,11 @@ import { COLORS, FONT_WEIGHTS } from '~/styles/variables';
 import Box, { FlexBox } from '../Box';
 import { Heading1 } from '../Text';
 import { FaLightbulb } from 'react-icons/fa';
+import { defaultTheme } from '~/styles/theme';
 
 export const Logo: React.FC = () => {
   return (
-    <FlexBox alignItems="center" height="1.5rem">
+    <FlexBox alignItems="center" height="1.5rem" margin={defaultTheme.margins.small}>
       <Box marginRight="1rem" marginBottom="-0.2rem">
         <FaLightbulb size={26} color={COLORS.primary} />
       </Box>

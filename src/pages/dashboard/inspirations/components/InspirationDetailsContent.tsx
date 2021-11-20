@@ -1,12 +1,12 @@
-import { Card, FlexBox } from '~/components/Box';
-import { AiOutlineClose } from 'react-icons/ai';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
-import { InspirationContent } from '~/pages/dashboard/inspiration-page/components/InspirationContent';
-import { InspirationDiscussion } from '~/pages/dashboard/inspiration-page/components/InspirationDiscussion';
 import React from 'react';
-import useDevice from '~/hooks/useDevice';
 import styled from 'styled-components';
-import { InspirationDetailsProps } from '~/pages/dashboard/inspiration-page/InspirationDetails';
+import { AiOutlineClose } from 'react-icons/ai';
+import { Card, FlexBox } from '~/components/Box';
+import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
+import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
+import { InspirationDiscussion } from '~/pages/dashboard/inspirations/components/InspirationDiscussion';
+import { InspirationDetailsProps } from '~/pages/dashboard/inspirations/InspirationDetails';
+import useDevice from '~/hooks/useDevice';
 
 const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isOpened'>) => {
   const { isTab } = useDevice();

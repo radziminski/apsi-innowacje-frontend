@@ -1,8 +1,8 @@
+import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import React from 'react';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
-import { CommentModel } from '~/pages/dashboard/inspiration-page/InspirationPage';
+import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
+import { CommentModel } from '~/pages/dashboard/inspirations/InspirationPage';
 
 interface DiscussionItemProps {
   comment: CommentModel;

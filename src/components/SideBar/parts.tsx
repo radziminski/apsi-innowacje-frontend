@@ -7,6 +7,7 @@ export const Container = styled.aside<{ isOpened: boolean }>`
   flex-direction: column;
   height: 100vh;
   background: ${({ theme }) => theme.colors.white};
+  position: relative;
 
   @media ${({ theme }) => theme.mediaQueries.tab} {
     position: fixed;
@@ -15,5 +16,11 @@ export const Container = styled.aside<{ isOpened: boolean }>`
     transition: transform 0.2s ease-in-out;
     transform: ${({ isOpened }) => (isOpened ? 'translateX(0%)' : 'translateX(-100%)')};
     z-index: ${({ theme }) => theme.zIndex.modalFront};
+  }
+
+  @media ${({ theme }) => theme.mediaQueries.mobile} {
+    width: 100%;
+    overflow-y: auto;
+    padding: 3rem 0;
   }
 `;

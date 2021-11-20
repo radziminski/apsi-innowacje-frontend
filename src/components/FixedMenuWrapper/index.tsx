@@ -16,20 +16,41 @@ const FixedMenuWrapperBase = (props: React.PropsWithChildren<FixedMenuWrapperPro
   useEffect(() => {
     if (isTab) {
       if (isOpened) {
+        if (window.scrollY < 250) {
+          // hack for showing whole detail
+          window.scrollBy({
+            top: 250,
+            left: 0,
+            behavior: 'smooth'
+          });
+        }
         document.body.style.overflowY = 'hidden';
       } else {
         document.body.style.overflowY = 'visible';
       }
+    } else {
+      if (isOpened) {
+        if (window.scrollY < 140) {
+          // hack for showing whole detail
+          window.scrollBy({
+            top: 140,
+            left: 0,
+            behavior: 'smooth'
+          });
+        }
+      }
+
+      return () => {
+        document.body.style.overflowY = 'visible';
+      };
     }
-    return () => {
-      document.body.style.overflowY = 'visible';
-    };
   }, [isOpened]);
 
   return <FlexBox className={className}>{children}</FlexBox>;
 };
 
 export const FixedMenuWrapper = styled(FixedMenuWrapperBase)`
+  scroll-behavior: smooth;
   top: 0;
   bottom: 0;
   position: fixed;

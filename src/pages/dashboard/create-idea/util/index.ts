@@ -1,4 +1,4 @@
-import { CreateIdeaFormSchema } from '~/pages/dashboard/create-idea-page/components/CreateIdeaForm';
+import { CreateIdeaFormSchema } from '~/pages/dashboard/create-idea/components/CreateIdeaForm';
 import { IdeaDto, IdeaDtoStatusEnum } from '~/api-client';
 
 export const formSchemaToIdeaDTO = (formData: CreateIdeaFormSchema, currentUserId: number): IdeaDto => {
