@@ -34,7 +34,7 @@ export const FormTextArea = styled(FormTextAreaBase)`
 
   .form-textarea,
   .form-textarea--error {
-    border: 0;
+    border: 1px solid ${({ theme }) => theme.colors.primary}5A;
     border-radius: 1.5rem;
     background-color: ${({ theme }) => theme.colors.white};
     padding: 15px;

@@ -30,7 +30,7 @@ export const TextInput = styled(TextInputBase)`
     ::placeholder {
       color: ${({ theme }) => theme.colors.lightGray};
     }
-    border: 0;
+    border: 1px solid ${({ theme }) => theme.colors.primary}5A;
     border-radius: 999px;
     background-color: ${({ theme }) => theme.colors.white};
     padding: 0.8rem ${({ theme }) => theme.margins.small};
