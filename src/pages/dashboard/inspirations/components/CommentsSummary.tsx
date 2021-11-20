@@ -1,8 +1,8 @@
+import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
 import { BsFillChatFill } from 'react-icons/bs';
 import { COLORS } from '~/styles/variables';
-import React from 'react';
 
 interface CommentsSummaryProps {
   comments: number;

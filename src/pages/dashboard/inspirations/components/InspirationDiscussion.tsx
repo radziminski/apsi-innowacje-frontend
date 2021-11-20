@@ -1,6 +1,6 @@
+import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import React from 'react';
 import { CommentModel } from '~/pages/dashboard/inspirations/InspirationPage';
 import { HorizontalRuler } from '~/components/HorizontalRuler';
 import { DiscussionItem } from '~/pages/dashboard/inspirations/components/DiscussionItem';

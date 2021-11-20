@@ -125,8 +125,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
   const fetchSubjects = React.useCallback(async (): Promise<SelectOption[]> => {
     const fetchedSubjects: SubjectDto[] = (await apiClient.getAllUsingGET()).data;
-    // eslint-disable-next-line no-console
-    console.log(fetchedSubjects);
     return fetchedSubjects.map(subject => ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value: `${subject.id!}`,
