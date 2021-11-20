@@ -14,4 +14,6 @@ export const getIdeasPath = () => `${getDashboardPath()}/pomysly`;
 
 export const getInspirationsPagePath = () => `${getDashboardPath()}/inspiracje`;
 
+export const getInspirationDetailsPagePath = () => `${getInspirationsPagePath()}/([0-9]+)`;
+
 export const getVotingPath = () => `${getDashboardPath()}/glosowanie`;

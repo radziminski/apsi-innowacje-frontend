@@ -4,11 +4,7 @@ import { useInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
 import { AuthorInfo } from '~/pages/dashboard/inspiration-page/components/AuthorInfo';
 import styled from 'styled-components';
 import Box, { FlexBox } from '~/components/Box';
-import { InspirationDetails } from '~/pages/dashboard/inspiration-page/InspirationDetails';
-import { CSSTransition } from 'react-transition-group';
 import { Inspiration } from '~/pages/dashboard/inspiration-page/components/Inspiration';
-import { useOutsideClick } from '~/hooks/useOutsideClick';
-import useDevice from '~/hooks/useDevice';
 
 export interface CommentModel {
   // TODO use proper DTO
@@ -59,8 +55,6 @@ function* inspirationGeneratorFn() {
 const inspirationGenerator = inspirationGeneratorFn();
 
 const InspirationPageBase = (props: InspirationPageProps) => {
-  const [chosenInspiration, setChosenInspiration] = React.useState<InspirationModel | undefined>(undefined);
-  const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
   const [inspirations, setInspirations] = React.useState<InspirationModel[]>([
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     inspirationGenerator.next().value!,
@@ -68,24 +62,6 @@ const InspirationPageBase = (props: InspirationPageProps) => {
     inspirationGenerator.next().value!
     /* eslint-enable @typescript-eslint/no-non-null-assertion */
   ]);
-  const { isTab } = useDevice();
-
-  const chosenInspirationRef = React.useRef<HTMLDivElement>();
-  const inspirationDetailsRef = React.useRef<HTMLDivElement>(null);
-
-  useOutsideClick([chosenInspirationRef, inspirationDetailsRef], () => {
-    isDetailsOpened && closeInspirationDetails();
-  });
-
-  const closeInspirationDetails = React.useCallback(() => {
-    setIsDetailsOpened(false);
-    setTimeout(() => setChosenInspiration(undefined), 500);
-  }, []);
-
-  const onInspirationClick = React.useCallback((inspiration: InspirationModel) => {
-    setChosenInspiration(inspiration);
-    setIsDetailsOpened(true);
-  }, []);
 
   const fetchData = React.useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -122,42 +98,24 @@ const InspirationPageBase = (props: InspirationPageProps) => {
 
   return (
     <FlexBox className={props.className}>
-      <div className={`inspiration-list${isDetailsOpened && isTab ? '--hidden' : ''}`}>
+      <div className={'inspiration-list'}>
         <CreateInspiration />
         <Box>
           {inspirations.map((inspiration, index) => (
-            <CSSTransition
-              in={chosenInspiration === inspiration}
+            <Inspiration
               key={inspiration.id}
-              timeout={500}
-              classNames="inspiration-list-item">
-              <Inspiration
-                inspiration={inspiration}
-                onClick={() => {
-                  onInspirationClick(inspiration);
-                }}
-                ref={ref => {
-                  if (inspirations.length === index + 1) {
-                    lastElementRef(ref);
-                  }
-                  if (inspiration === chosenInspiration) {
-                    chosenInspirationRef.current = ref || undefined;
-                  }
-                }}
-                customClassName={'inspiration-list-item'}
-              />
-            </CSSTransition>
+              inspiration={inspiration}
+              ref={ref => {
+                if (inspirations.length === index + 1) {
+                  lastElementRef(ref);
+                }
+              }}
+              customClassName={'inspiration-list-item'}
+            />
           ))}
         </Box>
         {isLoading && loader}
         {isError && errorComponent}
-      </div>
-      <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
-        {chosenInspiration && (
-          <FlexBox ref={inspirationDetailsRef}>
-            <InspirationDetails inspiration={chosenInspiration} onClose={closeInspirationDetails} />
-          </FlexBox>
-        )}
       </div>
     </FlexBox>
   );
@@ -170,46 +128,8 @@ export const InspirationPage = styled(InspirationPageBase)`
     margin: ${({ theme }) => theme.margins.medium};
   }
 
-  .inspiration-details {
-    margin-left: 0;
-    transform: translateX(0%);
-  }
-  .inspiration-details--hidden {
-    margin-left: -100%;
-    transform: translateX(100%);
-  }
-
-  .inspiration-details,
-  .inspiration-details--hidden {
+  .inspiration-list {
     width: 100%;
-    transition: 0.5s ease-in-out;
-  }
-
-  .inspiration-list--hidden {
-    margin-left: -100%;
-    transform: translateX(-100%);
-  }
-
-  .inspiration-list,
-  .inspiration-list--hidden {
-    width: 100%;
-    transition: 0.5s ease-in-out;
-  }
-
-  .inspiration-list-item {
-    &-enter-active,
-    &-enter-active:hover,
-    &-enter-done,
-    &-enter-done:hover {
-      transform: translate(-3px, -3px);
-      box-shadow: 2px 2px 0.5rem ${({ theme }) => theme.colors.primary}8F;
-    }
-
-    &-exit-active,
-    &-exit-active:hover {
-      transform: translate(0, 0);
-      transition: transform 0.2s ease-out;
-    }
   }
 
   .inspiration-list-item {

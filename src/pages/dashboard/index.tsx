@@ -4,7 +4,7 @@ import { getCreateIdeaPath, getExamplePagePath, getInspirationsPagePath } from '
 import ExamplePage from './example-page';
 import DashboardLayout from './layout';
 import CreateIdeaPage from './create-idea-page/CreateIdeaPage';
-import { InspirationPage } from '~/pages/dashboard/inspiration-page/InspirationPage';
+import InspirationRoutes from '~/pages/dashboard/InspirationRoutes';
 
 export const DashboardRoutes: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ export const DashboardRoutes: React.FC = () => {
       <Switch>
         <Route path={getExamplePagePath()} component={ExamplePage} />
         <Route path={getCreateIdeaPath()} component={CreateIdeaPage} />
-        <Route path={getInspirationsPagePath()} component={InspirationPage} />
+        <Route path={getInspirationsPagePath()} component={InspirationRoutes} />
         {/* Rest of dashboard routes here */}
       </Switch>
     </DashboardLayout>
