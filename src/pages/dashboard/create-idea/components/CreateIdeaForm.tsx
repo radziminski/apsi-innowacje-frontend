@@ -135,14 +135,8 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
   return (
     <div className={props.className}>
-      {isLoading && (
-        <LoadingModal
-          textContent={
-            'Trwa zapisywanie pomysłu... Zamiast Loadera dałbym toasta i stan' +
-            ' zapisywania trzymał w storze. Ale to TODO.'
-          }
-        />
-      )}
+      {/*TODO Use react-toastify to notify about adding and do it in the background*/}
+      {isLoading && <LoadingModal textContent={'Trwa zapisywanie pomysłu...'} />}
       <>
         {!isLoading && requestStatus === 'success' && <IdeaSavedModal onClose={closeIdeaSavedOrErrorModal} />}
         {!isLoading && requestStatus === 'error' && <IdeaErrorModal onClose={closeIdeaSavedOrErrorModal} />}

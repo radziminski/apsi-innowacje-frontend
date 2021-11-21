@@ -22,7 +22,9 @@ const useFilesListComponent = (
       {addedFiles.map((fileEntry: FileEntry) => (
         <li key={fileEntry.id}>
           <FlexBox>
-            <AiOutlineDelete size={18} onClick={() => svgClickHandler(fileEntry)} />
+            <FlexBox>
+              <AiOutlineDelete size={18} onClick={() => svgClickHandler(fileEntry)} />
+            </FlexBox>
             {fileEntry.file.name} - {prettyBytes(fileEntry.file.size)}
           </FlexBox>
         </li>

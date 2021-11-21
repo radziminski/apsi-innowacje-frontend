@@ -42,19 +42,15 @@ function* inspirationGeneratorFn() {
   while (true) {
     yield {
       id: id++,
-      content: 'aaaa',
-      author: { firstName: 'Michal', lastName: 'Belniak' },
+      content: 'Testowa treść',
+      author: { firstName: 'Testowy', lastName: 'Użytkownik' },
       // upvotes: 10,
       // downvotes: 5,
-      comments: [
-        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
-        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
-        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
-        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
-        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
-        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' },
-        { id: id++, author: { firstName: 'Jakiś', lastName: 'Hejter' }, content: 'Buuuu słabo' }
-      ]
+      comments: new Array(6).fill(0).map(() => ({
+        id: id++,
+        author: { firstName: 'Testowy', lastName: 'Użytkownik' },
+        content: 'Testowy komentarz'
+      }))
     };
   }
 }

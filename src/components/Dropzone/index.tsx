@@ -10,6 +10,8 @@ import { ModalOverlay } from '~/components/ModalOverlay';
 import { DuplicatedEntriesModal } from '~/components/Dropzone/DuplicatedEntriesModal';
 import { FilesToLargeModal } from '~/components/Dropzone/FileToLargeModal';
 import { FileErrorsModal } from '~/components/Dropzone/FileErrorModal';
+import { FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice';
+import { TotalSizeTooBigModal } from '~/components/Dropzone/TotalSizeTooBigModal';
 
 export interface DropzoneProps {
   onFilesAdded: (files) => void;
@@ -19,15 +21,28 @@ export interface DropzoneProps {
 }
 
 interface FileErrors {
-  filesToLarge: string[];
+  filesTooLarge: string[];
   erroredFiles: string[];
+  totalSizeTooBig: boolean;
 }
+
+const FILES_TOTAL_SIZE_LIMIT = 1024 * 1024 * 1024; //1GB
+const FILE_SIZE_LIMIT = 10 * 1024 * 1024; //10MB
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: ForwardedRef<HTMLDivElement>) => {
   const duplicatedEntriesError = useSelector((state: RootState) => state.addedFiles.duplicationError);
-  const [fileErrors, setFileErrors] = React.useState<FileErrors>({ filesToLarge: [], erroredFiles: [] });
-  const hasErrors = fileErrors.filesToLarge.length || fileErrors.erroredFiles.length || duplicatedEntriesError;
+  const currentFiles: FileEntry[] = useSelector((state: RootState) => state.addedFiles.addedFiles);
+  const [fileErrors, setFileErrors] = React.useState<FileErrors>({
+    filesTooLarge: [],
+    erroredFiles: [],
+    totalSizeTooBig: false
+  });
+  const hasErrors =
+    fileErrors.filesTooLarge.length ||
+    fileErrors.erroredFiles.length ||
+    fileErrors.totalSizeTooBig ||
+    duplicatedEntriesError;
 
   const onFilesAdded = React.useCallback(
     (addedFiles: File[], fileRejections) => {
@@ -39,15 +54,22 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
           .filter(file => file.errors.some(err => err.code !== 'file-too-large'))
           .map(file => file.file.name);
         setFileErrors({
-          filesToLarge: [...(fileErrors.filesToLarge || []), ...toLargeFiles],
+          ...fileErrors,
+          filesTooLarge: [...(fileErrors.filesTooLarge || []), ...toLargeFiles],
           erroredFiles: [...(fileErrors.erroredFiles || []), ...erroredFiles]
         });
 
         return;
       }
+      const currentTotalSize = currentFiles.reduce((sum, file) => file.file.size + sum, 0);
+      const addedFilesSize = addedFiles.reduce((sum, file) => file.size + sum, 0);
+      if (currentTotalSize + addedFilesSize > FILES_TOTAL_SIZE_LIMIT) {
+        setFileErrors({ ...fileErrors, totalSizeTooBig: true });
+        return;
+      }
       props.onFilesAdded(addedFiles);
     },
-    [props.accept, props.onFilesAdded]
+    [props.accept, props.onFilesAdded, currentFiles, fileErrors]
   );
 
   const addedFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
@@ -56,7 +78,7 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
     multiple: true,
     onDrop: onFilesAdded,
     accept: props.accept,
-    maxSize: 10 * 1024 * 1024
+    maxSize: FILE_SIZE_LIMIT
   });
 
   const onFilesErrorModalClose = React.useCallback(
@@ -65,7 +87,12 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
   );
 
   const onFilesToLargeModalClose = React.useCallback(
-    () => setFileErrors({ ...fileErrors, filesToLarge: [] }),
+    () => setFileErrors({ ...fileErrors, filesTooLarge: [] }),
+    [fileErrors]
+  );
+
+  const onTotalSizeTooBigModalClose = React.useCallback(
+    () => setFileErrors({ ...fileErrors, totalSizeTooBig: false }),
     [fileErrors]
   );
 
@@ -85,12 +112,16 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
       {hasErrors ? ( // need to render it conditionally, because otherwise fade-out appears temporarily on rerenders
         <ModalOverlay isVisible={!!hasErrors}>
           {duplicatedEntriesError && <DuplicatedEntriesModal filename={duplicatedEntriesError} />}
-          {fileErrors.filesToLarge.length && !duplicatedEntriesError && (
-            <FilesToLargeModal files={fileErrors.filesToLarge} onClick={onFilesToLargeModalClose} />
+          {fileErrors.filesTooLarge.length && !duplicatedEntriesError && (
+            <FilesToLargeModal files={fileErrors.filesTooLarge} onClick={onFilesToLargeModalClose} />
           )}
-          {fileErrors.erroredFiles.length && !fileErrors.filesToLarge.length && !duplicatedEntriesError && (
+          {fileErrors.erroredFiles.length && !fileErrors.filesTooLarge.length && !duplicatedEntriesError && (
             <FileErrorsModal files={fileErrors.erroredFiles} onClick={onFilesErrorModalClose} />
           )}
+          {fileErrors.filesTooLarge &&
+            !fileErrors.erroredFiles.length &&
+            !fileErrors.filesTooLarge.length &&
+            !duplicatedEntriesError && <TotalSizeTooBigModal onClick={onTotalSizeTooBigModalClose} />}
         </ModalOverlay>
       ) : null}
     </div>
