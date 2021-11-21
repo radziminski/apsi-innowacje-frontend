@@ -124,7 +124,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   }, []);
 
   const fetchSubjects = React.useCallback(async (): Promise<SelectOption[]> => {
-    const fetchedSubjects: SubjectDto[] = (await apiClient.getAllUsingGET()).data;
+    const fetchedSubjects: SubjectDto[] = (await apiClient.getAllSubjectsUsingGET()).data;
     // eslint-disable-next-line no-console
     console.log(fetchedSubjects);
     return fetchedSubjects.map(subject => ({

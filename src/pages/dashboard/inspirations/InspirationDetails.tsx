@@ -47,7 +47,7 @@ const InspirationDetailsBase = (props: InspirationDetailsProps) => {
 };
 
 export const InspirationDetails = styled(InspirationDetailsBase)`
-  min-height: 100vh;
+  height: 95vh;
   width: 100%;
   top: 0;
   bottom: 0;
