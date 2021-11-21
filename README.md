@@ -23,7 +23,7 @@ Rozwiazanie zostalo stworzone przy uzyciu biblioteki <img align="center" src="ht
 
 ### Uruchamianie lokalne
 Aby uruchomić stronę lokalnie w trybie developerskim należy mieć zainstalowane:
-* Node.js w wersji 14 bądź wyższej 
+* Node.js w wersji 14.16.0 bądź wyższej 
 * Menedzera pakietow NPM w wersji 7 bądź wyższej
 
 Przed uruchomieniem należy zainstalować wszystkie wymagane pakiety komendą
