@@ -5,7 +5,7 @@ import DashboardContent from '~/components/DashboardContent/DashboardContent';
 export const VotingPage: React.FC = () => {
   return (
     <DashboardContent title="Głosowanie na pomysły" icon={<MdOutlineRateReview size={28} />}>
-      s
+      Coming soon...
     </DashboardContent>
   );
 };

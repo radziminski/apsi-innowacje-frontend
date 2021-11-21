@@ -70,7 +70,7 @@ export const FormCheckbox = styled(FormCheckboxBase)`
     width: 20px;
     height: 20px;
     background-color: ${({ theme }) => theme.colors.white};
-    border-radius: 999px;
+    border-radius: 100%;
     margin: 0.7rem 0;
   }
 

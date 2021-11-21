@@ -58,6 +58,12 @@ export const BREAKPOINTS: Record<Device, number> = {
   [Device.Mobile]: 601
 };
 
+export const BORDER_RADIUSES = {
+  normal: '0.75rem',
+  small: '0.5rem',
+  large: '1rem'
+};
+
 export const MEDIA_QUERIES = {
   ...Object.values(Device).reduce<Record<Device, string>>((acc, breakpoint) => {
     return {

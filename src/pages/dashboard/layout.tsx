@@ -9,7 +9,11 @@ export const DashboardLayout: React.FC = ({ children }) => {
   const { isTab } = useDevice();
 
   return (
-    <FlexBox width="100%" minHeight="100vh" flexDirection={isTab ? 'column' : 'row'}>
+    <FlexBox
+      width="100%"
+      minHeight="100vh"
+      flexDirection={isTab ? 'column' : 'row'}
+      overflow={isTab ? undefined : 'hidden'}>
       <SideBar />
       {isTab && <MobileNavBar />}
       <Box flex={1} background={COLORS.background}>

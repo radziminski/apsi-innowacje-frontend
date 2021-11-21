@@ -101,7 +101,7 @@ export const Dropzone = styled(DropzoneBase)`
   .dropzone {
     width: 100%;
     padding: ${({ theme }) => theme.margins.big};
-    border-radius: 1.5rem;
+    border-radius: ${({ theme }) => theme.borderRadiuses.normal};
     background-color: ${({ theme }) => theme.colors.white};
 
     > div {
