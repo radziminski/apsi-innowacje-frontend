@@ -6,7 +6,7 @@ Ponizsze rezpozytorium prezentuje czesc frontend'owa projektu Innowacje stworzon
 
 ## Podglad 
 
-Rozwiazanie dostepne jest na stronie [https://apsi-innowacje.vercel.app/](https://apsi-innowacje-dev.vercel.app/ "Innowacje")
+Rozwiazanie dostepne jest na stronie [https://apsi-innowacje-test.vercel.app/](https://apsi-innowacje-test.vercel.app/ "Innowacje")
 
 Do logowania należy użyć hasła *1234567890* oraz jednej z nazw użytkownika:
 * Student

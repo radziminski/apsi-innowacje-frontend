@@ -193,7 +193,7 @@ export const InspirationPage = styled(InspirationPageBase)`
     position: sticky;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     transition: 0.5s ease-in-out;
   }
 

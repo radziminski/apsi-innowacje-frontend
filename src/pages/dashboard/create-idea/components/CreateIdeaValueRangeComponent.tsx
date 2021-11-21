@@ -35,7 +35,7 @@ export const CreateIdeaValueRangeComponent = styled(CreateIdeaValueRangeComponen
 
     color: ${({ theme }) => theme.colors.darkGray};
     box-shadow: 0 0 0.1rem ${({ theme }) => theme.colors.primaryDark};
-    border-radius: 1rem;
+    border-radius: ${({ theme }) => theme.borderRadiuses.small};
     background-color: ${({ theme }) => theme.colors.lightGray};
     height: 43px;
     width: 20%;
