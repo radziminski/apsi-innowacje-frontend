@@ -22,9 +22,8 @@ const RemoveFileModalBase = (props: RemoveFileModalProps) => {
             theme={{ ...props.theme, colors: { ...props.theme.colors, lightGray: COLORS.darkGray } } as DefaultTheme}
             onClick={() => props.handleChoice(true)}
             text={'Tak'}
-            id={'remove_file-modal__yes-button'}
           />
-          <Button onClick={() => props.handleChoice(false)} text={'Anuluj'} id={'remove_file-modal__cancel-button'} />
+          <Button onClick={() => props.handleChoice(false)} text={'Anuluj'} />
         </FlexBox>
       </Center>
     </ModalWindow>
@@ -45,12 +44,11 @@ export const RemoveFileModal = withTheme(styled(RemoveFileModalBase)`
     margin-top: ${({ theme }) => theme.margins.medium};
   }
 
-  #remove_file-modal__yes-button,
-  #remove_file-modal__cancel-button {
+  button {
     align-self: flex-end;
   }
 
-  #remove_file-modal__yes-button {
-    margin-right: ${({ theme }) => theme.margins.small};
+  button + button {
+    margin-left: ${({ theme }) => theme.margins.small};
   }
 `);
