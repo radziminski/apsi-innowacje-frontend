@@ -1,72 +1,37 @@
-import styled from 'styled-components';
-import { Card, FlexBox } from '~/components/Box';
 import React, { useEffect } from 'react';
+import { FixedMenuWrapper } from '~/components/FixedMenuWrapper';
+import { InspirationDetailsContent } from '~/pages/dashboard/inspirations/components/InspirationDetailsContent';
 import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
-import { AiOutlineClose } from 'react-icons/ai';
-import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
-import { InspirationDiscussion } from '~/pages/dashboard/inspirations/components/InspirationDiscussion';
-import useDevice from '~/hooks/useDevice';
 
-interface InspirationDetailsProps {
+export interface InspirationDetailsProps {
   inspiration: InspirationModel;
   onClose: () => void;
   isOpened?: boolean;
   className?: string;
 }
 
-const InspirationDetailsBase = (props: InspirationDetailsProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { inspiration, onClose, isOpened, className } = props;
-  const { isTab } = useDevice();
+export const InspirationDetails = (props: InspirationDetailsProps) => {
+  const { isOpened, ...rest } = props;
+  // hack for showing whole detail
   useEffect(() => {
-    if (isTab) {
-      if (isOpened) {
-        document.body.style.overflowY = 'hidden';
-      } else {
-        document.body.style.overflowY = 'visible';
+    if (isOpened) {
+      const mainElement = document.getElementsByClassName('inspiration-list--hidden');
+      if (mainElement.length) {
+        const yOffset = mainElement[0].getBoundingClientRect().top;
+        if (yOffset) {
+          // hack for showing whole detail
+          window.scrollBy({
+            top: yOffset,
+            behavior: 'smooth'
+          });
+        }
       }
     }
-    return () => {
-      document.body.style.overflowY = 'visible';
-    };
   }, [isOpened]);
+
   return (
-    <FlexBox className={className}>
-      <Card>
-        <FlexBox className={'inspiration-details__pre-header'}>
-          <span>11/11/2021 12:45 TODO proper date</span>
-          <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
-        </FlexBox>
-        <AuthorInfoComponent authorInfo={inspiration.author} />
-        <InspirationContent inspiration={props.inspiration} />
-        <InspirationDiscussion comments={props.inspiration.comments} />
-      </Card>
-    </FlexBox>
+    <FixedMenuWrapper isOpened={isOpened}>
+      <InspirationDetailsContent {...rest} />
+    </FixedMenuWrapper>
   );
 };
-
-export const InspirationDetails = styled(InspirationDetailsBase)`
-  height: 95vh;
-  width: 100%;
-  top: 0;
-  bottom: 0;
-  position: fixed;
-
-  > div {
-    width: 100%;
-    overflow-y: scroll;
-    flex-direction: column;
-  }
-  .inspiration-details__pre-header {
-    justify-content: space-between;
-    padding-bottom: ${({ theme }) => theme.margins.small};
-    svg {
-      cursor: pointer;
-      transition: 0.15s ease-in-out;
-      &:hover {
-        color: ${({ theme }) => theme.colors.primary};
-      }
-    }
-  }
-`;

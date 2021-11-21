@@ -1,6 +1,6 @@
+import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import React from 'react';
 import { CommentsSummary } from '~/pages/dashboard/inspirations/components/CommentsSummary';
 
 export interface InspirationFooterProps {

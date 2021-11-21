@@ -1,6 +1,6 @@
+import React from 'react';
 import styled from 'styled-components';
 import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
-import React from 'react';
 
 interface InspirationContentProps {
   inspiration: InspirationModel;

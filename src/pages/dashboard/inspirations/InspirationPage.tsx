@@ -1,16 +1,16 @@
 import React from 'react';
+import styled from 'styled-components';
+import { CSSTransition } from 'react-transition-group';
+import { BiMessageDetail } from 'react-icons/bi';
 import { CreateInspiration } from '~/pages/dashboard/inspirations/CreateInspiration';
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
 import { AuthorInfo } from '~/pages/dashboard/inspirations/components/AuthorInfo';
-import styled from 'styled-components';
 import Box, { FlexBox } from '~/components/Box';
 import { InspirationDetails } from '~/pages/dashboard/inspirations/InspirationDetails';
-import { CSSTransition } from 'react-transition-group';
 import { Inspiration } from '~/pages/dashboard/inspirations/components/Inspiration';
 import { useOutsideClick } from '~/hooks/useOutsideClick';
 import useDevice from '~/hooks/useDevice';
 import DashboardContent from '~/components/DashboardContent/DashboardContent';
-import { BiMessageDetail } from 'react-icons/bi';
 import { CenteredLoader } from '~/components/Loader';
 
 export interface CommentModel {

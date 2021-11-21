@@ -4,7 +4,7 @@ import { FlexBox } from '~/components/Box';
 
 export const ProfilePicture = () => {
   return (
-    <FlexBox>
+    <FlexBox className={'profile-picture'}>
       <CgProfile size={35} />
     </FlexBox>
   );
