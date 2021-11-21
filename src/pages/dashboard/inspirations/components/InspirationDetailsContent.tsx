@@ -15,7 +15,8 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
   return (
     <Card className={className}>
       <FlexBox className={'inspiration-details__pre-header'}>
-        <span>11/11/2021 12:45 TODO proper date</span>
+        {/*  TODO proper date*/}
+        <span>{new Date().toLocaleDateString() + ' o ' + new Date().toLocaleTimeString()}</span>
         <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
       </FlexBox>
       <AuthorInfoComponent authorInfo={inspiration.author} />

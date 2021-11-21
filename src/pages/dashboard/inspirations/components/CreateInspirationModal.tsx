@@ -17,7 +17,7 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
   return (
     <ModalOverlay isVisible>
       <ModalWindow ref={modalRef}>
-        <Center className={props.className}>Heeeej stwórz posta</Center>
+        <Center className={props.className}>Tu będzie modal do tworzenia inspiracji</Center>
       </ModalWindow>
     </ModalOverlay>
   );

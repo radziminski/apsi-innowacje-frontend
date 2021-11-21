@@ -23,9 +23,7 @@ const ModalBase = (props: ModalProps) => {
         <Center className={props.className}>
           {props.textContent}
           {props.buttons &&
-            props.buttons.map((button, index) => (
-              <Button key={index} onClick={button.onClick} text={button.text} id={'modal__button'} />
-            ))}
+            props.buttons.map((button, index) => <Button key={index} onClick={button.onClick} text={button.text} />)}
         </Center>
       </ModalWindow>
     </ModalOverlay>
@@ -36,8 +34,11 @@ export const Modal = styled(ModalBase)`
   max-width: 50%;
   flex-direction: column;
 
-  #modal__button {
+  button {
     align-self: flex-end;
-    margin: ${({ theme }) => `${theme.margins.small} ${theme.margins.small} 0 0 `};
+    margin-top: ${({ theme }) => theme.margins.small};
+  }
+  button + button {
+    margin-left: ${({ theme }) => theme.margins.small};
   }
 `;
