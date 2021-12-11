@@ -9,7 +9,7 @@ import {
 } from '~/constants/paths';
 import DashboardLayout from './layout';
 import CreateIdeaPage from './create-idea/CreateIdeaPage';
-import { InspirationPage } from '~/pages/dashboard/inspirations/InspirationPage';
+import { InspirationsPage } from '~/pages/dashboard/inspirations/InspirationsPage';
 import IdeasPage from './ideas';
 import VotingPage from './voting';
 import AccountDetailsPage from './account-details';
@@ -21,7 +21,7 @@ export const DashboardRoutes: React.FC = () => {
         <Route path={getIdeasPath()} component={IdeasPage} />
         <Route path={getCreateIdeaPath()} component={CreateIdeaPage} />
         <Route path={getVotingPath()} component={VotingPage} />
-        <Route path={getInspirationsPagePath()} component={InspirationPage} />
+        <Route path={getInspirationsPagePath()} component={InspirationsPage} />
         <Route path={getAccountDetailsPath()} component={AccountDetailsPage} />
         <Route>
           <Redirect to={getIdeasPath()} />

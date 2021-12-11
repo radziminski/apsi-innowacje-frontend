@@ -1,6 +1,6 @@
 import React, { ForwardedRef } from 'react';
 import styled from 'styled-components';
-import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
+import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationsPage';
 import { Card } from '~/components/Box';
 import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
 import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';

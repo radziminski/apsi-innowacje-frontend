@@ -7,7 +7,7 @@ import { defaultTheme } from '~/styles/theme';
 
 export const Logo: React.FC = () => {
   return (
-    <FlexBox alignItems="center" height="1.5rem" margin={defaultTheme.margins.small}>
+    <FlexBox alignItems="center" height="1.5rem" margin={defaultTheme.spacing.s}>
       <Box marginRight="1rem" marginBottom="-0.2rem">
         <FaLightbulb size={26} color={COLORS.primary} />
       </Box>

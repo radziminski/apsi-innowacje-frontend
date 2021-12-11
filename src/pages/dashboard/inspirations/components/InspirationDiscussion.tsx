@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import { CommentModel } from '~/pages/dashboard/inspirations/InspirationPage';
+import { CommentModel } from '~/pages/dashboard/inspirations/InspirationsPage';
 import { HorizontalRuler } from '~/components/HorizontalRuler';
 import { DiscussionItem } from '~/pages/dashboard/inspirations/components/DiscussionItem';
 
@@ -34,7 +34,7 @@ export const InspirationDiscussion = styled(InspirationDiscussionBase)`
   }
 
   .inspiration-details__discussion-list {
-    margin: ${({ theme }) => theme.margins.small} 0 0 ${({ theme }) => theme.margins.small};
+    margin: ${({ theme }) => theme.spacing.s} 0 0 ${({ theme }) => theme.spacing.s};
     flex-direction: column;
   }
 `;

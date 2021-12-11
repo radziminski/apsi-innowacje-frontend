@@ -18,11 +18,12 @@ export const COLORS = {
   lightGray: '#c4cfda'
 };
 
-export const MARGINS = {
-  small: '1rem',
-  medium: '1.5rem',
-  big: '2rem',
-  large: '3rem'
+export const SPACING = {
+  s: '1rem',
+  m: '1.5rem',
+  l: '2rem',
+  xl: '3rem',
+  xxl: '4rem'
 };
 
 export const FONT_WEIGHTS = {
@@ -55,6 +56,7 @@ export const Z_INDEX = {
 export const BREAKPOINTS: Record<Device, number> = {
   [Device.Desktop]: 1920,
   [Device.Tab]: 962,
+  [Device.WideTab]: 1240,
   [Device.Mobile]: 601
 };
 

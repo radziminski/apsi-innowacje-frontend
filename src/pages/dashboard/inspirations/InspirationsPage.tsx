@@ -30,7 +30,7 @@ export interface InspirationModel {
   comments: CommentModel[];
 }
 
-interface InspirationPageProps {
+interface InspirationsPageProps {
   className?: string;
 }
 
@@ -57,7 +57,7 @@ function* inspirationGeneratorFn() {
 
 const inspirationGenerator = inspirationGeneratorFn();
 
-const InspirationPageBase = (props: InspirationPageProps) => {
+const InspirationsPageBase = (props: InspirationsPageProps) => {
   const [chosenInspiration, setChosenInspiration] = React.useState<InspirationModel | undefined>(undefined);
   const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
   const [inspirations, setInspirations] = React.useState<InspirationModel[]>([
@@ -67,13 +67,13 @@ const InspirationPageBase = (props: InspirationPageProps) => {
     inspirationGenerator.next().value!
     /* eslint-enable @typescript-eslint/no-non-null-assertion */
   ]);
-  const { isTab } = useDevice();
+  const { isWideTab } = useDevice();
 
   const chosenInspirationRef = React.useRef<HTMLDivElement>();
   const inspirationDetailsRef = React.useRef<HTMLDivElement>(null);
 
   useOutsideClick([chosenInspirationRef, inspirationDetailsRef], () => {
-    isDetailsOpened && !isTab && closeInspirationDetails();
+    isDetailsOpened && !isWideTab && closeInspirationDetails();
   });
 
   const closeInspirationDetails = React.useCallback(() => {
@@ -122,7 +122,7 @@ const InspirationPageBase = (props: InspirationPageProps) => {
   return (
     <DashboardContent title="Portal Inspiracji" icon={<BiMessageDetail size={28} />}>
       <FlexBox className={props.className}>
-        <div className={`inspiration-list${isDetailsOpened && isTab ? '--hidden' : ''}`}>
+        <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
           <CreateInspiration />
           <Box>
             {inspirations.map((inspiration, index) => (
@@ -168,11 +168,11 @@ const InspirationPageBase = (props: InspirationPageProps) => {
   );
 };
 
-export const InspirationPage = styled(InspirationPageBase)`
-  width: 100%;
+export const InspirationsPage = styled(InspirationsPageBase)`
+  width: auto;
 
   .inspiration-list__loader {
-    margin: ${({ theme }) => theme.margins.medium};
+    margin: ${({ theme }) => theme.spacing.m};
   }
 
   .inspiration-details {
@@ -187,10 +187,15 @@ export const InspirationPage = styled(InspirationPageBase)`
   .inspiration-details,
   .inspiration-details--hidden {
     position: sticky;
-    top: 0;
+    top: -${({ theme }) => theme.spacing.xxl};
     width: 100%;
-    height: 100vh;
+    max-height: 100vh;
     transition: 0.5s ease-in-out;
+
+    @media ${({ theme }) => theme.mediaQueries.tab} {
+      top: 8rem;
+      max-height: 80vh;
+    }
   }
 
   .inspiration-list--hidden {

@@ -19,7 +19,7 @@ const ButtonBase = (props: ButtonProps & any): JSX.Element => {
 export const Button = styled(ButtonBase)`
   background-color: ${({ theme }) => theme.colors.lightGray};
   border-radius: ${({ theme }) => theme.borderRadiuses.normal};
-  padding: ${({ theme }) => theme.margins.small} ${({ theme }) => theme.margins.medium};
+  padding: ${({ theme }) => theme.spacing.s} ${({ theme }) => theme.spacing.m};
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import CreateIdeaForm from '~/pages/dashboard/create-idea/components/CreateIdeaForm';
 import styled from 'styled-components';
-import { MARGINS } from '~/styles/variables';
+import { SPACING } from '~/styles/variables';
 import { Asterisk } from '~/components/forms/Asterisk/Asterisk';
 import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import { MdOutlineDashboardCustomize } from 'react-icons/md';
@@ -24,10 +24,10 @@ const CreateIdeaPage = (): JSX.Element => {
 
 export default styled(CreateIdeaPage)`
   > div:first-of-type {
-    margin-top: ${MARGINS.big};
+    margin-top: ${SPACING.l};
   }
   h3 {
-    margin-bottom: ${MARGINS.medium};
+    margin-bottom: ${SPACING.m};
   }
   .required-field-info {
     margin: 15px 0 10px 30px;

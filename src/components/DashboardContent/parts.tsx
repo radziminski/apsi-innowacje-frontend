@@ -5,7 +5,7 @@ export const Container = styled.main`
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: 4rem 3.5rem;
+  padding: ${({ theme }) => `${theme.spacing.xxl} ${theme.spacing.xl}`};
   overflow-y: auto;
   overflow-x: hidden;
   height: 100vh;

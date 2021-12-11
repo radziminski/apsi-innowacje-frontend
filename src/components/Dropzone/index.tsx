@@ -131,7 +131,7 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
 export const Dropzone = styled(DropzoneBase)`
   .dropzone {
     width: 100%;
-    padding: ${({ theme }) => theme.margins.big};
+    padding: ${({ theme }) => theme.spacing.l};
     border-radius: ${({ theme }) => theme.borderRadiuses.normal};
     background-color: ${({ theme }) => theme.colors.white};
 
@@ -141,6 +141,6 @@ export const Dropzone = styled(DropzoneBase)`
   }
 
   .dropzone__added-files {
-    margin-top: ${({ theme }) => theme.margins.small};
+    margin-top: ${({ theme }) => theme.spacing.s};
   }
 `;

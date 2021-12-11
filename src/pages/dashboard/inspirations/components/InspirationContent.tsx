@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
+import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationsPage';
 
 interface InspirationContentProps {
   inspiration: InspirationModel;
@@ -17,5 +17,5 @@ const InspirationContentBase = (props: InspirationContentProps) => {
 };
 
 export const InspirationContent = styled(InspirationContentBase)`
-  margin: ${({ theme }) => theme.margins.small};
+  margin: ${({ theme }) => theme.spacing.s};
 `;

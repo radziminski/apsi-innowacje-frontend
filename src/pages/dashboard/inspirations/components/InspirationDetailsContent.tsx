@@ -32,10 +32,10 @@ export const InspirationDetailsContent = styled(InspirationDetailsContentBase)`
 
   .inspiration-details__pre-header {
     justify-content: space-between;
-    padding-bottom: ${({ theme }) => theme.margins.small};
+    padding-bottom: ${({ theme }) => theme.spacing.s};
     svg {
       cursor: pointer;
-      transition: 0.15s ease-in-out;
+      transition: 0.2s ease-in-out;
       &:hover {
         color: ${({ theme }) => theme.colors.primary};
       }

@@ -199,7 +199,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
 export default styled(CreateIdeaForm)`
   .create-idea-form {
-    margin: ${({ theme }) => theme.margins.small};
+    margin: ${({ theme }) => theme.spacing.s};
 
     @media ${({ theme }) => theme.mediaQueries.mobile} {
       margin: 0;
@@ -211,8 +211,8 @@ export default styled(CreateIdeaForm)`
 
     .create-idea-form__submit-button {
       align-items: flex-end;
-      margin-right: ${({ theme }) => theme.margins.small};
-      margin-top: ${({ theme }) => theme.margins.small};
+      margin-right: ${({ theme }) => theme.spacing.s};
+      margin-top: ${({ theme }) => theme.spacing.s};
     }
   }
 `;

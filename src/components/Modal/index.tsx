@@ -36,9 +36,9 @@ export const Modal = styled(ModalBase)`
 
   button {
     align-self: flex-end;
-    margin-top: ${({ theme }) => theme.margins.small};
+    margin-top: ${({ theme }) => theme.spacing.s};
   }
   button + button {
-    margin-left: ${({ theme }) => theme.margins.small};
+    margin-left: ${({ theme }) => theme.spacing.s};
   }
 `;
