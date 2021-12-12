@@ -3,7 +3,7 @@ const Dotenv = require('dotenv-webpack');
 const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-
+const path = require('path');
 const WEBPACK_BASE = require('./webpack.base').default;
 const SRC_MAP_STRATEGY = 'eval-source-map';
 
@@ -51,7 +51,7 @@ module.exports = merge(WEBPACK_BASE, {
     }),
     new Dotenv({
       systemvars: true,
-      path: ENV_FILE ? `./.env.${ENV_FILE}` : './env.dev'
+      path: path.resolve(__dirname, ENV_FILE ? `../.env.${ENV_FILE}` : '../.env.dev')
     })
   ]
 });

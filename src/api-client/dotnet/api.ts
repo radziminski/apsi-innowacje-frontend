@@ -43,6 +43,31 @@ export interface AuthenticateDto {
 /**
  * 
  * @export
+ * @interface CreatePostDto
+ */
+export interface CreatePostDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePostDto
+     */
+    'title'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePostDto
+     */
+    'text'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePostDto
+     */
+    'socialGroupName'?: string | null;
+}
+/**
+ * 
+ * @export
  * @interface LoggedUserDto
  */
 export interface LoggedUserDto {
@@ -88,6 +113,81 @@ export interface LoggedUserDto {
      * @memberof LoggedUserDto
      */
     'tokenExpirationDate'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface PostDto
+ */
+export interface PostDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostDto
+     */
+    'id'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostDto
+     */
+    'title'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostDto
+     */
+    'text'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostDto
+     */
+    'date'?: string;
+    /**
+     * 
+     * @type {SocialGroupIdDto}
+     * @memberof PostDto
+     */
+    'socialGroup'?: SocialGroupIdDto;
+    /**
+     * 
+     * @type {UserDto}
+     * @memberof PostDto
+     */
+    'author'?: UserDto;
+}
+/**
+ * 
+ * @export
+ * @interface SocialGroupDto
+ */
+export interface SocialGroupDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialGroupDto
+     */
+    'name'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface SocialGroupIdDto
+ */
+export interface SocialGroupIdDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof SocialGroupIdDto
+     */
+    'id'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialGroupIdDto
+     */
+    'name'?: string | null;
 }
 /**
  * 
@@ -315,6 +415,766 @@ export class AuthApi extends BaseAPI {
      */
     public authGetLoggedUserGet(options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).authGetLoggedUserGet(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * PostApi - axios parameter creator
+ * @export
+ */
+export const PostApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {CreatePostDto} [createPostDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postCreatePostPost: async (createPostDto?: CreatePostDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/CreatePost`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createPostDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetAllGet: async (page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetAll`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (count !== undefined) {
+                localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [authorUsername] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByAuthorGet: async (authorUsername?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostsByAuthor`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (authorUsername !== undefined) {
+                localVarQueryParameter['AuthorUsername'] = authorUsername;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (count !== undefined) {
+                localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByIdGet: async (id?: number, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostsById`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (id !== undefined) {
+                localVarQueryParameter['Id'] = id;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (count !== undefined) {
+                localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * PostApi - functional programming interface
+ * @export
+ */
+export const PostApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = PostApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {CreatePostDto} [createPostDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postCreatePostPost(createPostDto?: CreatePostDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postCreatePostPost(createPostDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetAllGet(page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetAllGet(page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} [authorUsername] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetPostsByAuthorGet(authorUsername?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAuthorGet(authorUsername, page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetPostsByIdGet(id?: number, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByIdGet(id, page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * PostApi - factory interface
+ * @export
+ */
+export const PostApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = PostApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {CreatePostDto} [createPostDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postCreatePostPost(createPostDto?: CreatePostDto, options?: any): AxiosPromise<number> {
+            return localVarFp.postCreatePostPost(createPostDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetAllGet(page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetAllGet(page, count, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [authorUsername] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByAuthorGet(authorUsername?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByAuthorGet(authorUsername, page, count, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByIdGet(id?: number, page?: number, count?: number, options?: any): AxiosPromise<PostDto> {
+            return localVarFp.postGetPostsByIdGet(id, page, count, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for postCreatePostPost operation in PostApi.
+ * @export
+ * @interface PostApiPostCreatePostPostRequest
+ */
+export interface PostApiPostCreatePostPostRequest {
+    /**
+     * 
+     * @type {CreatePostDto}
+     * @memberof PostApiPostCreatePostPost
+     */
+    readonly createPostDto?: CreatePostDto
+}
+
+/**
+ * Request parameters for postGetAllGet operation in PostApi.
+ * @export
+ * @interface PostApiPostGetAllGetRequest
+ */
+export interface PostApiPostGetAllGetRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetAllGet
+     */
+    readonly page?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetAllGet
+     */
+    readonly count?: number
+}
+
+/**
+ * Request parameters for postGetPostsByAuthorGet operation in PostApi.
+ * @export
+ * @interface PostApiPostGetPostsByAuthorGetRequest
+ */
+export interface PostApiPostGetPostsByAuthorGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PostApiPostGetPostsByAuthorGet
+     */
+    readonly authorUsername?: string
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByAuthorGet
+     */
+    readonly page?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByAuthorGet
+     */
+    readonly count?: number
+}
+
+/**
+ * Request parameters for postGetPostsByIdGet operation in PostApi.
+ * @export
+ * @interface PostApiPostGetPostsByIdGetRequest
+ */
+export interface PostApiPostGetPostsByIdGetRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByIdGet
+     */
+    readonly id?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByIdGet
+     */
+    readonly page?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByIdGet
+     */
+    readonly count?: number
+}
+
+/**
+ * PostApi - object-oriented interface
+ * @export
+ * @class PostApi
+ * @extends {BaseAPI}
+ */
+export class PostApi extends BaseAPI {
+    /**
+     * 
+     * @param {PostApiPostCreatePostPostRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postCreatePostPost(requestParameters: PostApiPostCreatePostPostRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postCreatePostPost(requestParameters.createPostDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostGetAllGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetAllGet(requestParameters: PostApiPostGetAllGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetAllGet(requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostGetPostsByAuthorGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetPostsByAuthorGet(requestParameters: PostApiPostGetPostsByAuthorGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostsByAuthorGet(requestParameters.authorUsername, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostGetPostsByIdGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetPostsByIdGet(requestParameters: PostApiPostGetPostsByIdGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostsByIdGet(requestParameters.id, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * SocialGroupApi - axios parameter creator
+ * @export
+ */
+export const SocialGroupApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {SocialGroupDto} [socialGroupDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        socialGroupCreateSocialGroupsPost: async (socialGroupDto?: SocialGroupDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/SocialGroup/CreateSocialGroups`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(socialGroupDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        socialGroupSocialGroupsAllGet: async (page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/SocialGroup/SocialGroupsAll`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (count !== undefined) {
+                localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        socialGroupSocialGroupsGet: async (name?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/SocialGroup/SocialGroups`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (name !== undefined) {
+                localVarQueryParameter['Name'] = name;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (count !== undefined) {
+                localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * SocialGroupApi - functional programming interface
+ * @export
+ */
+export const SocialGroupApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = SocialGroupApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {SocialGroupDto} [socialGroupDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async socialGroupCreateSocialGroupsPost(socialGroupDto?: SocialGroupDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.socialGroupCreateSocialGroupsPost(socialGroupDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async socialGroupSocialGroupsAllGet(page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SocialGroupIdDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.socialGroupSocialGroupsAllGet(page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async socialGroupSocialGroupsGet(name?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SocialGroupIdDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.socialGroupSocialGroupsGet(name, page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * SocialGroupApi - factory interface
+ * @export
+ */
+export const SocialGroupApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = SocialGroupApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {SocialGroupDto} [socialGroupDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        socialGroupCreateSocialGroupsPost(socialGroupDto?: SocialGroupDto, options?: any): AxiosPromise<number> {
+            return localVarFp.socialGroupCreateSocialGroupsPost(socialGroupDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        socialGroupSocialGroupsAllGet(page?: number, count?: number, options?: any): AxiosPromise<Array<SocialGroupIdDto>> {
+            return localVarFp.socialGroupSocialGroupsAllGet(page, count, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        socialGroupSocialGroupsGet(name?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<SocialGroupIdDto>> {
+            return localVarFp.socialGroupSocialGroupsGet(name, page, count, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for socialGroupCreateSocialGroupsPost operation in SocialGroupApi.
+ * @export
+ * @interface SocialGroupApiSocialGroupCreateSocialGroupsPostRequest
+ */
+export interface SocialGroupApiSocialGroupCreateSocialGroupsPostRequest {
+    /**
+     * 
+     * @type {SocialGroupDto}
+     * @memberof SocialGroupApiSocialGroupCreateSocialGroupsPost
+     */
+    readonly socialGroupDto?: SocialGroupDto
+}
+
+/**
+ * Request parameters for socialGroupSocialGroupsAllGet operation in SocialGroupApi.
+ * @export
+ * @interface SocialGroupApiSocialGroupSocialGroupsAllGetRequest
+ */
+export interface SocialGroupApiSocialGroupSocialGroupsAllGetRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof SocialGroupApiSocialGroupSocialGroupsAllGet
+     */
+    readonly page?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof SocialGroupApiSocialGroupSocialGroupsAllGet
+     */
+    readonly count?: number
+}
+
+/**
+ * Request parameters for socialGroupSocialGroupsGet operation in SocialGroupApi.
+ * @export
+ * @interface SocialGroupApiSocialGroupSocialGroupsGetRequest
+ */
+export interface SocialGroupApiSocialGroupSocialGroupsGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialGroupApiSocialGroupSocialGroupsGet
+     */
+    readonly name?: string
+
+    /**
+     * 
+     * @type {number}
+     * @memberof SocialGroupApiSocialGroupSocialGroupsGet
+     */
+    readonly page?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof SocialGroupApiSocialGroupSocialGroupsGet
+     */
+    readonly count?: number
+}
+
+/**
+ * SocialGroupApi - object-oriented interface
+ * @export
+ * @class SocialGroupApi
+ * @extends {BaseAPI}
+ */
+export class SocialGroupApi extends BaseAPI {
+    /**
+     * 
+     * @param {SocialGroupApiSocialGroupCreateSocialGroupsPostRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SocialGroupApi
+     */
+    public socialGroupCreateSocialGroupsPost(requestParameters: SocialGroupApiSocialGroupCreateSocialGroupsPostRequest = {}, options?: AxiosRequestConfig) {
+        return SocialGroupApiFp(this.configuration).socialGroupCreateSocialGroupsPost(requestParameters.socialGroupDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {SocialGroupApiSocialGroupSocialGroupsAllGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SocialGroupApi
+     */
+    public socialGroupSocialGroupsAllGet(requestParameters: SocialGroupApiSocialGroupSocialGroupsAllGetRequest = {}, options?: AxiosRequestConfig) {
+        return SocialGroupApiFp(this.configuration).socialGroupSocialGroupsAllGet(requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {SocialGroupApiSocialGroupSocialGroupsGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SocialGroupApi
+     */
+    public socialGroupSocialGroupsGet(requestParameters: SocialGroupApiSocialGroupSocialGroupsGetRequest = {}, options?: AxiosRequestConfig) {
+        return SocialGroupApiFp(this.configuration).socialGroupSocialGroupsGet(requestParameters.name, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -3,15 +3,20 @@ import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import { BiMessageDetail } from 'react-icons/bi';
 import { CreateInspiration } from '~/pages/dashboard/inspirations/CreateInspiration';
-import { useInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
+import { useReduxInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
 import { AuthorInfo } from '~/pages/dashboard/inspirations/components/AuthorInfo';
 import Box, { FlexBox } from '~/components/Box';
 import { InspirationDetails } from '~/pages/dashboard/inspirations/InspirationDetails';
-import { Inspiration } from '~/pages/dashboard/inspirations/components/Inspiration';
+import { InspirationCard } from '~/pages/dashboard/inspirations/components/InspirationCard';
 import { useOutsideClick } from '~/hooks/useOutsideClick';
 import useDevice from '~/hooks/useDevice';
 import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import { CenteredLoader } from '~/components/Loader';
+import AsyncContentContainer from '~/components/AsyncContentContainer';
+import { useSelector } from '~/store/hooks';
+import { PostDto } from '~/api-client';
+import { RootState } from '~/store/store';
+import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
 
 export interface CommentModel {
   // TODO use proper DTO
@@ -20,53 +25,17 @@ export interface CommentModel {
   content: string;
 }
 
-export interface InspirationModel {
-  // TODO use proper DTO
-  id: number;
-  content: string;
-  author: AuthorInfo;
-  // upvotes: number;
-  // downvotes: number;
-  comments: CommentModel[];
-}
-
 interface InspirationsPageProps {
   className?: string;
 }
 
-const HAS_MORE = true;
-
-function* inspirationGeneratorFn() {
-  let id = 0;
-
-  while (true) {
-    yield {
-      id: id++,
-      content: 'Testowa treść',
-      author: { firstName: 'Testowy', lastName: 'Użytkownik' },
-      // upvotes: 10,
-      // downvotes: 5,
-      comments: new Array(6).fill(0).map(() => ({
-        id: id++,
-        author: { firstName: 'Testowy', lastName: 'Użytkownik' },
-        content: 'Testowy komentarz'
-      }))
-    };
-  }
-}
-
-const inspirationGenerator = inspirationGeneratorFn();
+const PAGE_SIZE = 8;
 
 const InspirationsPageBase = (props: InspirationsPageProps) => {
-  const [chosenInspiration, setChosenInspiration] = React.useState<InspirationModel | undefined>(undefined);
+  const [chosenInspiration, setChosenInspiration] = React.useState<PostDto | undefined>(undefined);
   const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
-  const [inspirations, setInspirations] = React.useState<InspirationModel[]>([
-    /* eslint-disable @typescript-eslint/no-non-null-assertion */
-    inspirationGenerator.next().value!,
-    inspirationGenerator.next().value!,
-    inspirationGenerator.next().value!
-    /* eslint-enable @typescript-eslint/no-non-null-assertion */
-  ]);
+  const { inspirations } = useSelector(state => state.inspirations);
+
   const { isWideTab } = useDevice();
 
   const chosenInspirationRef = React.useRef<HTMLDivElement>();
@@ -81,32 +50,10 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
     setTimeout(() => setChosenInspiration(undefined), 500);
   }, []);
 
-  const onInspirationClick = React.useCallback((inspiration: InspirationModel) => {
+  const onInspirationClick = React.useCallback((inspiration: PostDto) => {
     setChosenInspiration(inspiration);
     setIsDetailsOpened(true);
   }, []);
-
-  const fetchData = React.useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async (page: number) => {
-      // TODO fetch inspirations
-      const newInspirations: InspirationModel[] = await new Promise(resolve => {
-        setTimeout(() => {
-          resolve([
-            /* eslint-disable @typescript-eslint/no-non-null-assertion */
-            inspirationGenerator.next().value!,
-            inspirationGenerator.next().value!,
-            inspirationGenerator.next().value!
-            /* eslint-enable @typescript-eslint/no-non-null-assertion */
-          ]);
-        }, 1000);
-      });
-
-      setInspirations(inspirations.concat(newInspirations));
-      return HAS_MORE;
-    },
-    [inspirations]
-  );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loader = (
@@ -117,53 +64,64 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
   const errorComponent = <div>Wystąpił błąd podczas ładowania.</div>;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLoading, isError, lastElementRef] = useInfiniteScroll(fetchData);
+  const [isLoading, isError, lastElementRef] = useReduxInfiniteScroll(
+    getInspirations,
+    (state: RootState) => state.inspirations,
+    PAGE_SIZE
+  );
 
   return (
     <DashboardContent title="Portal Inspiracji" icon={<BiMessageDetail size={28} />}>
-      <FlexBox className={props.className}>
-        <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
-          <CreateInspiration />
-          <Box>
-            {inspirations.map((inspiration, index) => (
-              <CSSTransition
-                in={chosenInspiration === inspiration}
-                key={inspiration.id}
-                timeout={500}
-                classNames="inspiration-list-item">
-                <Inspiration
-                  inspiration={inspiration}
-                  onClick={() => {
-                    onInspirationClick(inspiration);
-                  }}
-                  ref={ref => {
-                    if (inspirations.length === index + 1) {
-                      lastElementRef(ref);
-                    }
-                    if (inspiration === chosenInspiration) {
-                      chosenInspirationRef.current = ref || undefined;
-                    }
-                  }}
-                  customClassName={'inspiration-list-item'}
-                />
-              </CSSTransition>
-            ))}
-          </Box>
-          {isLoading && loader}
-          {isError && errorComponent}
-        </div>
-        <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
-          {chosenInspiration && (
-            <FlexBox ref={inspirationDetailsRef}>
-              <InspirationDetails
-                inspiration={chosenInspiration}
-                onClose={closeInspirationDetails}
-                isOpened={isDetailsOpened}
-              />
-            </FlexBox>
-          )}
-        </div>
-      </FlexBox>
+      <AsyncContentContainer
+        isLoading={inspirations === null && isLoading}
+        isError={inspirations === null && isError}
+        errorMessage="Wystąpił błąd z odświeżaniem pomysłów.">
+        {inspirations && (
+          <FlexBox className={props.className}>
+            <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
+              <CreateInspiration />
+              <Box>
+                {inspirations.map((inspiration, index) => (
+                  <CSSTransition
+                    in={chosenInspiration === inspiration}
+                    key={inspiration.id}
+                    timeout={500}
+                    classNames="inspiration-list-item">
+                    <InspirationCard
+                      inspiration={inspiration}
+                      onClick={() => {
+                        onInspirationClick(inspiration);
+                      }}
+                      ref={ref => {
+                        if (inspirations.length === index + 1) {
+                          lastElementRef(ref);
+                        }
+                        if (inspiration === chosenInspiration) {
+                          chosenInspirationRef.current = ref || undefined;
+                        }
+                      }}
+                      customClassName={'inspiration-list-item'}
+                    />
+                  </CSSTransition>
+                ))}
+              </Box>
+              {isLoading && loader}
+              {isError && errorComponent}
+            </div>
+            <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
+              {chosenInspiration && (
+                <FlexBox ref={inspirationDetailsRef}>
+                  <InspirationDetails
+                    inspiration={chosenInspiration}
+                    onClose={closeInspirationDetails}
+                    isOpened={isDetailsOpened}
+                  />
+                </FlexBox>
+              )}
+            </div>
+          </FlexBox>
+        )}
+      </AsyncContentContainer>
     </DashboardContent>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { FixedMenuWrapper } from '~/components/FixedMenuWrapper';
 import { InspirationDetailsContent } from '~/pages/dashboard/inspirations/components/InspirationDetailsContent';
-import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationsPage';
 import useDevice from '~/hooks/useDevice';
+import { PostDto } from '~/api-client';
 
 export interface InspirationDetailsProps {
-  inspiration: InspirationModel;
+  inspiration: PostDto;
   onClose: () => void;
   isOpened?: boolean;
   className?: string;

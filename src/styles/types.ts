@@ -11,8 +11,13 @@ export interface CustomTheme {
     transparent: string;
     white: string;
     primary: string;
+    primaryHover: string;
+    primaryActive: string;
     primaryDark: string;
     primaryLight: string;
+    secondary: string;
+    secondaryHover: string;
+    secondaryActive: string;
     background: string;
     accent1: string;
     accent2: string;

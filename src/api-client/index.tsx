@@ -1,4 +1,4 @@
-import { AuthApiFactory, UsersApiFactory } from './dotnet';
+import { AuthApiFactory, UsersApiFactory, PostApiFactory } from './dotnet';
 import { Configuration as DotnetConfiguration } from './dotnet/configuration';
 import { DOTNET_API_URL, JAVA_API_URL } from '~/constants/constants';
 import { Configuration as JavaConfiguration, InnowacjaAPIApiFactory } from '~/api-client/java';
@@ -22,6 +22,7 @@ const javaConfig = new JavaConfiguration({ baseOptions: globalAxiosOptions, base
 const apiClient = {
   ...AuthApiFactory(dotnetConfig),
   ...UsersApiFactory(dotnetConfig),
+  ...PostApiFactory(dotnetConfig),
   ...InnowacjaAPIApiFactory(javaConfig)
 };
 

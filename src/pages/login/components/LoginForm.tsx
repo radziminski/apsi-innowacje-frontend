@@ -25,7 +25,7 @@ export const LoginForm: React.FC<Props> = ({ onSubmit }) => {
         <FormRow label="Nazwa Użytkownika" formId={'username'} type={'text'} placeholder={'Nazwa Użytkownika'} />
         <FormRow label="Hasło" formId={'password'} type={'password'} placeholder={'Hasło'} />
         <FlexBox justifyContent="flex-end">
-          <Button type={'submit'} text={'Zaloguj'} width="20%">
+          <Button type={'submit'} text={'Zaloguj'} width="20%" primary>
             {isLoading && <Heading5 textAlign="center">Something went wrong</Heading5>}
           </Button>
         </FlexBox>

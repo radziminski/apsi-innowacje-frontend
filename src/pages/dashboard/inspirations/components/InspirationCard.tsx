@@ -1,13 +1,15 @@
 import React, { ForwardedRef } from 'react';
 import styled from 'styled-components';
-import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationsPage';
 import { Card } from '~/components/Box';
 import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
 import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
 import { InspirationFooter } from '~/pages/dashboard/inspirations/components/InspirationFooter';
+import { PostDto } from '~/api-client';
+import { DateHeader } from '~/components/DateHeader';
+import parseISO from 'date-fns/parseISO';
 
 interface InspirationProps {
-  inspiration: InspirationModel;
+  inspiration: PostDto;
   onClick: () => void;
   customClassName?: string;
   className?: string;
@@ -16,18 +18,19 @@ interface InspirationProps {
 const InspirationBase = React.forwardRef((props: InspirationProps, ref: ForwardedRef<HTMLDivElement>) => {
   return (
     <Card className={`${props.className} ${props.customClassName || ''}`} ref={ref} onClick={props.onClick}>
+      <DateHeader date={props.inspiration.date ? parseISO(props.inspiration.date) : new Date()} />
       <AuthorInfoComponent authorInfo={props.inspiration.author} />
       <InspirationContent inspiration={props.inspiration} />
       <InspirationFooter
         // upvotes={props.inspiration.upvotes}
         // downvotes={props.inspiration.downvotes}
-        comments={props.inspiration.comments.length}
+        comments={0}
       />
     </Card>
   );
 });
 
-export const Inspiration = styled(InspirationBase)`
+export const InspirationCard = styled(InspirationBase)`
   cursor: pointer;
   flex-direction: column;
 `;

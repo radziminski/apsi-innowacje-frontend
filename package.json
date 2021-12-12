@@ -29,6 +29,9 @@
     "styled-components": "^5.3.3",
     "styled-normalize": "^8.0.7",
     "styled-system": "^5.1.5",
+    "suneditor": "^2.41.3",
+    "suneditor-react": "^3.3.1",
+    "webpack-bundle-analyzer": "^4.5.0",
     "yup": "^0.32.11"
   },
   "scripts": {
@@ -38,6 +41,7 @@
     "clean": "rimraf ./build",
     "clean:clients": "rimraf src/api-client/dotnet && rimraf src/api-client/java",
     "build": "npm run clean && cross-env ENV_FILE=prod NODE_ENV=production && webpack build --config ./webpack/webpack.prod.js",
+    "build:dev": "npm run clean && cross-env ENV_FILE=dev NODE_ENV=development && webpack build --config ./webpack/webpack.dev.js",
     "test": "jest",
     "lint": "eslint ./src/ --ext js,jsx,ts,tsx",
     "lint:fix": "eslint ./src/ --ext js,jsx,ts,tsx --fix",
