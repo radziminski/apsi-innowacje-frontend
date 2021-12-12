@@ -31,8 +31,14 @@ export const CreateInspiration = styled(CreateInspirationBase)`
   align-items: center;
   cursor: pointer;
   border: 1px solid ${({ theme }) => theme.colors.primary}8A;
+  box-shadow: 0 0 0;
+  transition: box-shadow 0.15s ease-in;
+  &:hover {
+    box-shadow: 0 0 0.2rem ${({ theme }) => theme.colors.primary}AF;
+    transition: box-shadow 0.15s ease-in;
+  }
   .profile-picture {
-    margin-right: ${({ theme }) => theme.margins.small};
+    margin-right: ${({ theme }) => theme.spacing.s};
   }
   .form_input.create-inspiration__text-input {
     background-color: ${({ theme }) => theme.colors.lightGray};
@@ -40,5 +46,8 @@ export const CreateInspiration = styled(CreateInspirationBase)`
       color: black;
     }
     cursor: pointer;
+    &:hover {
+      box-shadow: 0 0 0;
+    }
   }
 `;

@@ -16,7 +16,8 @@ export const MobileNavBar: React.FC = () => {
       padding="2rem"
       height={MOBILE_NAVBAR_HEIGHT}
       zIndex={Z_INDEX.stickedBack}
-      alignItems="center">
+      alignItems="center"
+      id="mobile-nav-bar">
       Przyszły tytuł
     </FlexBox>
   );

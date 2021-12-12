@@ -67,15 +67,15 @@ export const FormCheckbox = styled(FormCheckboxBase)`
     box-shadow: 0 0 0.3rem ${({ theme }) => theme.colors.gray}AF;
     transition: box-shadow 0.15s ease-in-out;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     background-color: ${({ theme }) => theme.colors.white};
     border-radius: 100%;
     margin: 0.7rem 0;
   }
 
   svg {
-    transform: translate(3px, 1px);
+    transform: translate(6px, 3px);
   }
 
   .form_checkbox {
@@ -83,6 +83,7 @@ export const FormCheckbox = styled(FormCheckboxBase)`
     &--checked:hover {
       box-shadow: 0 0 0.6rem ${({ theme }) => theme.colors.primary}AF;
       cursor: pointer;
+      transition: box-shadow 0.15s ease-in;
     }
 
     &--checked {
@@ -92,10 +93,6 @@ export const FormCheckbox = styled(FormCheckboxBase)`
     &:focus,
     &--checked:focus {
       box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
-    }
-
-    &--checked:hover {
-      transition: box-shadow 0.15s ease-in;
     }
   }
 `;

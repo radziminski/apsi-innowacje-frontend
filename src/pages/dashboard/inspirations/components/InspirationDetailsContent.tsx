@@ -7,6 +7,8 @@ import { InspirationContent } from '~/pages/dashboard/inspirations/components/In
 import { InspirationDiscussion } from '~/pages/dashboard/inspirations/components/InspirationDiscussion';
 import { InspirationDetailsProps } from '~/pages/dashboard/inspirations/InspirationDetails';
 import useDevice from '~/hooks/useDevice';
+import { DateHeader } from '~/components/DateHeader';
+import parseISO from 'date-fns/parseISO';
 
 const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isOpened'>) => {
   const { isTab } = useDevice();
@@ -15,13 +17,12 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
   return (
     <Card className={className}>
       <FlexBox className={'inspiration-details__pre-header'}>
-        {/*  TODO proper date*/}
-        <span>{new Date().toLocaleDateString() + ' o ' + new Date().toLocaleTimeString()}</span>
+        <DateHeader date={props.inspiration.date ? parseISO(props.inspiration.date) : new Date()} />
         <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
       </FlexBox>
       <AuthorInfoComponent authorInfo={inspiration.author} />
       <InspirationContent inspiration={inspiration} />
-      <InspirationDiscussion comments={inspiration.comments} />
+      <InspirationDiscussion comments={[]} />
     </Card>
   );
 };
@@ -32,10 +33,9 @@ export const InspirationDetailsContent = styled(InspirationDetailsContentBase)`
 
   .inspiration-details__pre-header {
     justify-content: space-between;
-    padding-bottom: ${({ theme }) => theme.margins.small};
     svg {
       cursor: pointer;
-      transition: 0.15s ease-in-out;
+      transition: 0.2s ease-in-out;
       &:hover {
         color: ${({ theme }) => theme.colors.primary};
       }

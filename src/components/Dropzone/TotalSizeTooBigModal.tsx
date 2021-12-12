@@ -20,5 +20,5 @@ export const TotalSizeTooBigModal = styled((props: TotalSizeTooBigModalModalProp
     />
   );
 })`
-  margin-top: ${({ theme }) => theme.margins.small};
+  margin-top: ${({ theme }) => theme.spacing.s};
 `;

@@ -36,12 +36,12 @@ export const RemoveFileModal = withTheme(styled(RemoveFileModalBase)`
   flex-direction: column;
 
   // span {
-  //   margin: ${({ theme }) => theme.margins.medium} ${({ theme }) => theme.margins.small};
+  //   margin: ${({ theme }) => theme.spacing.m} ${({ theme }) => theme.spacing.s};
   // }
 
   > div {
     align-self: flex-end;
-    margin-top: ${({ theme }) => theme.margins.medium};
+    margin-top: ${({ theme }) => theme.spacing.m};
   }
 
   button {
@@ -49,6 +49,6 @@ export const RemoveFileModal = withTheme(styled(RemoveFileModalBase)`
   }
 
   button + button {
-    margin-left: ${({ theme }) => theme.margins.small};
+    margin-left: ${({ theme }) => theme.spacing.s};
   }
 `);

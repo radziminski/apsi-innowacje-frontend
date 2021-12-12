@@ -33,7 +33,7 @@ export const TextInput = styled(TextInputBase)`
     border: 1px solid ${({ theme }) => theme.colors.primary}5A;
     border-radius: 999px;
     background-color: ${({ theme }) => theme.colors.white};
-    padding: 0.8rem ${({ theme }) => theme.margins.small};
+    padding: 0.8rem ${({ theme }) => theme.spacing.s};
   }
 
   &.form_input {

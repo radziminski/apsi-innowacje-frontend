@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import React from 'react';
 import { ProfilePicture } from '~/pages/dashboard/inspirations/components/ProfilePicture';
 import { FlexBox } from '~/components/Box';
+import { UserDto } from '~/api-client';
 
 export interface AuthorInfo {
   firstName: string;
@@ -9,15 +10,19 @@ export interface AuthorInfo {
 }
 
 interface AuthorInfoProps {
-  authorInfo: AuthorInfo;
+  authorInfo?: UserDto;
   className?: string;
 }
 
 const AuthorInfoBase = (props: AuthorInfoProps) => {
   return (
     <FlexBox className={props.className}>
-      <ProfilePicture />
-      <span>{props.authorInfo.firstName + ' ' + props.authorInfo.lastName}</span>
+      {props.authorInfo && (
+        <>
+          <ProfilePicture />
+          <span>{props.authorInfo.firstName + ' ' + props.authorInfo.lastName}</span>
+        </>
+      )}
     </FlexBox>
   );
 };
@@ -25,7 +30,7 @@ const AuthorInfoBase = (props: AuthorInfoProps) => {
 export const AuthorInfoComponent = styled(AuthorInfoBase)`
   align-items: center;
   span {
-    margin-left: ${({ theme }) => theme.margins.small};
+    margin-left: ${({ theme }) => theme.spacing.s};
     font-weight: 500;
   }
 `;
