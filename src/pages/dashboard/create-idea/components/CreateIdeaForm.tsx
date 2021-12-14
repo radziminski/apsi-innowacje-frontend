@@ -187,7 +187,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                 <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} onFilesAdded={onFilesAdded} />
               </FlexBox>
               <FlexBox className={'create-idea-form__submit-button'}>
-                <Button type={'submit'} text={'Wyślij'} />
+                <Button type={'submit'} text={'Wyślij'} primary />
               </FlexBox>
             </form>
           </div>
@@ -211,7 +211,6 @@ export default styled(CreateIdeaForm)`
 
     .create-idea-form__submit-button {
       align-items: flex-end;
-      margin-right: ${({ theme }) => theme.spacing.s};
       margin-top: ${({ theme }) => theme.spacing.s};
     }
   }

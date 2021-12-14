@@ -72,8 +72,6 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
     [props.accept, props.onFilesAdded, currentFiles, fileErrors]
   );
 
-  const addedFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
-
   const { getRootProps, getInputProps } = useDropzone({
     multiple: true,
     onDrop: onFilesAdded,
@@ -108,7 +106,7 @@ const DropzoneBase = React.forwardRef((props: DropzoneProps & any, ref: Forwarde
           <Paragraph>{props.placeholder ? props.placeholder : 'Upuść pliki lub kliknij, by wybrać'}</Paragraph>
         </Center>
       </FlexBox>
-      {addedFiles.length ? <AddedFilesList {...{ addedFiles }} /> : null}
+      {currentFiles.length ? <AddedFilesList addedFiles={currentFiles} /> : null}
       {hasErrors ? ( // need to render it conditionally, because otherwise fade-out appears temporarily on rerenders
         <ModalOverlay isVisible={!!hasErrors}>
           {duplicatedEntriesError && <DuplicatedEntriesModal filename={duplicatedEntriesError} />}

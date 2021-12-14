@@ -59,7 +59,7 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
 
 export const FormRow = styled(FormRowBase)`
   flex-direction: row;
-  margin: ${({ theme }) => theme.spacing.s};
+  margin: ${({ theme }) => theme.spacing.s} 0;
   align-items: center;
 
   > div {

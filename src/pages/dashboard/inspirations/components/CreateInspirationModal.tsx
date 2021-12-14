@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 import { Center, FlexBox } from '~/components/Box';
 import { useOutsideClick } from '~/hooks/useOutsideClick';
-import SunEditor from 'suneditor-react';
 import { image, link } from 'suneditor/src/plugins';
 import { CloseCreateInspirationModalPrompt } from './CloseCreateInspirationModalPrompt';
 import { Modal } from '~/components/Modal';
 import { Button } from '~/components/Button';
+import { CenteredLoader } from '~/components/Loader';
 require('suneditor/dist/css/suneditor.min.css');
 
 interface CreateInspirationModalProps {
@@ -35,25 +35,29 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
   }, []);
   useOutsideClick(modalRef, promptCloseModal);
 
+  const SunEditor = React.lazy(() => import('suneditor-react'));
+
   return (
     <Modal
       ref={modalRef}
       textContent={
         <div>
           <Center className={props.className}>
-            <SunEditor
-              placeholder="Wpisz treść inspiracji..."
-              setOptions={{
-                height: '200',
-                width: '60vw',
-                plugins: [image, link],
-                buttonList: [['undo', 'redo', 'image', 'link']]
-              }}
-              lang={'pl'}
-              onChange={content => {
-                editorContent.current = content;
-              }}
-            />
+            <Suspense fallback={<CenteredLoader />}>
+              <SunEditor
+                placeholder="Wpisz treść inspiracji..."
+                setOptions={{
+                  height: '200',
+                  width: '60vw',
+                  plugins: [image, link],
+                  buttonList: [['undo', 'redo', 'image', 'link']]
+                }}
+                lang={'pl'}
+                onChange={content => {
+                  editorContent.current = content;
+                }}
+              />
+            </Suspense>
             <FlexBox className={'create-inspiration__buttons'}>
               <Button text={'Wyślij'} primary onClick={submitForm} />
               <Button text={'Anuluj'} onClick={promptCloseModal} />
