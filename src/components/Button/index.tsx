@@ -9,7 +9,8 @@ export interface ButtonProps {
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ButtonBase = (props: ButtonProps & any): JSX.Element => {
-  const { className, text, ...rest } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { primary, className, text, ...rest } = props;
   return (
     <button className={className} {...rest}>
       {text}
