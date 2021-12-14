@@ -8,7 +8,6 @@ import { AuthorInfo } from '~/pages/dashboard/inspirations/components/AuthorInfo
 import Box, { FlexBox } from '~/components/Box';
 import { InspirationDetails } from '~/pages/dashboard/inspirations/InspirationDetails';
 import { InspirationCard } from '~/pages/dashboard/inspirations/components/InspirationCard';
-import { useOutsideClick } from '~/hooks/useOutsideClick';
 import useDevice from '~/hooks/useDevice';
 import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import { CenteredLoader } from '~/components/Loader';
@@ -39,11 +38,6 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
   const { isWideTab } = useDevice();
 
   const chosenInspirationRef = React.useRef<HTMLDivElement>();
-  const inspirationDetailsRef = React.useRef<HTMLDivElement>(null);
-
-  useOutsideClick([chosenInspirationRef, inspirationDetailsRef], () => {
-    isDetailsOpened && !isWideTab && closeInspirationDetails();
-  });
 
   const closeInspirationDetails = React.useCallback(() => {
     setIsDetailsOpened(false);
@@ -110,7 +104,7 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
             </div>
             <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
               {chosenInspiration && (
-                <FlexBox ref={inspirationDetailsRef}>
+                <FlexBox>
                   <InspirationDetails
                     inspiration={chosenInspiration}
                     onClose={closeInspirationDetails}

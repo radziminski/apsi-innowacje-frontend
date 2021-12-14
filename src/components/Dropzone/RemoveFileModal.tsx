@@ -22,6 +22,7 @@ const RemoveFileModalBase = (props: RemoveFileModalProps) => {
             theme={{ ...props.theme, colors: { ...props.theme.colors, lightGray: COLORS.darkGray } } as DefaultTheme}
             onClick={() => props.handleChoice(true)}
             text={'Tak'}
+            primary
           />
           <Button onClick={() => props.handleChoice(false)} text={'Anuluj'} />
         </FlexBox>
@@ -34,10 +35,6 @@ export const RemoveFileModal = withTheme(styled(RemoveFileModalBase)`
   max-width: 50%;
   min-height: 20%;
   flex-direction: column;
-
-  // span {
-  //   margin: ${({ theme }) => theme.spacing.m} ${({ theme }) => theme.spacing.s};
-  // }
 
   > div {
     align-self: flex-end;

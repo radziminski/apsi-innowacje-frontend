@@ -4,7 +4,7 @@ import React from 'react';
 export interface ButtonProps {
   className?: string;
   text: string;
-  primary?: boolean;
+  primary: boolean;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any

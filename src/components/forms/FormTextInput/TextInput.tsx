@@ -51,10 +51,5 @@ export const TextInput = styled(TextInputBase)`
     &--error:focus {
       box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.error}AF;
     }
-
-    &:hover,
-    &--error:hover {
-      transition: box-shadow 0.15s ease-in;
-    }
   }
 `;
