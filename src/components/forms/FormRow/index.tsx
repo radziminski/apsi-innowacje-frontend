@@ -64,6 +64,7 @@ export const FormRow = styled(FormRowBase)`
 
   > div {
     display: flex;
+    margin: 0 ${({ theme }) => theme.spacing.s};
     label {
       font-weight: 400;
     }
