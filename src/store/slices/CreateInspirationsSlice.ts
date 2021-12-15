@@ -4,6 +4,7 @@ import { PageableApiArgs } from '~/store/store';
 
 export interface InspirationsState {
   inspirations: PostDto[] | null;
+  lastResultEmpty: boolean;
   isLoading: boolean;
   isError: boolean;
   error: SerializedError | null;
@@ -12,6 +13,7 @@ export interface InspirationsState {
 
 const initialState: InspirationsState = {
   inspirations: null,
+  lastResultEmpty: false,
   isLoading: false,
   isError: false,
   error: null,
@@ -29,6 +31,7 @@ export const getInspirations = createAsyncThunk<PostDto[], PageableApiArgs>(
 const createGetInspirationsReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
   builder.addCase(getInspirations.fulfilled, (state, action) => {
     state.inspirations = [...(state.inspirations || []), ...action.payload];
+    state.lastResultEmpty = action.payload.length === 0;
     state.isLoading = false;
     state.isError = false;
     state.error = null;
@@ -36,11 +39,13 @@ const createGetInspirationsReducers = (builder: ActionReducerMapBuilder<Inspirat
   });
   builder.addCase(getInspirations.pending, state => {
     state.isError = false;
+    state.lastResultEmpty = false;
     state.error = null;
     state.isLoading = true;
   });
   builder.addCase(getInspirations.rejected, (state, action) => {
     state.isLoading = false;
+    state.lastResultEmpty = false;
     state.isError = true;
     state.error = action.error;
   });

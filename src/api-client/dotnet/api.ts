@@ -43,6 +43,25 @@ export interface AuthenticateDto {
 /**
  * 
  * @export
+ * @interface CreatePostAnswerDto
+ */
+export interface CreatePostAnswerDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePostAnswerDto
+     */
+    'text'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreatePostAnswerDto
+     */
+    'postId'?: number;
+}
+/**
+ * 
+ * @export
  * @interface CreatePostDto
  */
 export interface CreatePostDto {
@@ -117,6 +136,37 @@ export interface LoggedUserDto {
 /**
  * 
  * @export
+ * @interface PostAnswerDto
+ */
+export interface PostAnswerDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostAnswerDto
+     */
+    'id'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostAnswerDto
+     */
+    'text'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostAnswerDto
+     */
+    'date'?: string;
+    /**
+     * 
+     * @type {UserDto}
+     * @memberof PostAnswerDto
+     */
+    'author'?: UserDto;
+}
+/**
+ * 
+ * @export
  * @interface PostDto
  */
 export interface PostDto {
@@ -156,6 +206,12 @@ export interface PostDto {
      * @memberof PostDto
      */
     'author'?: UserDto;
+    /**
+     * 
+     * @type {Array<PostAnswerDto>}
+     * @memberof PostDto
+     */
+    'postAnswers'?: Array<PostAnswerDto> | null;
 }
 /**
  * 
@@ -427,6 +483,43 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
     return {
         /**
          * 
+         * @param {CreatePostAnswerDto} [createPostAnswerDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postCreatePostAnswerPost: async (createPostAnswerDto?: CreatePostAnswerDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/CreatePostAnswer`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json-patch+json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createPostAnswerDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {CreatePostDto} [createPostDto] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -464,6 +557,82 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postDeletePostAnswerDelete: async (id?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/DeletePostAnswer`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postDeletePostDelete: async (id?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/DeletePost`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
@@ -485,6 +654,178 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
             // authentication Bearer required
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (count !== undefined) {
+                localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostAnswersCountByPostIdGet: async (id?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostAnswersCountByPostId`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostByIdGet: async (id?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostById`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [authorUsername] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByAnswerAuthorGet: async (authorUsername?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostsByAnswerAuthor`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (authorUsername !== undefined) {
+                localVarQueryParameter['AuthorUsername'] = authorUsername;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (count !== undefined) {
+                localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [string] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByAnswerTextGet: async (string?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostsByAnswerText`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (string !== undefined) {
+                localVarQueryParameter['String'] = string;
+            }
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -555,14 +896,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
-         * @param {number} [id] 
+         * @param {string} [string] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByIdGet: async (id?: number, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/Post/GetPostsById`;
+        postGetPostsByTextGet: async (string?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostsByText`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -578,8 +919,8 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-            if (id !== undefined) {
-                localVarQueryParameter['Id'] = id;
+            if (string !== undefined) {
+                localVarQueryParameter['String'] = string;
             }
 
             if (page !== undefined) {
@@ -588,6 +929,183 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (count !== undefined) {
                 localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [string] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByTitleGet: async (string?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostsByTitle`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (string !== undefined) {
+                localVarQueryParameter['String'] = string;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (count !== undefined) {
+                localVarQueryParameter['count'] = count;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsCountGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/GetPostsCount`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [answerId] 
+         * @param {string} [text] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postUpdatePostAnswerPut: async (answerId?: number, text?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/UpdatePostAnswer`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (answerId !== undefined) {
+                localVarQueryParameter['AnswerId'] = answerId;
+            }
+
+            if (text !== undefined) {
+                localVarQueryParameter['Text'] = text;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [postId] 
+         * @param {string} [title] 
+         * @param {string} [text] 
+         * @param {string} [socialGroupName] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postUpdatePostPut: async (postId?: number, title?: string, text?: string, socialGroupName?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/Post/UpdatePost`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (postId !== undefined) {
+                localVarQueryParameter['PostId'] = postId;
+            }
+
+            if (title !== undefined) {
+                localVarQueryParameter['Title'] = title;
+            }
+
+            if (text !== undefined) {
+                localVarQueryParameter['Text'] = text;
+            }
+
+            if (socialGroupName !== undefined) {
+                localVarQueryParameter['socialGroupName'] = socialGroupName;
             }
 
 
@@ -613,12 +1131,42 @@ export const PostApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {CreatePostAnswerDto} [createPostAnswerDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postCreatePostAnswerPost(createPostAnswerDto?: CreatePostAnswerDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postCreatePostAnswerPost(createPostAnswerDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {CreatePostDto} [createPostDto] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async postCreatePostPost(createPostDto?: CreatePostDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postCreatePostPost(createPostDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postDeletePostAnswerDelete(id?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postDeletePostAnswerDelete(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postDeletePostDelete(id?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postDeletePostDelete(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -630,6 +1178,50 @@ export const PostApiFp = function(configuration?: Configuration) {
          */
         async postGetAllGet(page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postGetAllGet(page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetPostAnswersCountByPostIdGet(id?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostAnswersCountByPostIdGet(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetPostByIdGet(id?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostByIdGet(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} [authorUsername] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetPostsByAnswerAuthorGet(authorUsername?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAnswerAuthorGet(authorUsername, page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} [string] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetPostsByAnswerTextGet(string?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAnswerTextGet(string, page, count, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -646,14 +1238,59 @@ export const PostApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {number} [id] 
+         * @param {string} [string] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postGetPostsByIdGet(id?: number, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByIdGet(id, page, count, options);
+        async postGetPostsByTextGet(string?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByTextGet(string, page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} [string] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetPostsByTitleGet(string?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByTitleGet(string, page, count, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postGetPostsCountGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsCountGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [answerId] 
+         * @param {string} [text] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postUpdatePostAnswerPut(answerId?: number, text?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postUpdatePostAnswerPut(answerId, text, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [postId] 
+         * @param {string} [title] 
+         * @param {string} [text] 
+         * @param {string} [socialGroupName] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postUpdatePostPut(postId?: number, title?: string, text?: string, socialGroupName?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postUpdatePostPut(postId, title, text, socialGroupName, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -668,12 +1305,39 @@ export const PostApiFactory = function (configuration?: Configuration, basePath?
     return {
         /**
          * 
+         * @param {CreatePostAnswerDto} [createPostAnswerDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postCreatePostAnswerPost(createPostAnswerDto?: CreatePostAnswerDto, options?: any): AxiosPromise<number> {
+            return localVarFp.postCreatePostAnswerPost(createPostAnswerDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {CreatePostDto} [createPostDto] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         postCreatePostPost(createPostDto?: CreatePostDto, options?: any): AxiosPromise<number> {
             return localVarFp.postCreatePostPost(createPostDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postDeletePostAnswerDelete(id?: number, options?: any): AxiosPromise<number> {
+            return localVarFp.postDeletePostAnswerDelete(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postDeletePostDelete(id?: number, options?: any): AxiosPromise<number> {
+            return localVarFp.postDeletePostDelete(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -684,6 +1348,46 @@ export const PostApiFactory = function (configuration?: Configuration, basePath?
          */
         postGetAllGet(page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
             return localVarFp.postGetAllGet(page, count, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostAnswersCountByPostIdGet(id?: number, options?: any): AxiosPromise<number> {
+            return localVarFp.postGetPostAnswersCountByPostIdGet(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostByIdGet(id?: number, options?: any): AxiosPromise<PostDto> {
+            return localVarFp.postGetPostByIdGet(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [authorUsername] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByAnswerAuthorGet(authorUsername?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByAnswerAuthorGet(authorUsername, page, count, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [string] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByAnswerTextGet(string?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByAnswerTextGet(string, page, count, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -698,17 +1402,72 @@ export const PostApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
-         * @param {number} [id] 
+         * @param {string} [string] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByIdGet(id?: number, page?: number, count?: number, options?: any): AxiosPromise<PostDto> {
-            return localVarFp.postGetPostsByIdGet(id, page, count, options).then((request) => request(axios, basePath));
+        postGetPostsByTextGet(string?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByTextGet(string, page, count, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [string] 
+         * @param {number} [page] 
+         * @param {number} [count] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsByTitleGet(string?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByTitleGet(string, page, count, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postGetPostsCountGet(options?: any): AxiosPromise<number> {
+            return localVarFp.postGetPostsCountGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [answerId] 
+         * @param {string} [text] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postUpdatePostAnswerPut(answerId?: number, text?: string, options?: any): AxiosPromise<number> {
+            return localVarFp.postUpdatePostAnswerPut(answerId, text, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [postId] 
+         * @param {string} [title] 
+         * @param {string} [text] 
+         * @param {string} [socialGroupName] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postUpdatePostPut(postId?: number, title?: string, text?: string, socialGroupName?: string, options?: any): AxiosPromise<number> {
+            return localVarFp.postUpdatePostPut(postId, title, text, socialGroupName, options).then((request) => request(axios, basePath));
         },
     };
 };
+
+/**
+ * Request parameters for postCreatePostAnswerPost operation in PostApi.
+ * @export
+ * @interface PostApiPostCreatePostAnswerPostRequest
+ */
+export interface PostApiPostCreatePostAnswerPostRequest {
+    /**
+     * 
+     * @type {CreatePostAnswerDto}
+     * @memberof PostApiPostCreatePostAnswerPost
+     */
+    readonly createPostAnswerDto?: CreatePostAnswerDto
+}
 
 /**
  * Request parameters for postCreatePostPost operation in PostApi.
@@ -722,6 +1481,34 @@ export interface PostApiPostCreatePostPostRequest {
      * @memberof PostApiPostCreatePostPost
      */
     readonly createPostDto?: CreatePostDto
+}
+
+/**
+ * Request parameters for postDeletePostAnswerDelete operation in PostApi.
+ * @export
+ * @interface PostApiPostDeletePostAnswerDeleteRequest
+ */
+export interface PostApiPostDeletePostAnswerDeleteRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostDeletePostAnswerDelete
+     */
+    readonly id?: number
+}
+
+/**
+ * Request parameters for postDeletePostDelete operation in PostApi.
+ * @export
+ * @interface PostApiPostDeletePostDeleteRequest
+ */
+export interface PostApiPostDeletePostDeleteRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostDeletePostDelete
+     */
+    readonly id?: number
 }
 
 /**
@@ -741,6 +1528,90 @@ export interface PostApiPostGetAllGetRequest {
      * 
      * @type {number}
      * @memberof PostApiPostGetAllGet
+     */
+    readonly count?: number
+}
+
+/**
+ * Request parameters for postGetPostAnswersCountByPostIdGet operation in PostApi.
+ * @export
+ * @interface PostApiPostGetPostAnswersCountByPostIdGetRequest
+ */
+export interface PostApiPostGetPostAnswersCountByPostIdGetRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostAnswersCountByPostIdGet
+     */
+    readonly id?: number
+}
+
+/**
+ * Request parameters for postGetPostByIdGet operation in PostApi.
+ * @export
+ * @interface PostApiPostGetPostByIdGetRequest
+ */
+export interface PostApiPostGetPostByIdGetRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostByIdGet
+     */
+    readonly id?: number
+}
+
+/**
+ * Request parameters for postGetPostsByAnswerAuthorGet operation in PostApi.
+ * @export
+ * @interface PostApiPostGetPostsByAnswerAuthorGetRequest
+ */
+export interface PostApiPostGetPostsByAnswerAuthorGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PostApiPostGetPostsByAnswerAuthorGet
+     */
+    readonly authorUsername?: string
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByAnswerAuthorGet
+     */
+    readonly page?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByAnswerAuthorGet
+     */
+    readonly count?: number
+}
+
+/**
+ * Request parameters for postGetPostsByAnswerTextGet operation in PostApi.
+ * @export
+ * @interface PostApiPostGetPostsByAnswerTextGetRequest
+ */
+export interface PostApiPostGetPostsByAnswerTextGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PostApiPostGetPostsByAnswerTextGet
+     */
+    readonly string?: string
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByAnswerTextGet
+     */
+    readonly page?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByAnswerTextGet
      */
     readonly count?: number
 }
@@ -774,31 +1645,115 @@ export interface PostApiPostGetPostsByAuthorGetRequest {
 }
 
 /**
- * Request parameters for postGetPostsByIdGet operation in PostApi.
+ * Request parameters for postGetPostsByTextGet operation in PostApi.
  * @export
- * @interface PostApiPostGetPostsByIdGetRequest
+ * @interface PostApiPostGetPostsByTextGetRequest
  */
-export interface PostApiPostGetPostsByIdGetRequest {
+export interface PostApiPostGetPostsByTextGetRequest {
     /**
      * 
-     * @type {number}
-     * @memberof PostApiPostGetPostsByIdGet
+     * @type {string}
+     * @memberof PostApiPostGetPostsByTextGet
      */
-    readonly id?: number
+    readonly string?: string
 
     /**
      * 
      * @type {number}
-     * @memberof PostApiPostGetPostsByIdGet
+     * @memberof PostApiPostGetPostsByTextGet
      */
     readonly page?: number
 
     /**
      * 
      * @type {number}
-     * @memberof PostApiPostGetPostsByIdGet
+     * @memberof PostApiPostGetPostsByTextGet
      */
     readonly count?: number
+}
+
+/**
+ * Request parameters for postGetPostsByTitleGet operation in PostApi.
+ * @export
+ * @interface PostApiPostGetPostsByTitleGetRequest
+ */
+export interface PostApiPostGetPostsByTitleGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PostApiPostGetPostsByTitleGet
+     */
+    readonly string?: string
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByTitleGet
+     */
+    readonly page?: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostGetPostsByTitleGet
+     */
+    readonly count?: number
+}
+
+/**
+ * Request parameters for postUpdatePostAnswerPut operation in PostApi.
+ * @export
+ * @interface PostApiPostUpdatePostAnswerPutRequest
+ */
+export interface PostApiPostUpdatePostAnswerPutRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostUpdatePostAnswerPut
+     */
+    readonly answerId?: number
+
+    /**
+     * 
+     * @type {string}
+     * @memberof PostApiPostUpdatePostAnswerPut
+     */
+    readonly text?: string
+}
+
+/**
+ * Request parameters for postUpdatePostPut operation in PostApi.
+ * @export
+ * @interface PostApiPostUpdatePostPutRequest
+ */
+export interface PostApiPostUpdatePostPutRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostApiPostUpdatePostPut
+     */
+    readonly postId?: number
+
+    /**
+     * 
+     * @type {string}
+     * @memberof PostApiPostUpdatePostPut
+     */
+    readonly title?: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof PostApiPostUpdatePostPut
+     */
+    readonly text?: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof PostApiPostUpdatePostPut
+     */
+    readonly socialGroupName?: string
 }
 
 /**
@@ -810,6 +1765,17 @@ export interface PostApiPostGetPostsByIdGetRequest {
 export class PostApi extends BaseAPI {
     /**
      * 
+     * @param {PostApiPostCreatePostAnswerPostRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postCreatePostAnswerPost(requestParameters: PostApiPostCreatePostAnswerPostRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postCreatePostAnswerPost(requestParameters.createPostAnswerDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {PostApiPostCreatePostPostRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -817,6 +1783,28 @@ export class PostApi extends BaseAPI {
      */
     public postCreatePostPost(requestParameters: PostApiPostCreatePostPostRequest = {}, options?: AxiosRequestConfig) {
         return PostApiFp(this.configuration).postCreatePostPost(requestParameters.createPostDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostDeletePostAnswerDeleteRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postDeletePostAnswerDelete(requestParameters: PostApiPostDeletePostAnswerDeleteRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postDeletePostAnswerDelete(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostDeletePostDeleteRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postDeletePostDelete(requestParameters: PostApiPostDeletePostDeleteRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postDeletePostDelete(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -832,6 +1820,50 @@ export class PostApi extends BaseAPI {
 
     /**
      * 
+     * @param {PostApiPostGetPostAnswersCountByPostIdGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetPostAnswersCountByPostIdGet(requestParameters: PostApiPostGetPostAnswersCountByPostIdGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostAnswersCountByPostIdGet(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostGetPostByIdGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetPostByIdGet(requestParameters: PostApiPostGetPostByIdGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostByIdGet(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostGetPostsByAnswerAuthorGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetPostsByAnswerAuthorGet(requestParameters: PostApiPostGetPostsByAnswerAuthorGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostsByAnswerAuthorGet(requestParameters.authorUsername, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostGetPostsByAnswerTextGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetPostsByAnswerTextGet(requestParameters: PostApiPostGetPostsByAnswerTextGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostsByAnswerTextGet(requestParameters.string, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {PostApiPostGetPostsByAuthorGetRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -843,13 +1875,56 @@ export class PostApi extends BaseAPI {
 
     /**
      * 
-     * @param {PostApiPostGetPostsByIdGetRequest} requestParameters Request parameters.
+     * @param {PostApiPostGetPostsByTextGetRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PostApi
      */
-    public postGetPostsByIdGet(requestParameters: PostApiPostGetPostsByIdGetRequest = {}, options?: AxiosRequestConfig) {
-        return PostApiFp(this.configuration).postGetPostsByIdGet(requestParameters.id, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    public postGetPostsByTextGet(requestParameters: PostApiPostGetPostsByTextGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostsByTextGet(requestParameters.string, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostGetPostsByTitleGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetPostsByTitleGet(requestParameters: PostApiPostGetPostsByTitleGetRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostsByTitleGet(requestParameters.string, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postGetPostsCountGet(options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postGetPostsCountGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostUpdatePostAnswerPutRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postUpdatePostAnswerPut(requestParameters: PostApiPostUpdatePostAnswerPutRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postUpdatePostAnswerPut(requestParameters.answerId, requestParameters.text, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PostApiPostUpdatePostPutRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public postUpdatePostPut(requestParameters: PostApiPostUpdatePostPutRequest = {}, options?: AxiosRequestConfig) {
+        return PostApiFp(this.configuration).postUpdatePostPut(requestParameters.postId, requestParameters.title, requestParameters.text, requestParameters.socialGroupName, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
