@@ -1,12 +1,13 @@
 import React, { Suspense } from 'react';
 import styled from 'styled-components';
 import { Center, FlexBox } from '~/components/Box';
-import { useOutsideClick } from '~/hooks/useOutsideClick';
 import { image, link } from 'suneditor/src/plugins';
 import { CloseCreateInspirationModalPrompt } from './CloseCreateInspirationModalPrompt';
 import { Modal } from '~/components/Modal';
 import { Button } from '~/components/Button';
 import { CenteredLoader } from '~/components/Loader';
+import { FormDropzone } from '~/components/forms/FormDropzone';
+
 require('suneditor/dist/css/suneditor.min.css');
 
 interface CreateInspirationModalProps {
@@ -15,7 +16,6 @@ interface CreateInspirationModalProps {
 }
 
 const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
-  const modalRef = React.createRef<HTMLDivElement>();
   const [promptModalVisible, setPromptModalVisible] = React.useState<boolean>(false);
   const editorContent = React.useRef('');
   const promptCloseModal = React.useCallback(() => {
@@ -33,13 +33,11 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
     // eslint-disable-next-line no-console
     console.log(editorContent);
   }, []);
-  useOutsideClick(modalRef, promptCloseModal);
 
   const SunEditor = React.lazy(() => import('suneditor-react'));
 
   return (
     <Modal
-      ref={modalRef}
       textContent={
         <div>
           <Center className={props.className}>
@@ -58,6 +56,7 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
                 }}
               />
             </Suspense>
+            <FormDropzone id={'create-inspiration__dropzone'} />
             <FlexBox className={'create-inspiration__buttons'}>
               <Button text={'Wyślij'} primary onClick={submitForm} />
               <Button text={'Anuluj'} onClick={promptCloseModal} />
@@ -75,5 +74,12 @@ export const CreateInspirationModal = styled(CreateInspirationModalBase)`
   .create-inspiration__buttons {
     width: 100%;
     justify-content: flex-end;
+  }
+
+  #create-inspiration__dropzone {
+    margin-top: ${({ theme }) => theme.spacing.m};
+    .inno-modal {
+      height: 100%;
+    }
   }
 `;

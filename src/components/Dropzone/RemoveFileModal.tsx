@@ -1,51 +1,27 @@
-import styled, { DefaultTheme, withTheme } from 'styled-components';
-import { Center, FlexBox } from '~/components/Box';
-import { Button } from '~/components/Button';
-import { COLORS } from '~/styles/variables';
 import React from 'react';
-import { ModalWindow } from '~/components/ModalWindow';
+import { Modal } from '~/components/Modal';
 
 interface RemoveFileModalProps {
   handleChoice: (confirmDelete: boolean) => void;
   filename: string;
-  theme: DefaultTheme;
   className?: string;
 }
 
-const RemoveFileModalBase = (props: RemoveFileModalProps) => {
+export const RemoveFileModal = (props: RemoveFileModalProps) => {
   return (
-    <ModalWindow>
-      <Center className={props.className}>
-        <span>Czy na pewno chcesz usunąć plik {props.filename}?</span>
-        <FlexBox>
-          <Button
-            theme={{ ...props.theme, colors: { ...props.theme.colors, lightGray: COLORS.darkGray } } as DefaultTheme}
-            onClick={() => props.handleChoice(true)}
-            text={'Tak'}
-            primary
-          />
-          <Button onClick={() => props.handleChoice(false)} text={'Anuluj'} />
-        </FlexBox>
-      </Center>
-    </ModalWindow>
+    <Modal
+      textContent={<span>Czy na pewno chcesz usunąć plik {props.filename}?</span>}
+      buttons={[
+        {
+          text: 'Tak',
+          onClick: () => props.handleChoice(true),
+          primary: true
+        },
+        {
+          text: 'Anuluj',
+          onClick: () => props.handleChoice(false)
+        }
+      ]}
+    />
   );
 };
-
-export const RemoveFileModal = withTheme(styled(RemoveFileModalBase)`
-  max-width: 50%;
-  min-height: 20%;
-  flex-direction: column;
-
-  > div {
-    align-self: flex-end;
-    margin-top: ${({ theme }) => theme.spacing.m};
-  }
-
-  button {
-    align-self: flex-end;
-  }
-
-  button + button {
-    margin-left: ${({ theme }) => theme.spacing.s};
-  }
-`);

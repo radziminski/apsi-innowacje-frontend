@@ -19,7 +19,7 @@ export interface ModalProps {
 
 const ModalBase = React.forwardRef((props: ModalProps, ref: ForwardedRef<HTMLDivElement>) => {
   return (
-    <ModalOverlay isVisible>
+    <ModalOverlay isVisible className={'inno-modal'}>
       <ModalWindow ref={ref}>
         <Center className={props.className}>
           {props.textContent}
