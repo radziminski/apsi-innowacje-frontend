@@ -7,6 +7,7 @@ import { InspirationFooter } from '~/pages/dashboard/inspirations/components/Ins
 import { PostDto } from '~/api-client';
 import { DateHeader } from '~/components/DateHeader';
 import parseISO from 'date-fns/parseISO';
+import classNames from 'classnames';
 
 interface InspirationProps {
   inspiration: PostDto;
@@ -17,7 +18,7 @@ interface InspirationProps {
 
 const InspirationBase = React.forwardRef((props: InspirationProps, ref: ForwardedRef<HTMLDivElement>) => {
   return (
-    <Card className={`${props.className} ${props.customClassName || ''}`} ref={ref} onClick={props.onClick}>
+    <Card className={classNames(props.className, props.customClassName)} ref={ref} onClick={props.onClick}>
       <DateHeader date={props.inspiration.date ? parseISO(props.inspiration.date) : new Date()} />
       <AuthorInfoComponent authorInfo={props.inspiration.author} />
       <InspirationContent inspiration={props.inspiration} />

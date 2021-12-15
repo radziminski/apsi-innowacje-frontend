@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FormComponentProps } from '~/components/forms';
 import React from 'react';
+import classNames from 'classnames';
 
 const TextAreaBase = (props: FormComponentProps) => {
   const { className, register, customClassName, ...rest } = props;
@@ -10,7 +11,7 @@ const TextAreaBase = (props: FormComponentProps) => {
       {...(register ? register : {})}
       maxLength={1000}
       {...rest}
-      className={className + (customClassName ? ` ${customClassName}` : '')}
+      className={classNames(className, customClassName)}
     />
   );
 };

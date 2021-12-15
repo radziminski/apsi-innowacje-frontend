@@ -40,7 +40,7 @@ export const CreateInspiration = styled(CreateInspirationBase)`
   .profile-picture {
     margin-right: ${({ theme }) => theme.spacing.s};
   }
-  .form_input.create-inspiration__text-input {
+  .create-inspiration__text-input {
     background-color: ${({ theme }) => theme.colors.lightGray};
     ::placeholder {
       color: black;

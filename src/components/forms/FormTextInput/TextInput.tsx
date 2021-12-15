@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FormComponentProps } from '~/components/forms';
 import React from 'react';
+import classNames from 'classnames';
 
 const TextInputBase = (props: FormComponentProps) => {
   const { className, register, customClassName, ...rest } = props;
@@ -9,7 +10,7 @@ const TextInputBase = (props: FormComponentProps) => {
     <input
       {...(register ? register : {})}
       type={props.type || 'text'}
-      className={className + (customClassName ? ` ${customClassName}` : '')}
+      className={classNames(className, customClassName)}
       {...rest}
     />
   );

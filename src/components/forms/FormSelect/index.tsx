@@ -3,6 +3,7 @@ import React from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
 import { customSelectStyles, FormComponentProps, SelectOption } from '~/components/forms';
+import classNames from 'classnames';
 
 export interface FormSelectProps extends FormComponentProps {
   options: SelectOption[];
@@ -25,7 +26,7 @@ const FormSelectBase = (props: FormSelectProps) => {
         render={({ field }) => (
           <Select
             {...{ options }}
-            className={customClassName || ''}
+            className={classNames(customClassName)}
             styles={customSelectStyles(!!errors[id])}
             {...register(id)}
             {...field}
