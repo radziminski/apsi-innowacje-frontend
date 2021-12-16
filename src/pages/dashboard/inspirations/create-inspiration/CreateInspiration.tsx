@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import { Card } from '~/components/Box';
 import { TextInput } from '~/components/forms/FormTextInput/TextInput';
 import { ProfilePicture } from '~/pages/dashboard/inspirations/components/ProfilePicture';
-import { CreateInspirationModal } from '~/pages/dashboard/inspirations/components/CreateInspirationModal';
+import { CreateInspirationModal } from './components/CreateInspirationModal';
 
 const CreateInspirationBase = (props: { className?: string }) => {
   const [modalOpened, setModalOpened] = React.useState<boolean>(false);
 
   return (
     <>
-      {modalOpened && <CreateInspirationModal closeModal={() => setModalOpened(false)} />}
+      {modalOpened && <CreateInspirationModal closeSelf={() => setModalOpened(false)} />}
       <label htmlFor={'create-post__input'}>
         <Card className={props.className} onClick={() => setModalOpened(true)}>
           <ProfilePicture />

@@ -25,4 +25,5 @@ const FormTextInputBase = (props: FormComponentProps) => {
 
 export const FormTextInput = styled(FormTextInputBase)`
   flex-direction: column;
+  width: 100%;
 `;

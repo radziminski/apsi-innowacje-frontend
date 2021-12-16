@@ -2,9 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import { BiMessageDetail } from 'react-icons/bi';
-import { CreateInspiration } from '~/pages/dashboard/inspirations/CreateInspiration';
+import { CreateInspiration } from '~/pages/dashboard/inspirations/create-inspiration/CreateInspiration';
 import { useReduxInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
-import { AuthorInfo } from '~/pages/dashboard/inspirations/components/AuthorInfo';
 import Box, { Center, FlexBox } from '~/components/Box';
 import { InspirationDetails } from '~/pages/dashboard/inspirations/InspirationDetails';
 import { InspirationCard } from '~/pages/dashboard/inspirations/components/InspirationCard';
@@ -20,7 +19,6 @@ import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
 export interface CommentModel {
   // TODO use proper DTO
   id: number;
-  author: AuthorInfo;
   content: string;
 }
 

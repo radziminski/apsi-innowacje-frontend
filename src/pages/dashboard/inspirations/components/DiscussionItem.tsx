@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
 import { CommentModel } from '~/pages/dashboard/inspirations/InspirationsPage';
 
 interface DiscussionItemProps {
@@ -12,7 +11,7 @@ interface DiscussionItemProps {
 const DiscussionItemBase = (props: DiscussionItemProps) => {
   return (
     <FlexBox className={props.className}>
-      <AuthorInfoComponent authorInfo={props.comment.author} />
+      {/*<InspirationTitle title={props.inspiration.title} />*/}
       <p>{props.comment.content}</p>
     </FlexBox>
   );

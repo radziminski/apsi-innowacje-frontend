@@ -10,7 +10,13 @@ interface InspirationContentProps {
 const InspirationContentBase = (props: InspirationContentProps) => {
   return (
     <div className={props.className}>
-      <div className={'inspiration-content__text-content'}>{props.inspiration.text}</div>
+      {props.inspiration.text && (
+        <div
+          className={'inspiration-content__text-content'}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          dangerouslySetInnerHTML={{ __html: props.inspiration.text! }}
+        />
+      )}
       {/*<div className={'inspiration-content__images'}>{props.inspiration.images}</div>*/}
     </div>
   );

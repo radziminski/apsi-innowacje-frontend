@@ -1,11 +1,11 @@
 import React, { ForwardedRef } from 'react';
 import styled from 'styled-components';
 import { Card } from '~/components/Box';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
+import { InspirationTitle } from '~/pages/dashboard/inspirations/components/InspirationTitle';
 import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
 import { InspirationFooter } from '~/pages/dashboard/inspirations/components/InspirationFooter';
 import { PostDto } from '~/api-client';
-import { DateHeader } from '~/components/DateHeader';
+import { InspirationHeader } from '~/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 import classNames from 'classnames';
 
@@ -19,8 +19,11 @@ interface InspirationProps {
 const InspirationBase = React.forwardRef((props: InspirationProps, ref: ForwardedRef<HTMLDivElement>) => {
   return (
     <Card className={classNames(props.className, props.customClassName)} ref={ref} onClick={props.onClick}>
-      <DateHeader date={props.inspiration.date ? parseISO(props.inspiration.date) : new Date()} />
-      <AuthorInfoComponent authorInfo={props.inspiration.author} />
+      <InspirationHeader
+        authorInfo={props.inspiration.author}
+        date={props.inspiration.date ? parseISO(props.inspiration.date) : new Date()}
+      />
+      <InspirationTitle title={props.inspiration.title} />
       <InspirationContent inspiration={props.inspiration} />
       <InspirationFooter
         // upvotes={props.inspiration.upvotes}
