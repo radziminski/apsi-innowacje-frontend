@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { FormComponentProps } from '~/components/forms';
 import { FlexBox } from '~/components/Box';
 import { TextArea } from '~/components/forms/FormTextArea/TextArea';
+import { ErrorLabel } from '~/components/forms/ErrorLabel';
 
 const FormTextAreaBase = (props: FormComponentProps) => {
   const { id, className, ...rest } = props;
@@ -17,7 +18,7 @@ const FormTextAreaBase = (props: FormComponentProps) => {
     <MemoizeFormComponent {...methods}>
       <FlexBox className={className}>
         <TextArea register={methods.register(id)} errors={errors} id={id} {...rest} />
-        {errors[id] && <p>{errors[id].message}</p>}
+        {errors[id] && <ErrorLabel text={errors[id].message} />}
       </FlexBox>
     </MemoizeFormComponent>
   );
@@ -26,7 +27,4 @@ const FormTextAreaBase = (props: FormComponentProps) => {
 export const FormTextArea = styled(FormTextAreaBase)`
   flex-direction: column;
   width: 100%;
-  p {
-    margin-top: 5px;
-  }
 `;

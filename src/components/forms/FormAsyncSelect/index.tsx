@@ -3,6 +3,7 @@ import React from 'react';
 import AsyncSelect from 'react-select/async';
 import styled from 'styled-components';
 import { customSelectStyles, FormComponentProps, SelectOption } from '~/components/forms';
+import { ErrorLabel } from '~/components/forms/ErrorLabel';
 
 interface FormAsyncSelectProps extends FormComponentProps {
   fetchOptions: () => Promise<SelectOption[]>;
@@ -48,14 +49,11 @@ const FormAsyncSelectBase = (props: FormAsyncSelectProps) => {
           />
         )}
       />
-      {errors[id] && <p>{errors[id].message}</p>}
+      {errors[id] && <ErrorLabel text={errors[id].message} />}
     </div>
   );
 };
 
 export const FormAsyncSelect = styled(FormAsyncSelectBase)`
   width: 100%;
-  p {
-    margin-top: 5px;
-  }
 `;

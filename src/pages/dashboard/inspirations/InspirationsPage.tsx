@@ -16,12 +16,6 @@ import { PostDto } from '~/api-client';
 import { RootState } from '~/store/store';
 import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
 
-export interface CommentModel {
-  // TODO use proper DTO
-  id: number;
-  content: string;
-}
-
 interface InspirationsPageProps {
   className?: string;
 }

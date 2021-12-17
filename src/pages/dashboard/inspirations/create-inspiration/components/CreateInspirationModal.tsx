@@ -104,6 +104,7 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
                   formId={'title'}
                   inputWidth={'90%'}
                   labelWidth={'10%'}
+                  maxLength="100"
                   required
                 />
                 <ContentEditor id={'content'} />

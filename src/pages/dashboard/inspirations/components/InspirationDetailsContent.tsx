@@ -25,7 +25,7 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
       </FlexBox>
       <InspirationTitle title={props.inspiration.title} />
       <InspirationContent inspiration={inspiration} />
-      <InspirationDiscussion comments={[]} />
+      <InspirationDiscussion inspiration={inspiration} />
     </Card>
   );
 };
