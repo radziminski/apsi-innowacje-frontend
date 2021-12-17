@@ -28,7 +28,7 @@ const InspirationBase = React.forwardRef((props: InspirationProps, ref: Forwarde
       <InspirationFooter
         // upvotes={props.inspiration.upvotes}
         // downvotes={props.inspiration.downvotes}
-        comments={0}
+        comments={props.inspiration.postAnswers ? props.inspiration.postAnswers.length : 0}
       />
     </Card>
   );
