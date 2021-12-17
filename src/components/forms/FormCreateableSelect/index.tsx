@@ -3,6 +3,7 @@ import CreatableSelect from 'react-select/creatable';
 import styled from 'styled-components';
 import React from 'react';
 import { customSelectStyles, FormComponentProps } from '~/components/forms';
+import { ErrorLabel } from '~/components/forms/ErrorLabel';
 
 const FormCreateableSelectBase = (props: FormComponentProps) => {
   const { id, className, ...rest } = props;
@@ -30,14 +31,11 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
           />
         )}
       />
-      {errors[id] && <p>{errors[id].message}</p>}
+      {errors[id] && <ErrorLabel text={errors[id].message} />}
     </div>
   );
 };
 
 export const FormCreateableSelect = styled(FormCreateableSelectBase)`
   width: 100%;
-  p {
-    margin-top: 5px;
-  }
 `;

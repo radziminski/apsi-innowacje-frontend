@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import { CommentModel } from '~/pages/dashboard/inspirations/InspirationsPage';
 import { HorizontalRuler } from '~/components/HorizontalRuler';
 import { DiscussionItem } from '~/pages/dashboard/inspirations/components/DiscussionItem';
+import { CreateComment } from '~/pages/dashboard/inspirations/components/CreateComment';
+import { PostDto } from '~/api-client';
 
 interface InspirationDiscussionProps {
-  comments: CommentModel[];
+  inspiration: PostDto;
   className?: string;
 }
 
@@ -15,13 +16,15 @@ const InspirationDiscussionBase = (props: InspirationDiscussionProps) => {
     <FlexBox className={props.className}>
       <HorizontalRuler />
       <span>Dyskusja:</span>
+      {props.inspiration.id && <CreateComment inspirationId={props.inspiration.id} />}
       <FlexBox className={'inspiration-details__discussion-list'}>
-        {props.comments.map((comment, index) => (
-          <div key={comment.id}>
-            <DiscussionItem comment={comment} />
-            {props.comments.length !== index + 1 && <HorizontalRuler />}
-          </div>
-        ))}
+        {props.inspiration.postAnswers &&
+          props.inspiration.postAnswers.map((comment, index) => (
+            <div key={comment.id}>
+              <DiscussionItem comment={comment} />
+              {props.inspiration.postAnswers?.length !== index + 1 && <HorizontalRuler />}
+            </div>
+          ))}
       </FlexBox>
     </FlexBox>
   );

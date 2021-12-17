@@ -20,13 +20,16 @@ export interface FormRowPropsBase {
   customFormComponent?: JSX.Element;
   className?: string;
   required?: boolean;
+  labelWidth?: string;
+  inputWidth?: string;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FormRowProps = FormRowPropsBase & any;
 
 const FormRowBase = (props: FormRowProps): JSX.Element => {
-  const { label, formId, className, customFormComponent, required, ...rest } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { label, formId, className, customFormComponent, required, labelWidth, inputWidth, ...rest } = props;
   const type = props.type || '';
 
   const getFormComponent = (type: FormType): JSX.Element => {
@@ -59,6 +62,7 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
 
 export const FormRow = styled(FormRowBase)`
   flex-direction: row;
+  flex: 0 0 auto;
   margin: ${({ theme }) => theme.spacing.s} 0;
   align-items: center;
 
@@ -70,11 +74,11 @@ export const FormRow = styled(FormRowBase)`
     }
 
     &:first-child {
-      width: 40%;
+      width: ${({ labelWidth }) => labelWidth || '40%'};
       display: inline;
     }
     &:nth-child(2) {
-      width: 60%;
+      width: ${({ inputWidth }) => inputWidth || '60%'};
     }
   }
 `;

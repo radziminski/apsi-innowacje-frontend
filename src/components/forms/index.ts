@@ -17,7 +17,7 @@ export interface SelectOption {
 export const customSelectStyles = (isError: boolean) => ({
   control: (provided, state) => ({
     ...provided,
-    border: `1px solid ${COLORS.primary}5A`,
+    border: `1px solid ${isError ? COLORS.error : COLORS.primary}5A`,
     boxShadow: state.isFocused ? `0 0 0.25rem ${isError ? COLORS.error : COLORS.primary}AF` : 0,
     '&:hover': {
       boxShadow: state.isFocused

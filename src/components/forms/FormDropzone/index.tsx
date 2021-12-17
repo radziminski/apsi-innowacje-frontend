@@ -4,7 +4,7 @@ import { FormComponentProps } from '~/components/forms';
 import styled from 'styled-components';
 
 export interface FormDropzoneProps extends FormComponentProps {
-  onFilesAdded: (acceptedFiles) => void;
+  onFilesAdded?: (acceptedFiles) => void;
 }
 
 const FormDropzoneBase = (props: FormDropzoneProps) => {

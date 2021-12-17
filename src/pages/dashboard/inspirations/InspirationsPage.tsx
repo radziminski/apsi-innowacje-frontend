@@ -2,10 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import { BiMessageDetail } from 'react-icons/bi';
-import { CreateInspiration } from '~/pages/dashboard/inspirations/CreateInspiration';
+import { CreateInspiration } from '~/pages/dashboard/inspirations/create-inspiration/CreateInspiration';
 import { useReduxInfiniteScroll } from '~/hooks/useInfiniteScroll/useInfiniteScroll';
-import { AuthorInfo } from '~/pages/dashboard/inspirations/components/AuthorInfo';
-import Box, { FlexBox } from '~/components/Box';
+import Box, { Center, FlexBox } from '~/components/Box';
 import { InspirationDetails } from '~/pages/dashboard/inspirations/InspirationDetails';
 import { InspirationCard } from '~/pages/dashboard/inspirations/components/InspirationCard';
 import useDevice from '~/hooks/useDevice';
@@ -16,13 +15,6 @@ import { useSelector } from '~/store/hooks';
 import { PostDto } from '~/api-client';
 import { RootState } from '~/store/store';
 import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
-
-export interface CommentModel {
-  // TODO use proper DTO
-  id: number;
-  author: AuthorInfo;
-  content: string;
-}
 
 interface InspirationsPageProps {
   className?: string;
@@ -55,10 +47,12 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
       <CenteredLoader />
     </div>
   );
-  const errorComponent = <div>Wystąpił błąd podczas ładowania.</div>;
+  const errorComponent = <Center>Wystąpił błąd podczas ładowania.</Center>;
+
+  const noMoreComponent = <Center>Wyświetlono już wszystkie posty.</Center>;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLoading, isError, lastElementRef] = useReduxInfiniteScroll(
+  const [isLoading, isError, hasMore, lastElementRef] = useReduxInfiniteScroll(
     getInspirations,
     (state: RootState) => state.inspirations,
     PAGE_SIZE
@@ -101,6 +95,7 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
               </Box>
               {isLoading && loader}
               {isError && errorComponent}
+              {hasMore || noMoreComponent}
             </div>
             <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
               {chosenInspiration && (

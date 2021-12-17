@@ -48,7 +48,7 @@ export const useAsyncInfiniteScroll = (
 };
 
 export const useReduxInfiniteScroll = <
-  T extends { isLoading: boolean; isError: boolean; currentPage: number },
+  T extends { isLoading: boolean; isError: boolean; currentPage: number; lastResultEmpty: boolean },
   ApiArgs extends PageableApiArgs,
   // eslint-disable-next-line @typescript-eslint/ban-types
   State extends {}
@@ -60,11 +60,10 @@ export const useReduxInfiniteScroll = <
   selector: (state: State) => T,
   pageSize: number,
   restDispatchArgs?: Omit<ApiArgs, 'page' | 'count'>
-): [boolean, boolean, (node: HTMLElement | null) => void] => {
-  const { isLoading, isError, currentPage } = useSelector<State, T>(selector);
+): [boolean, boolean, boolean, (node: HTMLElement | null) => void] => {
+  const { isLoading, isError, currentPage, lastResultEmpty } = useSelector<State, T>(selector);
   const dispatch = useDispatch();
-  // TODO get has_more from api by checking the total count
-  const [hasMore, setHasMore] = React.useState(true);
+  const hasMore = !lastResultEmpty;
   const [shouldFetch, setShouldFetch] = React.useState(true);
 
   const observer = React.useRef<IntersectionObserver>();
@@ -86,10 +85,9 @@ export const useReduxInfiniteScroll = <
     if (!isLoading) {
       setShouldFetch(false);
       dispatch(dispatchActionFn({ ...(restDispatchArgs || {}), page: currentPage, count: pageSize }));
-      setHasMore(true);
     }
   }, [shouldFetch]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return [isLoading, isError, lastElementRef];
+  return [isLoading, isError, hasMore, lastElementRef];
 };

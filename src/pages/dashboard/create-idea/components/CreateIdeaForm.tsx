@@ -4,7 +4,7 @@ import { FlexBox } from '~/components/Box';
 import styled from 'styled-components';
 import { FormRow } from '~/components/forms/FormRow';
 import { useDispatch, useSelector } from 'react-redux';
-import { addFiles, clearFiles, FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice';
+import { clearFiles, FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice';
 import { RootState } from '~/store/store';
 import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
@@ -117,12 +117,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     [currentFiles, currentUser]
   );
 
-  const onFilesAdded = React.useCallback((addedFiles: File[]) => {
-    if (addedFiles.length > 0) {
-      dispatch(addFiles(addedFiles));
-    }
-  }, []);
-
   const fetchSubjects = React.useCallback(async (): Promise<SelectOption[]> => {
     const fetchedSubjects: SubjectDto[] = (await apiClient.getAllSubjectsUsingGET()).data;
 
@@ -184,7 +178,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                   customFormComponent={<CreateIdeaValueRangeComponent />}
                   required
                 />
-                <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} onFilesAdded={onFilesAdded} />
+                <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} />
               </FlexBox>
               <FlexBox className={'create-idea-form__submit-button'}>
                 <Button type={'submit'} text={'Wyślij'} primary />
@@ -212,6 +206,7 @@ export default styled(CreateIdeaForm)`
     .create-idea-form__submit-button {
       align-items: flex-end;
       margin-top: ${({ theme }) => theme.spacing.s};
+      margin-right: ${({ theme }) => theme.spacing.s};
     }
   }
 `;
