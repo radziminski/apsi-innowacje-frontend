@@ -24,4 +24,8 @@ const InspirationContentBase = (props: InspirationContentProps) => {
 
 export const InspirationContent = styled(InspirationContentBase)`
   margin: ${({ theme }) => theme.spacing.s};
+  a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
