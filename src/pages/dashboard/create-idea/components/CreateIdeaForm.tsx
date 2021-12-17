@@ -15,9 +15,8 @@ import { IdeaSavedModal } from '~/pages/dashboard/create-idea/components/IdeaSav
 import apiClient, { SubjectDto, SubjectDtoAudienceEnum } from '~/api-client';
 import { AxiosResponse } from 'axios';
 import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea/util';
-import { IdeaErrorModal } from '~/pages/dashboard/create-idea/components/IdeaErrorModal';
-import { LoadingModal } from '~/components/Modal/LoadingModal';
 import { components } from 'react-select';
+import { toast } from 'react-toastify';
 
 export interface CreateIdeaFormSchema {
   anonymous: boolean;
@@ -28,8 +27,6 @@ export interface CreateIdeaFormSchema {
   costs_from: number;
   costs_to: number;
 }
-
-type PostStatus = 'success' | 'error';
 
 export const CustomSubjectSelectOption = ({ innerRef, innerProps, ...restProps }) => {
   return (
@@ -75,22 +72,36 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const dispatch = useDispatch();
   const currentFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [requestStatus, setRequestStatus] = React.useState<PostStatus | undefined>(undefined);
+  const [viewRequestSentModal, setViewRequestSentModal] = React.useState<boolean>(false);
 
   const closeIdeaSavedOrErrorModal = React.useCallback(() => {
-    if (requestStatus === 'success') {
-      dispatch(clearFiles());
-    }
-    setRequestStatus(undefined);
+    setViewRequestSentModal(false);
   }, []);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(clearFiles());
+    };
+  }, []);
+
+  const toastError = () => {
+    toast.error('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined
+    });
+  };
 
   const onSubmit = React.useCallback(
     async (data: CreateIdeaFormSchema) => {
       if (currentUser && currentUser.id) {
-        setIsLoading(true);
         const ideaDTO = formSchemaToIdeaDTO(data, currentUser.id);
         try {
+          setViewRequestSentModal(true);
           const response: AxiosResponse<number> = await apiClient.saveIdeaUsingPOST(ideaDTO);
           if ([200, 201].includes(response.status)) {
             const ideaId = response.data;
@@ -98,18 +109,34 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
               apiClient.saveAttachmentUsingPOST(ideaId, fileEntry.file.stream())
             );
 
-            Promise.all(attachmentResponses).then(() => {
-              setRequestStatus('success');
-              setIsLoading(false);
+            Promise.all(attachmentResponses).then(responses => {
+              if (!responses.some(r => ![200, 201].includes(r.status))) {
+                toast.success('Pomysł został zapisany.', {
+                  position: 'top-right',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined
+                });
+              } else {
+                toast.error('Niestety nie udało się zapisać załączników.', {
+                  position: 'top-right',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined
+                });
+              }
             });
           } else {
-            // TODO proper error handling
-            setRequestStatus('error');
-            setIsLoading(false);
+            toastError();
           }
         } catch (e) {
-          setRequestStatus('error');
-          setIsLoading(false);
+          toastError();
         }
         return;
       }
@@ -130,11 +157,8 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
   return (
     <div className={props.className}>
-      {/*TODO Use react-toastify to notify about adding and do it in the background*/}
-      {isLoading && <LoadingModal textContent={'Trwa zapisywanie pomysłu...'} />}
       <>
-        {!isLoading && requestStatus === 'success' && <IdeaSavedModal onClose={closeIdeaSavedOrErrorModal} />}
-        {!isLoading && requestStatus === 'error' && <IdeaErrorModal onClose={closeIdeaSavedOrErrorModal} />}
+        {viewRequestSentModal && <IdeaSavedModal onClose={closeIdeaSavedOrErrorModal} />}
         <FormProvider {...methods}>
           <div className={'create-idea-form'}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>

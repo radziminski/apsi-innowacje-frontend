@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '~/store/store';
 import { InspirationSavedModal } from './InspirationSavedModal';
 import { FormRow } from '~/components/forms/FormRow';
+import { toast } from 'react-toastify';
 
 require('suneditor/dist/css/suneditor.min.css');
 
@@ -28,14 +29,10 @@ export interface CreateInspirationFormSchema {
   content: string;
 }
 
-type PostStatus = 'success' | 'error';
-
 const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
   const [promptModalVisible, setPromptModalVisible] = React.useState<boolean>(false);
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [requestStatus, setRequestStatus] = React.useState<PostStatus | undefined>(undefined);
+  const [viewRequestSentModal, setViewRequestSentModal] = React.useState<boolean>(false);
   const methods = useForm({
     resolver: yupResolver(schema)
   });
@@ -52,41 +49,55 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
     [props.closeSelf]
   );
 
-  const closeInspirationSavedOrErrorModal = React.useCallback(() => {
-    if (requestStatus === 'success') {
-      props.closeSelf();
-    }
-    setRequestStatus(undefined);
-  }, [requestStatus, props.closeSelf]);
+  const toastError = () => {
+    toast.error('Wystąpił problem podczas zapisywania inspiracji i nie została ona zapisana.', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined
+    });
+  };
 
   const onSubmit = React.useCallback(
     async (data: CreateInspirationFormSchema) => {
       // eslint-disable-next-line no-console
       if (currentUser && currentUser.id) {
-        setIsLoading(true);
         const formData = {
           title: data.title,
           text: data.content
         } as CreatePostDto;
+        setViewRequestSentModal(true);
         try {
           const response: AxiosResponse<number> = await apiClient.postCreatePostPost(formData);
           if ([200, 201].includes(response.status)) {
-            setRequestStatus('success');
-            setIsLoading(false);
+            toast.success('Inspiracja została zapisana.', {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined
+            });
           } else {
-            // TODO proper error handling
-            setRequestStatus('error');
-            setIsLoading(false);
+            toastError();
           }
         } catch (e) {
-          setRequestStatus('error');
-          setIsLoading(false);
+          toastError();
         }
         return;
       }
     },
     [currentUser]
   );
+
+  const closeInspirationSavedModal = React.useCallback(() => {
+    setViewRequestSentModal(false);
+    props.closeSelf();
+  }, [props.closeSelf]);
 
   return (
     <Modal
@@ -115,9 +126,7 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
               </form>
             </Center>
             {promptModalVisible && <CloseCreateInspirationModalPrompt closeModal={exitCreation} />}
-            {!isLoading && requestStatus === 'success' && (
-              <InspirationSavedModal onClose={closeInspirationSavedOrErrorModal} />
-            )}
+            {viewRequestSentModal && <InspirationSavedModal onClose={closeInspirationSavedModal} />}
           </FormProvider>
         </div>
       }

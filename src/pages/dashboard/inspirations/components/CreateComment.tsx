@@ -11,6 +11,7 @@ import apiClient, { CreatePostDto } from '~/api-client';
 import { AxiosResponse } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/store/store';
+import { toast } from 'react-toastify';
 
 const schema = yup
   .object({
@@ -32,11 +33,28 @@ export const CreateComment = styled((props: CreateCommentProps) => {
     resolver: yupResolver(schema)
   });
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-
+  const toastError = () => {
+    toast.error('Wystąpił problem podczas dodawania komentarza i nie został on zapisany.', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined
+    });
+  };
   const onSubmit = React.useCallback(
     async (data: CommentSchema) => {
-      // eslint-disable-next-line no-console
-      console.log(data);
+      toast.info('Komentarz zostanie zapisany.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
       if (currentUser && currentUser.id) {
         // setIsLoading(true);
         const formData = {
@@ -46,15 +64,21 @@ export const CreateComment = styled((props: CreateCommentProps) => {
         try {
           const response: AxiosResponse<number> = await apiClient.postCreatePostAnswerPost(formData);
           if ([200, 201].includes(response.status)) {
-            // setRequestStatus('success');
-            // eslint-disable-next-line no-console
-            console.log(response);
+            toast.success('Komentarz został dodany.', {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined
+            });
+            methods.reset();
           } else {
-            // TODO proper error handling
-            // setRequestStatus('error');
+            toastError();
           }
         } catch (e) {
-          // setRequestStatus('error');
+          toastError();
         }
         return;
       }

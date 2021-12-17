@@ -15,6 +15,8 @@ import { useSelector } from '~/store/hooks';
 import { PostDto } from '~/api-client';
 import { RootState } from '~/store/store';
 import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface InspirationsPageProps {
   className?: string;
@@ -66,6 +68,7 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
         errorMessage="Wystąpił błąd z odświeżaniem pomysłów.">
         {inspirations && (
           <FlexBox className={props.className}>
+            <ToastContainer />
             <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
               <CreateInspiration />
               <Box>
@@ -117,6 +120,9 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
 
 export const InspirationsPage = styled(InspirationsPageBase)`
   width: auto;
+  .Toastify__toast-container--top-right {
+    top: 9rem;
+  }
 
   .inspiration-list__loader {
     margin: ${({ theme }) => theme.spacing.m};
