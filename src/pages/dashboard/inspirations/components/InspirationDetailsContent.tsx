@@ -19,7 +19,7 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
       <FlexBox className={'inspiration-details__pre-header'}>
         <InspirationHeader
           authorInfo={props.inspiration.author}
-          date={props.inspiration.date ? parseISO(props.inspiration.date) : new Date()}
+          date={props.inspiration.date ? parseISO('1999-07-09T10:00+00:00') : new Date()}
         />
         <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
       </FlexBox>

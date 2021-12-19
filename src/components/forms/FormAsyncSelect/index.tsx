@@ -37,14 +37,15 @@ const FormAsyncSelectBase = (props: FormAsyncSelectProps) => {
         control={control}
         render={({ field }) => (
           <AsyncSelect
+            {...register(id)}
+            {...field}
             loadOptions={fetchOptions}
             cacheOptions
             defaultOptions
+            value={field.value ?? null}
             styles={customSelectStyles(!!errors[id])}
             noOptionsMessage={() => 'Brak opcji'}
             loadingMessage={() => 'Ładowanie opcji...'}
-            {...register(id)}
-            {...field}
             {...rest}
           />
         )}

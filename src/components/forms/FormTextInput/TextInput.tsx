@@ -26,7 +26,7 @@ export const TextInput = styled(TextInputBase)`
   border: 1px solid ${({ id, errors, theme }) => (errors && errors[id] ? theme.colors.error : theme.colors.primary)}5A;
   border-radius: 999px;
   background-color: ${({ theme }) => theme.colors.white};
-  padding: 0.8rem ${({ theme }) => theme.spacing.s};
+  padding: 0.5rem ${({ theme }) => theme.spacing.s};
   &:hover {
     box-shadow: 0 0 0.15rem
       ${({ id, errors, theme }) => (errors && errors[id] ? theme.colors.error : theme.colors.primary)}AF;
