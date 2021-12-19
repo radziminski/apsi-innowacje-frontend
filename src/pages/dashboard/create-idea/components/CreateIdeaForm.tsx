@@ -8,10 +8,10 @@ import { clearFiles, FileEntry } from '~/store/slices/CreateIdeaAddedFilesSlice'
 import { RootState } from '~/store/store';
 import { Button } from '~/components/Button';
 import { CreateIdeaValueRangeComponent } from './CreateIdeaValueRangeComponent';
-import { schema } from '~/pages/dashboard/create-idea/schema';
+import { CreateIdeaFormFields, schema } from '~/pages/dashboard/create-idea/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SelectOption } from '~/components/forms';
-import { IdeaSavedModal } from '~/pages/dashboard/create-idea/components/IdeaSavedModal';
+import { IdeaRequestPendingModal } from '~/pages/dashboard/create-idea/components/IdeaRequestPendingModal';
 import apiClient, { SubjectDto, SubjectDtoAudienceEnum } from '~/api-client';
 import { AxiosResponse } from 'axios';
 import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea/util';
@@ -19,13 +19,14 @@ import { components } from 'react-select';
 import { toast } from 'react-toastify';
 
 export interface CreateIdeaFormSchema {
-  anonymous: boolean;
-  subjectId: SelectOption;
-  keywords: SelectOption[];
-  description: string;
-  benefits: string;
-  costs_from: number;
-  costs_to: number;
+  [CreateIdeaFormFields.title]: string;
+  [CreateIdeaFormFields.anonymous]: boolean;
+  [CreateIdeaFormFields.subject]: SelectOption;
+  [CreateIdeaFormFields.keywords]: SelectOption[];
+  [CreateIdeaFormFields.description]: string;
+  [CreateIdeaFormFields.benefits]: string;
+  [CreateIdeaFormFields.costs_from]: number;
+  [CreateIdeaFormFields.costs_to]: number;
 }
 
 export const CustomSubjectSelectOption = ({ innerRef, innerProps, ...restProps }) => {
@@ -65,6 +66,8 @@ function subjectDTOAudienceToSelectText(
   return 'Nieznana';
 }
 
+type RequestStatus = 'pending' | 'error' | 'success';
+
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm({
     resolver: yupResolver(schema)
@@ -72,11 +75,17 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const dispatch = useDispatch();
   const currentFiles = useSelector((state: RootState) => state.addedFiles.addedFiles);
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  const [viewRequestSentModal, setViewRequestSentModal] = React.useState<boolean>(false);
+  const [requestStatus, setRequestStatus] = React.useState<RequestStatus | undefined>(undefined);
 
-  const closeIdeaSavedOrErrorModal = React.useCallback(() => {
-    setViewRequestSentModal(false);
-  }, []);
+  React.useEffect(() => {
+    if (requestStatus === 'success') {
+      dispatch(clearFiles());
+      methods.reset();
+      setRequestStatus(undefined);
+    } else if (requestStatus === 'error') {
+      setRequestStatus(undefined);
+    }
+  }, [requestStatus]);
 
   React.useEffect(() => {
     return () => {
@@ -84,8 +93,8 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     };
   }, []);
 
-  const toastError = () => {
-    toast.error('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.', {
+  const toastError = (message: string) => {
+    toast.error(message, {
       position: 'top-right',
       autoClose: 5000,
       hideProgressBar: false,
@@ -98,45 +107,48 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
   const onSubmit = React.useCallback(
     async (data: CreateIdeaFormSchema) => {
+      // eslint-disable-next-line no-console
+      console.log(data);
       if (currentUser && currentUser.id) {
         const ideaDTO = formSchemaToIdeaDTO(data, currentUser.id);
         try {
-          setViewRequestSentModal(true);
+          setRequestStatus('pending');
           const response: AxiosResponse<number> = await apiClient.saveIdeaUsingPOST(ideaDTO);
           if ([200, 201].includes(response.status)) {
             const ideaId = response.data;
             const attachmentResponses = currentFiles.map((fileEntry: FileEntry) =>
-              apiClient.saveAttachmentUsingPOST(ideaId, fileEntry.file.stream())
+              apiClient.saveAttachmentUsingPOST(ideaId, fileEntry.file)
             );
 
-            Promise.all(attachmentResponses).then(responses => {
-              if (!responses.some(r => ![200, 201].includes(r.status))) {
-                toast.success('Pomysł został zapisany.', {
-                  position: 'top-right',
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined
-                });
-              } else {
-                toast.error('Niestety nie udało się zapisać załączników.', {
-                  position: 'top-right',
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined
-                });
-              }
-            });
+            Promise.all(attachmentResponses)
+              .then(responses => {
+                if (!responses.some(r => ![200, 201].includes(r.status))) {
+                  setRequestStatus('success');
+                  toast.success('Pomysł został zapisany.', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined
+                  });
+                } else {
+                  setRequestStatus('error');
+                  toastError('Niestety nie udało się zapisać załączników.');
+                }
+              })
+              .catch(() => {
+                setRequestStatus('error');
+                toastError('Niestety nie udało się zapisać załączników.');
+              });
           } else {
-            toastError();
+            setRequestStatus('error');
+            toastError('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
           }
         } catch (e) {
-          toastError();
+          setRequestStatus('error');
+          toastError('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
         }
         return;
       }
@@ -158,15 +170,21 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   return (
     <div className={props.className}>
       <>
-        {viewRequestSentModal && <IdeaSavedModal onClose={closeIdeaSavedOrErrorModal} />}
+        {requestStatus && requestStatus === 'pending' && <IdeaRequestPendingModal />}
         <FormProvider {...methods}>
           <div className={'create-idea-form'}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
               <FlexBox>
-                <FormRow label={'Dodaj anonimowo'} formId={'anonymous'} type={'checkbox'} />
+                <FormRow
+                  label={'Tytuł pomysłu'}
+                  formId={CreateIdeaFormFields.title}
+                  type={'text'}
+                  placeholder={'Krótka nazwa pomysłu (1-100 znaków)'}
+                  required
+                />
                 <FormRow
                   label={'Tematyka pomysłu'}
-                  formId={'subjectId'}
+                  formId={CreateIdeaFormFields.subject}
                   type={'async-select'}
                   placeholder={'Wybierz tematykę pomysłu'}
                   fetchOptions={fetchSubjects}
@@ -175,14 +193,14 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                 />
                 <FormRow
                   label={'Słowa kluczowe'}
-                  formId={'keywords'}
+                  formId={CreateIdeaFormFields.keywords}
                   type={'createable-select'}
                   placeholder={'Wpisz słowa kluczowe'}
                   required
                 />
                 <FormRow
                   label={'Opis'}
-                  formId={'description'}
+                  formId={CreateIdeaFormFields.description}
                   type={'textarea'}
                   rows={8}
                   placeholder={'Opowiedz nam o swoim pomyśle. Minimum 30 znaków.'}
@@ -190,7 +208,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                 />
                 <FormRow
                   label={'Planowane korzyści'}
-                  formId={'benefits'}
+                  formId={CreateIdeaFormFields.benefits}
                   type={'textarea'}
                   rows={4}
                   placeholder={'Jakie korzyści może przynieść twój pomysł?'}
@@ -198,11 +216,12 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                 />
                 <FormRow
                   label={'Planowane koszty'}
-                  formId={'costs_from'}
+                  formId={CreateIdeaFormFields.costs_from}
                   customFormComponent={<CreateIdeaValueRangeComponent />}
                   required
                 />
-                <FormRow label={'Załączniki'} formId={'attachments'} type={'dropzone'} />
+                <FormRow label={'Dodaj anonimowo'} formId={CreateIdeaFormFields.anonymous} type={'checkbox'} />
+                <FormRow label={'Załączniki'} formId={CreateIdeaFormFields.attachments} type={'dropzone'} />
               </FlexBox>
               <FlexBox className={'create-idea-form__submit-button'}>
                 <Button type={'submit'} text={'Wyślij'} primary />

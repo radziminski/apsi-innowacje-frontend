@@ -27,10 +27,11 @@ const FormSelectBase = (props: FormSelectProps) => {
         render={({ field }) => (
           <Select
             {...{ options }}
-            className={classNames(customClassName)}
-            styles={customSelectStyles(!!errors[id])}
             {...register(id)}
             {...field}
+            value={field.value ?? null}
+            className={classNames(customClassName)}
+            styles={customSelectStyles(!!errors[id])}
             {...rest}
           />
         )}

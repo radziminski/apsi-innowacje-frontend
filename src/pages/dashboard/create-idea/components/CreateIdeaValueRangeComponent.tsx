@@ -22,12 +22,11 @@ export const CreateIdeaValueRangeComponent = styled(CreateIdeaValueRangeComponen
   width: 100%;
 
   .value-range_dash-container {
-    height: 100%;
     flex-direction: column;
+    align-self: flex-start;
   }
   .value-range_dash {
-    margin: 11px 5px;
-    align-self: flex-start;
+    margin: 10px 5px;
   }
 
   .value-range_currency-box {
@@ -37,7 +36,7 @@ export const CreateIdeaValueRangeComponent = styled(CreateIdeaValueRangeComponen
     box-shadow: 0 0 0.1rem ${({ theme }) => theme.colors.primaryDark};
     border-radius: ${({ theme }) => theme.borderRadiuses.small};
     background-color: ${({ theme }) => theme.colors.lightGray};
-    height: 43px;
+    height: 38px;
     width: 20%;
     min-width: 3rem;
     margin: 0 5px;

@@ -21,12 +21,13 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
         render={({ field }) => (
           <CreatableSelect
             isMulti
+            {...register(id)}
+            {...field}
+            value={field.value ?? null}
             noOptionsMessage={() => 'Wpisz słowo by je dodać'}
             formatCreateLabel={(inputValue: string) => `Dodaj "${inputValue}"`}
             isClearable={false}
             styles={customSelectStyles(!!errors[id])}
-            {...register(id)}
-            {...field}
             {...rest}
           />
         )}

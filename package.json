@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "npm run start:dev",
-    "start:dev": "cross-env ENV_FILE=dev NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js",
+    "start:dev": "cross-env ENV_FILE=dev NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js --port 5000",
     "start:prod": "cross-env ENV_FILE=prod NODE_ENV=production webpack serve --config ./webpack/webpack.prod.js",
     "clean": "rimraf ./build",
     "clean:clients": "rimraf src/api-client/dotnet && rimraf src/api-client/java",
