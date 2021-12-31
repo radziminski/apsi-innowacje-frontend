@@ -9,23 +9,38 @@ import { InspirationDetailsProps } from '~/pages/dashboard/inspirations/Inspirat
 import useDevice from '~/hooks/useDevice';
 import { InspirationHeader } from '~/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
+import { useSelector } from '~/store/hooks';
+import { useDispatch } from 'react-redux';
+import { getSingleInspiration } from '~/store/slices/CreateInspirationsSlice';
 
 const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isOpened'>) => {
   const { isTab } = useDevice();
-  const { inspiration, onClose, className } = props;
+  const { inspirationId, onClose, className } = props;
+  const inspiration = useSelector(state =>
+    state.inspirations.inspirations ? state.inspirations.inspirations.find(ins => ins.id === inspirationId) : null
+  );
+  const dispatch = useDispatch();
+
+  const onCommentAdded = React.useCallback(() => {
+    props.inspirationId && dispatch(getSingleInspiration({ id: props.inspirationId }));
+  }, [props.inspirationId]);
 
   return (
     <Card className={className}>
-      <FlexBox className={'inspiration-details__pre-header'}>
-        <InspirationHeader
-          authorInfo={props.inspiration.author}
-          date={props.inspiration.date ? parseISO('1999-07-09T10:00+00:00') : new Date()}
-        />
-        <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
-      </FlexBox>
-      <InspirationTitle title={props.inspiration.title} />
-      <InspirationContent inspiration={inspiration} />
-      <InspirationDiscussion inspiration={inspiration} />
+      {inspiration && (
+        <>
+          <FlexBox className={'inspiration-details__pre-header'}>
+            <InspirationHeader
+              authorInfo={inspiration.author}
+              date={inspiration.date ? parseISO(inspiration.date) : new Date()}
+            />
+            <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
+          </FlexBox>
+          <InspirationTitle title={inspiration.title} />
+          <InspirationContent inspiration={inspiration} />
+          <InspirationDiscussion inspiration={inspiration} onCommentAdd={onCommentAdded} />
+        </>
+      )}
     </Card>
   );
 };
