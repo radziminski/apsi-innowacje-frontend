@@ -4,10 +4,10 @@ import { Card } from '~/components/Box';
 import { InspirationTitle } from '~/pages/dashboard/inspirations/components/InspirationTitle';
 import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
 import { InspirationFooter } from '~/pages/dashboard/inspirations/components/InspirationFooter';
-import { PostDto } from '~/api-client';
 import { InspirationHeader } from '~/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 import classNames from 'classnames';
+import { PostDto } from '~/api-client';
 
 interface InspirationProps {
   inspiration: PostDto;

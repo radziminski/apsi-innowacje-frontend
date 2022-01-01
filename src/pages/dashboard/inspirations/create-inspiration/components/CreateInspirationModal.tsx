@@ -13,9 +13,10 @@ import { AxiosResponse } from 'axios';
 import apiClient, { CreatePostDto } from '~/api-client';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/store/store';
-import { InspirationSavedModal } from './InspirationSavedModal';
 import { FormRow } from '~/components/forms/FormRow';
 import { toast } from 'react-toastify';
+import { RequestStatus } from '~/constants/constants';
+import { InspirationRequestPendingModal } from './InspirationRequestPendingModal';
 
 require('suneditor/dist/css/suneditor.min.css');
 
@@ -32,7 +33,7 @@ export interface CreateInspirationFormSchema {
 const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
   const [promptModalVisible, setPromptModalVisible] = React.useState<boolean>(false);
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  const [viewRequestSentModal, setViewRequestSentModal] = React.useState<boolean>(false);
+  const [requestStatus, setRequestStatus] = React.useState<RequestStatus | undefined>(undefined);
   const methods = useForm({
     resolver: yupResolver(schema)
   });
@@ -48,6 +49,13 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
     },
     [props.closeSelf]
   );
+
+  React.useEffect(() => {
+    if (requestStatus === 'success') {
+      setRequestStatus(undefined);
+      props.closeSelf();
+    }
+  }, [requestStatus, props.closeSelf]);
 
   const toastError = () => {
     toast.error('Wystąpił problem podczas zapisywania inspiracji i nie została ona zapisana.', {
@@ -69,7 +77,7 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
           title: data.title,
           text: data.content
         } as CreatePostDto;
-        setViewRequestSentModal(true);
+        setRequestStatus('pending');
         try {
           const response: AxiosResponse<number> = await apiClient.postCreatePostPost(formData);
           if ([200, 201].includes(response.status)) {
@@ -82,10 +90,13 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
               draggable: true,
               progress: undefined
             });
+            setRequestStatus('success');
           } else {
+            setRequestStatus('error');
             toastError();
           }
         } catch (e) {
+          setRequestStatus('error');
           toastError();
         }
         return;
@@ -94,15 +105,11 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
     [currentUser]
   );
 
-  const closeInspirationSavedModal = React.useCallback(() => {
-    setViewRequestSentModal(false);
-    props.closeSelf();
-  }, [props.closeSelf]);
-
   return (
     <Modal
       textContent={
         <div>
+          {requestStatus && requestStatus === 'pending' && <InspirationRequestPendingModal />}
           <FormProvider {...methods}>
             <Center className={props.className}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -126,7 +133,6 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
               </form>
             </Center>
             {promptModalVisible && <CloseCreateInspirationModalPrompt closeModal={exitCreation} />}
-            {viewRequestSentModal && <InspirationSavedModal onClose={closeInspirationSavedModal} />}
           </FormProvider>
         </div>
       }

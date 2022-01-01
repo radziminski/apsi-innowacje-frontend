@@ -12,7 +12,6 @@ import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import { CenteredLoader } from '~/components/Loader';
 import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useSelector } from '~/store/hooks';
-import { PostDto } from '~/api-client';
 import { RootState } from '~/store/store';
 import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
 
@@ -23,21 +22,19 @@ interface InspirationsPageProps {
 const PAGE_SIZE = 8;
 
 const InspirationsPageBase = (props: InspirationsPageProps) => {
-  const [chosenInspiration, setChosenInspiration] = React.useState<PostDto | undefined>(undefined);
+  const [chosenInspirationId, setChosenInspirationId] = React.useState<number | undefined>(undefined);
   const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
   const { inspirations } = useSelector(state => state.inspirations);
 
   const { isWideTab } = useDevice();
 
-  const chosenInspirationRef = React.useRef<HTMLDivElement>();
-
   const closeInspirationDetails = React.useCallback(() => {
     setIsDetailsOpened(false);
-    setTimeout(() => setChosenInspiration(undefined), 500);
+    setTimeout(() => setChosenInspirationId(undefined), 500);
   }, []);
 
-  const onInspirationClick = React.useCallback((inspiration: PostDto) => {
-    setChosenInspiration(inspiration);
+  const onInspirationClick = React.useCallback((inspirationId: number) => {
+    setChosenInspirationId(inspirationId);
     setIsDetailsOpened(true);
   }, []);
 
@@ -69,39 +66,39 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
             <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
               <CreateInspiration />
               <Box>
-                {inspirations.map((inspiration, index) => (
-                  <CSSTransition
-                    in={chosenInspiration === inspiration}
-                    key={inspiration.id}
-                    timeout={500}
-                    classNames="inspiration-list-item">
-                    <InspirationCard
-                      inspiration={inspiration}
-                      onClick={() => {
-                        onInspirationClick(inspiration);
-                      }}
-                      ref={ref => {
-                        if (inspirations.length === index + 1) {
-                          lastElementRef(ref);
-                        }
-                        if (inspiration === chosenInspiration) {
-                          chosenInspirationRef.current = ref || undefined;
-                        }
-                      }}
-                      customClassName={'inspiration-list-item'}
-                    />
-                  </CSSTransition>
-                ))}
+                {inspirations.map((inspiration, index) =>
+                  inspiration.id ? (
+                    <CSSTransition
+                      in={chosenInspirationId === inspiration.id}
+                      key={inspiration.id}
+                      timeout={500}
+                      classNames="inspiration-list-item">
+                      <InspirationCard
+                        inspiration={inspiration}
+                        onClick={() => {
+                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                          onInspirationClick(inspiration.id!);
+                        }}
+                        ref={ref => {
+                          if (inspirations.length === index + 1) {
+                            lastElementRef(ref);
+                          }
+                        }}
+                        customClassName={'inspiration-list-item'}
+                      />
+                    </CSSTransition>
+                  ) : null
+                )}
               </Box>
               {isLoading && loader}
               {isError && errorComponent}
               {hasMore || noMoreComponent}
             </div>
             <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
-              {chosenInspiration && (
+              {chosenInspirationId && chosenInspirationId && (
                 <FlexBox>
                   <InspirationDetails
-                    inspiration={chosenInspiration}
+                    inspirationId={chosenInspirationId}
                     onClose={closeInspirationDetails}
                     isOpened={isDetailsOpened}
                   />
@@ -142,6 +139,7 @@ export const InspirationsPage = styled(InspirationsPageBase)`
     @media ${({ theme }) => theme.mediaQueries.tab} {
       top: 8rem;
       max-height: 80vh;
+      margin-bottom: -100%;
     }
   }
 

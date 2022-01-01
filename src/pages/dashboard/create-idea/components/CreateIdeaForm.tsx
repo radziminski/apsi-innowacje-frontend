@@ -17,6 +17,7 @@ import { AxiosResponse } from 'axios';
 import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea/util';
 import { components } from 'react-select';
 import { toast } from 'react-toastify';
+import { RequestStatus } from '~/constants/constants';
 
 export interface CreateIdeaFormSchema {
   [CreateIdeaFormFields.title]: string;
@@ -65,8 +66,6 @@ function subjectDTOAudienceToSelectText(
   }
   return 'Nieznana';
 }
-
-type RequestStatus = 'pending' | 'error' | 'success';
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm({

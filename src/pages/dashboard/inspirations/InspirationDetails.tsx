@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import { FixedMenuWrapper } from '~/components/FixedMenuWrapper';
 import { InspirationDetailsContent } from '~/pages/dashboard/inspirations/components/InspirationDetailsContent';
 import useDevice from '~/hooks/useDevice';
-import { PostDto } from '~/api-client';
 
 export interface InspirationDetailsProps {
-  inspiration: PostDto;
+  inspirationId: number;
   onClose: () => void;
   isOpened?: boolean;
   className?: string;

@@ -25,6 +25,7 @@ interface CommentSchema {
 
 interface CreateCommentProps {
   inspirationId: number;
+  onCommentAdd?: () => void;
   className?: string;
 }
 
@@ -44,6 +45,14 @@ export const CreateComment = styled((props: CreateCommentProps) => {
       progress: undefined
     });
   };
+  const handleUserKeyPress = React.useCallback((event: KeyboardEvent) => {
+    if (event.code === 'Enter' && event.ctrlKey) {
+      // eslint-disable-next-line no-console
+      console.log('Enter');
+      methods.handleSubmit(onSubmit)();
+    }
+  }, []);
+
   const onSubmit = React.useCallback(
     async (data: CommentSchema) => {
       toast.info('Komentarz zostanie zapisany.', {
@@ -74,6 +83,7 @@ export const CreateComment = styled((props: CreateCommentProps) => {
               progress: undefined
             });
             methods.reset();
+            props.onCommentAdd && props.onCommentAdd();
           } else {
             toastError();
           }
@@ -83,7 +93,7 @@ export const CreateComment = styled((props: CreateCommentProps) => {
         return;
       }
     },
-    [props.inspirationId, currentUser]
+    [props.inspirationId, props.onCommentAdd, currentUser]
   );
   return (
     <FormProvider {...methods}>
@@ -91,7 +101,7 @@ export const CreateComment = styled((props: CreateCommentProps) => {
         <Paragraph>Dodaj komentarz:</Paragraph>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <FlexBox className={'create-comment__form-container'}>
-            <FormTextArea id={'comment'} rows={1} />
+            <FormTextArea id={'comment'} rows={1} onKeyPress={handleUserKeyPress} />
             <Button text={'Dodaj'} type={'submit'} primary />
           </FlexBox>
         </form>
@@ -100,7 +110,8 @@ export const CreateComment = styled((props: CreateCommentProps) => {
   );
 })`
   flex-direction: column;
-  box-shadow: 0 0 0.15rem #00000082;
+  // box-shadow: 0 0 0.15rem #00000082;
+  background-color: ${({ theme }) => theme.colors.lightGray};
   border-radius: 5px;
   padding: 5px;
   margin: ${({ theme }) => theme.spacing.s} 0;
@@ -116,5 +127,6 @@ export const CreateComment = styled((props: CreateCommentProps) => {
   }
   button {
     align-self: flex-end;
+    padding: 0.7rem ${({ theme }) => theme.spacing.m};
   }
 `;
