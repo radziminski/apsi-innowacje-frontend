@@ -11,11 +11,12 @@ interface Props {
   icon: React.ReactNode;
   isActive?: boolean;
   onClick?: () => void;
+  isDisabled?: boolean;
 }
 
-export const NavItem: React.FC<Props> = ({ label, to, icon, isActive, onClick }) => {
+export const NavItem: React.FC<Props> = ({ label, to, icon, isActive, onClick, isDisabled }) => {
   const content = (
-    <Container as={onClick && !to ? 'button' : 'div'} isActive={isActive} onClick={onClick}>
+    <Container as={onClick && !to ? 'button' : 'div'} isActive={isActive} onClick={onClick} isDisabled={isDisabled}>
       {icon}
       <Box marginRight="1rem" />
       <Heading3 fontSize="1.1rem" fontWeight={FONT_WEIGHTS.medium}>
@@ -24,7 +25,7 @@ export const NavItem: React.FC<Props> = ({ label, to, icon, isActive, onClick })
     </Container>
   );
 
-  if (to)
+  if (to && !isDisabled)
     return (
       <Link key={label} to={to}>
         {content}

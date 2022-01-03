@@ -23,6 +23,8 @@ import { Pill } from './parts';
 import { useDispatch } from 'react-redux';
 import { logout } from '~/store/slices/CreateUserSlice';
 import useDevice from '~/hooks/useDevice';
+import { UserRole } from '~/api-client';
+import { useSelector } from '~/store/hooks';
 
 const ICON_SIZE = 22;
 
@@ -40,7 +42,8 @@ const NAV_LINKS = [
   {
     icon: <MdOutlineRateReview size={ICON_SIZE} />,
     to: getVotingPath(),
-    label: 'Głosowanie'
+    label: 'Głosowanie',
+    restrictedTo: [UserRole.Admin, UserRole.Committee]
   },
   {
     icon: <BiMessageDetail size={ICON_SIZE} />,
@@ -54,6 +57,7 @@ export const Nav: React.FC = () => {
   const dispatch = useDispatch();
   const isInAccountPage = location.pathname.startsWith(getAccountDetailsPath());
   const { isTab } = useDevice();
+  const { currentUser } = useSelector(state => state.user);
 
   const getLocationOffset = () => {
     if (isInAccountPage) {
@@ -68,11 +72,13 @@ export const Nav: React.FC = () => {
   return (
     <FlexBox flexDirection="column" as="nav" padding={isTab ? '0 2rem' : '0 3.5rem'} position="relative" height="100%">
       <FlexBox as="ul" flexDirection="column" color={COLORS.gray}>
-        {NAV_LINKS.map(link => (
-          <Box as="li" paddingY="1.25rem" key={link.label}>
-            <NavItem {...link} isActive={location.pathname.startsWith(link.to)} />
-          </Box>
-        ))}
+        {NAV_LINKS.map(link =>
+          link.restrictedTo && currentUser?.userRole && !link.restrictedTo.includes(currentUser.userRole) ? null : (
+            <Box as="li" paddingY="1.25rem" key={link.label}>
+              <NavItem {...link} isActive={location.pathname.startsWith(link.to)} />
+            </Box>
+          )
+        )}
       </FlexBox>
 
       <Pill offset={9 + getLocationOffset() * 64} />

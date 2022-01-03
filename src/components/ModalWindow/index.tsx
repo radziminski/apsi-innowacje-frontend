@@ -21,5 +21,6 @@ export const ModalWindow = styled(ModalWindowBase)`
     transform: translate(-50%, -50%);
     max-height: 90%;
     max-width: 90%;
+    border-radius: ${({ theme }) => theme.borderRadiuses.small};
   }
 `;
