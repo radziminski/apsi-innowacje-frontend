@@ -14,7 +14,7 @@ const ModalWindowBase = React.forwardRef<HTMLDivElement, React.PropsWithChildren
 export const ModalWindow = styled(ModalWindowBase)`
   > div {
     background-color: ${({ theme }) => theme.colors.white};
-    padding: ${({ theme }) => theme.spacing.s} ${({ theme }) => theme.spacing.s};
+    padding: ${({ theme }) => theme.spacing.m} ${({ theme }) => theme.spacing.m};
     top: 50%;
     left: 50%;
     position: fixed;

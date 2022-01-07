@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import Rating from 'react-rating';
 import { useOutsideClick } from '~/hooks/useOutsideClick';
-import Box, { FlexBox } from '../Box';
+import Box, { Center, FlexBox } from '../Box';
 import { Button } from '../Button';
+import { TextArea } from '../forms/FormTextArea/TextArea';
 import { ModalOverlay } from '../ModalOverlay';
 import { ModalWindow } from '../ModalWindow';
 import { Heading3 } from '../Text';
@@ -16,14 +17,14 @@ interface Props {
 
 const RatingModal: React.FC<Props> = ({ onClose, ideaId, ideaTitle, isVisible }) => {
   const [ratingTempValue, setRatingTempValue] = useState<number | undefined>(undefined);
-  const [ratingValue, setRatingValue] = useState(0);
+  const [ratingValue, setRatingValue] = useState<number | undefined>(undefined);
   const ref = useRef(null);
 
   const onCloseModal = () => {
     if (isVisible && onClose) {
       onClose();
       setRatingTempValue(undefined);
-      setRatingValue(0);
+      setRatingValue(undefined);
     }
   };
 
@@ -34,10 +35,21 @@ const RatingModal: React.FC<Props> = ({ onClose, ideaId, ideaTitle, isVisible })
       <ModalWindow>
         <Box padding="2rem" minWidth="600px" ref={ref}>
           <Heading3 textAlign="center">Oceń pomysł {ideaTitle ? `"${ideaTitle}"` : ''}</Heading3>
-          <FlexBox justifyContent="center" paddingY="1rem">
-            <Rating onHover={setRatingTempValue} onChange={setRatingValue} initialRating={ratingValue} />
-          </FlexBox>
-          <FlexBox justifyContent="center">Ocena: {ratingTempValue ?? ratingValue}</FlexBox>
+          <Box maxWidth="400px" margin="0 auto">
+            <Center padding="1rem 0 0.2rem">
+              Ocena*: {ratingTempValue ?? ratingValue ?? 'brak'}
+              <Box marginLeft="auto">
+                <Rating onHover={setRatingTempValue} onChange={setRatingValue} initialRating={ratingValue} />
+              </Box>
+            </Center>
+            <Center padding="0.2rem 0 1rem">
+              Komentarz:
+              <Box marginLeft="auto">
+                <TextArea />
+              </Box>
+            </Center>
+          </Box>
+
           <FlexBox justifyContent="flex-end">
             <Button
               text="Powrót"
@@ -54,6 +66,7 @@ const RatingModal: React.FC<Props> = ({ onClose, ideaId, ideaTitle, isVisible })
                 console.log(ideaId);
               }}
               primary={true}
+              disabled={!ratingValue}
             />
           </FlexBox>
         </Box>

@@ -1,10 +1,11 @@
 import React from 'react';
-import { FlexBox } from '~/components/Box';
+import Box, { Center, FlexBox } from '~/components/Box';
 import { useSelector } from '~/store/hooks';
 import { FormRow } from '~/components/forms/FormRow';
 import { Button } from '~/components/Button';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Heading5 } from '~/components/Text';
+import Loader from '~/components/Loader';
 
 export interface LoginFormData {
   username: string;
@@ -25,9 +26,19 @@ export const LoginForm: React.FC<Props> = ({ onSubmit }) => {
         <FormRow label="Nazwa Użytkownika" formId={'username'} type={'text'} placeholder={'Nazwa Użytkownika'} />
         <FormRow label="Hasło" formId={'password'} type={'password'} placeholder={'Hasło'} />
         <FlexBox justifyContent="flex-end">
-          <Button type={'submit'} text={'Zaloguj'} width="20%" primary>
-            {isLoading && <Heading5 textAlign="center">Something went wrong</Heading5>}
-          </Button>
+          <Box width="20%">
+            <Button type={'submit'} primary>
+              {isLoading ? (
+                <Center width="1rem" height="1rem" overflow="hidden" flexGrow={1}>
+                  <Center transform="scale(0.2)" flexGrow={1}>
+                    <Loader />{' '}
+                  </Center>
+                </Center>
+              ) : (
+                'Zaloguj'
+              )}
+            </Button>
+          </Box>
         </FlexBox>
         {isError && <Heading5 textAlign="center">Something went wrong</Heading5>}
       </form>
