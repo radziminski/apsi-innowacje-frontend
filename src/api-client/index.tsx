@@ -1,7 +1,7 @@
 import { AuthApiFactory, UsersApiFactory, PostApiFactory } from './dotnet';
 import { Configuration as DotnetConfiguration } from './dotnet/configuration';
 import { DOTNET_API_URL, JAVA_API_URL } from '~/constants/constants';
-import { Configuration as JavaConfiguration, InnowacjaAPIApiFactory } from '~/api-client/java';
+import { Configuration as JavaConfiguration, BackendApiApiFactory } from '~/api-client/java';
 
 export * from './dotnet/api';
 export * from './java/api';
@@ -23,7 +23,7 @@ const apiClient = {
   ...AuthApiFactory(dotnetConfig),
   ...UsersApiFactory(dotnetConfig),
   ...PostApiFactory(dotnetConfig),
-  ...InnowacjaAPIApiFactory(javaConfig)
+  ...BackendApiApiFactory(javaConfig)
 };
 
 export default apiClient;

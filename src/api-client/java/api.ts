@@ -133,6 +133,12 @@ export interface IdeaDto {
     'keywords'?: Array<string>;
     /**
      * 
+     * @type {number}
+     * @memberof IdeaDto
+     */
+    'rating'?: number;
+    /**
+     * 
      * @type {string}
      * @memberof IdeaDto
      */
@@ -172,6 +178,155 @@ export enum IdeaDtoStatusEnum {
 /**
  * 
  * @export
+ * @interface RatingSetting
+ */
+export interface RatingSetting {
+    /**
+     * 
+     * @type {string}
+     * @memberof RatingSetting
+     */
+    'userRole'?: RatingSettingUserRoleEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof RatingSetting
+     */
+    'weight'?: number;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum RatingSettingUserRoleEnum {
+    Student = 'Student',
+    Employee = 'Employee',
+    Committee = 'Committee',
+    Admin = 'Admin'
+}
+
+/**
+ * 
+ * @export
+ * @interface RatingSettingCreateRequest
+ */
+export interface RatingSettingCreateRequest {
+    /**
+     * 
+     * @type {Array<RatingSetting>}
+     * @memberof RatingSettingCreateRequest
+     */
+    'ratingSettings'?: Array<RatingSetting>;
+}
+/**
+ * 
+ * @export
+ * @interface RatingSettingDto
+ */
+export interface RatingSettingDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof RatingSettingDto
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RatingSettingDto
+     */
+    'ideaId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RatingSettingDto
+     */
+    'userRole'?: RatingSettingDtoUserRoleEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof RatingSettingDto
+     */
+    'weight'?: number;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum RatingSettingDtoUserRoleEnum {
+    Student = 'Student',
+    Employee = 'Employee',
+    Committee = 'Committee',
+    Admin = 'Admin'
+}
+
+/**
+ * 
+ * @export
+ * @interface ReviewCreateRequest
+ */
+export interface ReviewCreateRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ReviewCreateRequest
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ReviewCreateRequest
+     */
+    'rating'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface ReviewDto
+ */
+export interface ReviewDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof ReviewDto
+     */
+    'authorId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReviewDto
+     */
+    'date'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReviewDto
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ReviewDto
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ReviewDto
+     */
+    'ideaId'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ReviewDto
+     */
+    'rating'?: number;
+}
+/**
+ * 
+ * @export
  * @interface SubjectDto
  */
 export interface SubjectDto {
@@ -208,10 +363,10 @@ export enum SubjectDtoAudienceEnum {
 
 
 /**
- * InnowacjaAPIApi - axios parameter creator
+ * BackendApiApi - axios parameter creator
  * @export
  */
-export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Configuration) {
+export const BackendApiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -225,6 +380,43 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
             assertParamExists('deleteIdeaByIdUsingDELETE', 'id', id)
             const localVarPath = `/ideas/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary deleteRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRatingSettingsByIdeaIdUsingDELETE: async (ideaId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('deleteRatingSettingsByIdeaIdUsingDELETE', 'ideaId', ideaId)
+            const localVarPath = `/ideas/{ideaId}/rating-settings`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -356,15 +548,15 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
         /**
          * 
          * @summary Get list of attachment id\'s belonging to given idea.
-         * @param {number} id id
+         * @param {number} ideaId ideaId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAttachmentIdsByIdeaIdUsingGET: async (id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getAttachmentIdsByIdeaIdUsingGET', 'id', id)
-            const localVarPath = `/ideas/{id}/attachments`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        getAttachmentIdsByIdeaIdUsingGET: async (ideaId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('getAttachmentIdsByIdeaIdUsingGET', 'ideaId', ideaId)
+            const localVarPath = `/ideas/{ideaId}/attachments`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -469,6 +661,150 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
+         * @summary getRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRatingSettingsByIdeaIdUsingGET: async (ideaId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('getRatingSettingsByIdeaIdUsingGET', 'ideaId', ideaId)
+            const localVarPath = `/ideas/{ideaId}/rating-settings`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary getReviewsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReviewsByIdeaIdUsingGET: async (ideaId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('getReviewsByIdeaIdUsingGET', 'ideaId', ideaId)
+            const localVarPath = `/ideas/{ideaId}/reviews`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary getReviewsByUserId
+         * @param {number} userId userId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReviewsByUserIdUsingGET: async (userId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('getReviewsByUserIdUsingGET', 'userId', userId)
+            const localVarPath = `/users/{userId}/reviews`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary getReviewsOfCurrentUser
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReviewsOfCurrentUserUsingGET: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/reviews`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get subject with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
@@ -506,19 +842,63 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
+         * @summary rateIdeaById
+         * @param {number} ideaId ideaId
+         * @param {number} rating rating
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        rateIdeaByIdUsingPUT: async (ideaId: number, rating: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('rateIdeaByIdUsingPUT', 'ideaId', ideaId)
+            // verify required parameter 'rating' is not null or undefined
+            assertParamExists('rateIdeaByIdUsingPUT', 'rating', rating)
+            const localVarPath = `/ideas/{ideaId}/rating`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (rating !== undefined) {
+                localVarQueryParameter['rating'] = rating;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Save attachment for given ideaId
-         * @param {number} id id
+         * @param {number} ideaId ideaId
          * @param {any} file file
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveAttachmentUsingPOST: async (id: number, file: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('saveAttachmentUsingPOST', 'id', id)
+        saveAttachmentUsingPOST: async (ideaId: number, file: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('saveAttachmentUsingPOST', 'ideaId', ideaId)
             // verify required parameter 'file' is not null or undefined
             assertParamExists('saveAttachmentUsingPOST', 'file', file)
-            const localVarPath = `/ideas/{id}/attachments`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            const localVarPath = `/ideas/{ideaId}/attachments`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -593,6 +973,92 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
+         * @summary saveRatingSatingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {RatingSettingCreateRequest} ratingSettingCreateRequest ratingSettingCreateRequest
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveRatingSatingsByIdeaIdUsingPOST: async (ideaId: number, ratingSettingCreateRequest: RatingSettingCreateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('saveRatingSatingsByIdeaIdUsingPOST', 'ideaId', ideaId)
+            // verify required parameter 'ratingSettingCreateRequest' is not null or undefined
+            assertParamExists('saveRatingSatingsByIdeaIdUsingPOST', 'ratingSettingCreateRequest', ratingSettingCreateRequest)
+            const localVarPath = `/ideas/{ideaId}/rating-settings`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ratingSettingCreateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary saveReviewByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {ReviewCreateRequest} reviewCreateRequest reviewCreateRequest
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveReviewByIdeaIdUsingPOST: async (ideaId: number, reviewCreateRequest: ReviewCreateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('saveReviewByIdeaIdUsingPOST', 'ideaId', ideaId)
+            // verify required parameter 'reviewCreateRequest' is not null or undefined
+            assertParamExists('saveReviewByIdeaIdUsingPOST', 'reviewCreateRequest', reviewCreateRequest)
+            const localVarPath = `/ideas/{ideaId}/reviews`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(reviewCreateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Save subject in database, returns id of saved entity
          * @param {'Student' | 'Employee' | 'Committee' | 'Admin'} [audience] 
          * @param {number} [id] 
@@ -641,7 +1107,89 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Update Idea in database, returns true if updated or false if saved new entity
+         * @summary updateExistingRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {Array<RatingSettingDto>} newRatingSettings newRatingSettings
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExistingRatingSettingsByIdeaIdUsingPUT: async (ideaId: number, newRatingSettings: Array<RatingSettingDto>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('updateExistingRatingSettingsByIdeaIdUsingPUT', 'ideaId', ideaId)
+            // verify required parameter 'newRatingSettings' is not null or undefined
+            assertParamExists('updateExistingRatingSettingsByIdeaIdUsingPUT', 'newRatingSettings', newRatingSettings)
+            const localVarPath = `/ideas/{ideaId}/rating-settings`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(newRatingSettings, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary updateExistingReview
+         * @param {ReviewDto} reviewDto reviewDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExistingReviewUsingPUT: async (reviewDto: ReviewDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'reviewDto' is not null or undefined
+            assertParamExists('updateExistingReviewUsingPUT', 'reviewDto', reviewDto)
+            const localVarPath = `/reviews`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(reviewDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update existing Idea in database.
          * @param {IdeaDto} ideaDto ideaDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -682,11 +1230,11 @@ export const InnowacjaAPIApiAxiosParamCreator = function (configuration?: Config
 };
 
 /**
- * InnowacjaAPIApi - functional programming interface
+ * BackendApiApi - functional programming interface
  * @export
  */
-export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = InnowacjaAPIApiAxiosParamCreator(configuration)
+export const BackendApiApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = BackendApiApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -697,6 +1245,17 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
          */
         async deleteIdeaByIdUsingDELETE(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteIdeaByIdUsingDELETE(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary deleteRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteRatingSettingsByIdeaIdUsingDELETE(ideaId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteRatingSettingsByIdeaIdUsingDELETE(ideaId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -733,12 +1292,12 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Get list of attachment id\'s belonging to given idea.
-         * @param {number} id id
+         * @param {number} ideaId ideaId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAttachmentIdsByIdeaIdUsingGET(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAttachmentIdsByIdeaIdUsingGET(id, options);
+        async getAttachmentIdsByIdeaIdUsingGET(ideaId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAttachmentIdsByIdeaIdUsingGET(ideaId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -765,6 +1324,49 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary getRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getRatingSettingsByIdeaIdUsingGET(ideaId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RatingSettingDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRatingSettingsByIdeaIdUsingGET(ideaId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary getReviewsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getReviewsByIdeaIdUsingGET(ideaId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ReviewDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getReviewsByIdeaIdUsingGET(ideaId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary getReviewsByUserId
+         * @param {number} userId userId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getReviewsByUserIdUsingGET(userId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ReviewDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getReviewsByUserIdUsingGET(userId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary getReviewsOfCurrentUser
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getReviewsOfCurrentUserUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ReviewDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getReviewsOfCurrentUserUsingGET(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get subject with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
@@ -776,14 +1378,26 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary rateIdeaById
+         * @param {number} ideaId ideaId
+         * @param {number} rating rating
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async rateIdeaByIdUsingPUT(ideaId: number, rating: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.rateIdeaByIdUsingPUT(ideaId, rating, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Save attachment for given ideaId
-         * @param {number} id id
+         * @param {number} ideaId ideaId
          * @param {any} file file
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveAttachmentUsingPOST(id: number, file: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.saveAttachmentUsingPOST(id, file, options);
+        async saveAttachmentUsingPOST(ideaId: number, file: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveAttachmentUsingPOST(ideaId, file, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -795,6 +1409,30 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
          */
         async saveIdeaUsingPOST(ideaDto: IdeaDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.saveIdeaUsingPOST(ideaDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary saveRatingSatingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {RatingSettingCreateRequest} ratingSettingCreateRequest ratingSettingCreateRequest
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveRatingSatingsByIdeaIdUsingPOST(ideaId: number, ratingSettingCreateRequest: RatingSettingCreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveRatingSatingsByIdeaIdUsingPOST(ideaId, ratingSettingCreateRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary saveReviewByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {ReviewCreateRequest} reviewCreateRequest reviewCreateRequest
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveReviewByIdeaIdUsingPOST(ideaId: number, reviewCreateRequest: ReviewCreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveReviewByIdeaIdUsingPOST(ideaId, reviewCreateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -812,12 +1450,35 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Update Idea in database, returns true if updated or false if saved new entity
+         * @summary updateExistingRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {Array<RatingSettingDto>} newRatingSettings newRatingSettings
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateExistingRatingSettingsByIdeaIdUsingPUT(ideaId: number, newRatingSettings: Array<RatingSettingDto>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateExistingRatingSettingsByIdeaIdUsingPUT(ideaId, newRatingSettings, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary updateExistingReview
+         * @param {ReviewDto} reviewDto reviewDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateExistingReviewUsingPUT(reviewDto: ReviewDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateExistingReviewUsingPUT(reviewDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update existing Idea in database.
          * @param {IdeaDto} ideaDto ideaDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateIdeaUsingPUT(ideaDto: IdeaDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+        async updateIdeaUsingPUT(ideaDto: IdeaDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateIdeaUsingPUT(ideaDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -825,11 +1486,11 @@ export const InnowacjaAPIApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * InnowacjaAPIApi - factory interface
+ * BackendApiApi - factory interface
  * @export
  */
-export const InnowacjaAPIApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = InnowacjaAPIApiFp(configuration)
+export const BackendApiApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = BackendApiApiFp(configuration)
     return {
         /**
          * 
@@ -840,6 +1501,16 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
          */
         deleteIdeaByIdUsingDELETE(id: number, options?: any): AxiosPromise<void> {
             return localVarFp.deleteIdeaByIdUsingDELETE(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary deleteRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRatingSettingsByIdeaIdUsingDELETE(ideaId: number, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteRatingSettingsByIdeaIdUsingDELETE(ideaId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -872,12 +1543,12 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Get list of attachment id\'s belonging to given idea.
-         * @param {number} id id
+         * @param {number} ideaId ideaId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAttachmentIdsByIdeaIdUsingGET(id: number, options?: any): AxiosPromise<Array<number>> {
-            return localVarFp.getAttachmentIdsByIdeaIdUsingGET(id, options).then((request) => request(axios, basePath));
+        getAttachmentIdsByIdeaIdUsingGET(ideaId: number, options?: any): AxiosPromise<Array<number>> {
+            return localVarFp.getAttachmentIdsByIdeaIdUsingGET(ideaId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -901,6 +1572,45 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
         },
         /**
          * 
+         * @summary getRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRatingSettingsByIdeaIdUsingGET(ideaId: number, options?: any): AxiosPromise<Array<RatingSettingDto>> {
+            return localVarFp.getRatingSettingsByIdeaIdUsingGET(ideaId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary getReviewsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReviewsByIdeaIdUsingGET(ideaId: number, options?: any): AxiosPromise<Array<ReviewDto>> {
+            return localVarFp.getReviewsByIdeaIdUsingGET(ideaId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary getReviewsByUserId
+         * @param {number} userId userId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReviewsByUserIdUsingGET(userId: number, options?: any): AxiosPromise<Array<ReviewDto>> {
+            return localVarFp.getReviewsByUserIdUsingGET(userId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary getReviewsOfCurrentUser
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReviewsOfCurrentUserUsingGET(options?: any): AxiosPromise<Array<ReviewDto>> {
+            return localVarFp.getReviewsOfCurrentUserUsingGET(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get subject with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
@@ -911,14 +1621,25 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
         },
         /**
          * 
+         * @summary rateIdeaById
+         * @param {number} ideaId ideaId
+         * @param {number} rating rating
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        rateIdeaByIdUsingPUT(ideaId: number, rating: number, options?: any): AxiosPromise<void> {
+            return localVarFp.rateIdeaByIdUsingPUT(ideaId, rating, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Save attachment for given ideaId
-         * @param {number} id id
+         * @param {number} ideaId ideaId
          * @param {any} file file
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveAttachmentUsingPOST(id: number, file: any, options?: any): AxiosPromise<number> {
-            return localVarFp.saveAttachmentUsingPOST(id, file, options).then((request) => request(axios, basePath));
+        saveAttachmentUsingPOST(ideaId: number, file: any, options?: any): AxiosPromise<number> {
+            return localVarFp.saveAttachmentUsingPOST(ideaId, file, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -929,6 +1650,28 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
          */
         saveIdeaUsingPOST(ideaDto: IdeaDto, options?: any): AxiosPromise<number> {
             return localVarFp.saveIdeaUsingPOST(ideaDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary saveRatingSatingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {RatingSettingCreateRequest} ratingSettingCreateRequest ratingSettingCreateRequest
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveRatingSatingsByIdeaIdUsingPOST(ideaId: number, ratingSettingCreateRequest: RatingSettingCreateRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.saveRatingSatingsByIdeaIdUsingPOST(ideaId, ratingSettingCreateRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary saveReviewByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {ReviewCreateRequest} reviewCreateRequest reviewCreateRequest
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveReviewByIdeaIdUsingPOST(ideaId: number, reviewCreateRequest: ReviewCreateRequest, options?: any): AxiosPromise<number> {
+            return localVarFp.saveReviewByIdeaIdUsingPOST(ideaId, reviewCreateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -944,207 +1687,394 @@ export const InnowacjaAPIApiFactory = function (configuration?: Configuration, b
         },
         /**
          * 
-         * @summary Update Idea in database, returns true if updated or false if saved new entity
+         * @summary updateExistingRatingSettingsByIdeaId
+         * @param {number} ideaId ideaId
+         * @param {Array<RatingSettingDto>} newRatingSettings newRatingSettings
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExistingRatingSettingsByIdeaIdUsingPUT(ideaId: number, newRatingSettings: Array<RatingSettingDto>, options?: any): AxiosPromise<void> {
+            return localVarFp.updateExistingRatingSettingsByIdeaIdUsingPUT(ideaId, newRatingSettings, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary updateExistingReview
+         * @param {ReviewDto} reviewDto reviewDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExistingReviewUsingPUT(reviewDto: ReviewDto, options?: any): AxiosPromise<void> {
+            return localVarFp.updateExistingReviewUsingPUT(reviewDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update existing Idea in database.
          * @param {IdeaDto} ideaDto ideaDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateIdeaUsingPUT(ideaDto: IdeaDto, options?: any): AxiosPromise<boolean> {
+        updateIdeaUsingPUT(ideaDto: IdeaDto, options?: any): AxiosPromise<void> {
             return localVarFp.updateIdeaUsingPUT(ideaDto, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for deleteIdeaByIdUsingDELETE operation in InnowacjaAPIApi.
+ * Request parameters for deleteIdeaByIdUsingDELETE operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiDeleteIdeaByIdUsingDELETERequest
+ * @interface BackendApiApiDeleteIdeaByIdUsingDELETERequest
  */
-export interface InnowacjaAPIApiDeleteIdeaByIdUsingDELETERequest {
+export interface BackendApiApiDeleteIdeaByIdUsingDELETERequest {
     /**
      * id
      * @type {number}
-     * @memberof InnowacjaAPIApiDeleteIdeaByIdUsingDELETE
+     * @memberof BackendApiApiDeleteIdeaByIdUsingDELETE
      */
     readonly id: number
 }
 
 /**
- * Request parameters for downloadAttachmentByIdUsingGET operation in InnowacjaAPIApi.
+ * Request parameters for deleteRatingSettingsByIdeaIdUsingDELETE operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiDownloadAttachmentByIdUsingGETRequest
+ * @interface BackendApiApiDeleteRatingSettingsByIdeaIdUsingDELETERequest
  */
-export interface InnowacjaAPIApiDownloadAttachmentByIdUsingGETRequest {
+export interface BackendApiApiDeleteRatingSettingsByIdeaIdUsingDELETERequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiDeleteRatingSettingsByIdeaIdUsingDELETE
+     */
+    readonly ideaId: number
+}
+
+/**
+ * Request parameters for downloadAttachmentByIdUsingGET operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiDownloadAttachmentByIdUsingGETRequest
+ */
+export interface BackendApiApiDownloadAttachmentByIdUsingGETRequest {
     /**
      * id
      * @type {number}
-     * @memberof InnowacjaAPIApiDownloadAttachmentByIdUsingGET
+     * @memberof BackendApiApiDownloadAttachmentByIdUsingGET
      */
     readonly id: number
 }
 
 /**
- * Request parameters for getAttachmentIdsByIdeaIdUsingGET operation in InnowacjaAPIApi.
+ * Request parameters for getAttachmentIdsByIdeaIdUsingGET operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGETRequest
+ * @interface BackendApiApiGetAttachmentIdsByIdeaIdUsingGETRequest
  */
-export interface InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGETRequest {
+export interface BackendApiApiGetAttachmentIdsByIdeaIdUsingGETRequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiGetAttachmentIdsByIdeaIdUsingGET
+     */
+    readonly ideaId: number
+}
+
+/**
+ * Request parameters for getIdeaByIdUsingGET operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiGetIdeaByIdUsingGETRequest
+ */
+export interface BackendApiApiGetIdeaByIdUsingGETRequest {
     /**
      * id
      * @type {number}
-     * @memberof InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGET
+     * @memberof BackendApiApiGetIdeaByIdUsingGET
      */
     readonly id: number
 }
 
 /**
- * Request parameters for getIdeaByIdUsingGET operation in InnowacjaAPIApi.
+ * Request parameters for getIdeasBySubjectIdUsingGET operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiGetIdeaByIdUsingGETRequest
+ * @interface BackendApiApiGetIdeasBySubjectIdUsingGETRequest
  */
-export interface InnowacjaAPIApiGetIdeaByIdUsingGETRequest {
-    /**
-     * id
-     * @type {number}
-     * @memberof InnowacjaAPIApiGetIdeaByIdUsingGET
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getIdeasBySubjectIdUsingGET operation in InnowacjaAPIApi.
- * @export
- * @interface InnowacjaAPIApiGetIdeasBySubjectIdUsingGETRequest
- */
-export interface InnowacjaAPIApiGetIdeasBySubjectIdUsingGETRequest {
+export interface BackendApiApiGetIdeasBySubjectIdUsingGETRequest {
     /**
      * subjectId
      * @type {number}
-     * @memberof InnowacjaAPIApiGetIdeasBySubjectIdUsingGET
+     * @memberof BackendApiApiGetIdeasBySubjectIdUsingGET
      */
     readonly subjectId: number
 }
 
 /**
- * Request parameters for getSubjectByIdUsingGET operation in InnowacjaAPIApi.
+ * Request parameters for getRatingSettingsByIdeaIdUsingGET operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiGetSubjectByIdUsingGETRequest
+ * @interface BackendApiApiGetRatingSettingsByIdeaIdUsingGETRequest
  */
-export interface InnowacjaAPIApiGetSubjectByIdUsingGETRequest {
+export interface BackendApiApiGetRatingSettingsByIdeaIdUsingGETRequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiGetRatingSettingsByIdeaIdUsingGET
+     */
+    readonly ideaId: number
+}
+
+/**
+ * Request parameters for getReviewsByIdeaIdUsingGET operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiGetReviewsByIdeaIdUsingGETRequest
+ */
+export interface BackendApiApiGetReviewsByIdeaIdUsingGETRequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiGetReviewsByIdeaIdUsingGET
+     */
+    readonly ideaId: number
+}
+
+/**
+ * Request parameters for getReviewsByUserIdUsingGET operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiGetReviewsByUserIdUsingGETRequest
+ */
+export interface BackendApiApiGetReviewsByUserIdUsingGETRequest {
+    /**
+     * userId
+     * @type {number}
+     * @memberof BackendApiApiGetReviewsByUserIdUsingGET
+     */
+    readonly userId: number
+}
+
+/**
+ * Request parameters for getSubjectByIdUsingGET operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiGetSubjectByIdUsingGETRequest
+ */
+export interface BackendApiApiGetSubjectByIdUsingGETRequest {
     /**
      * id
      * @type {number}
-     * @memberof InnowacjaAPIApiGetSubjectByIdUsingGET
+     * @memberof BackendApiApiGetSubjectByIdUsingGET
      */
     readonly id: number
 }
 
 /**
- * Request parameters for saveAttachmentUsingPOST operation in InnowacjaAPIApi.
+ * Request parameters for rateIdeaByIdUsingPUT operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiSaveAttachmentUsingPOSTRequest
+ * @interface BackendApiApiRateIdeaByIdUsingPUTRequest
  */
-export interface InnowacjaAPIApiSaveAttachmentUsingPOSTRequest {
+export interface BackendApiApiRateIdeaByIdUsingPUTRequest {
     /**
-     * id
+     * ideaId
      * @type {number}
-     * @memberof InnowacjaAPIApiSaveAttachmentUsingPOST
+     * @memberof BackendApiApiRateIdeaByIdUsingPUT
      */
-    readonly id: number
+    readonly ideaId: number
+
+    /**
+     * rating
+     * @type {number}
+     * @memberof BackendApiApiRateIdeaByIdUsingPUT
+     */
+    readonly rating: number
+}
+
+/**
+ * Request parameters for saveAttachmentUsingPOST operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiSaveAttachmentUsingPOSTRequest
+ */
+export interface BackendApiApiSaveAttachmentUsingPOSTRequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiSaveAttachmentUsingPOST
+     */
+    readonly ideaId: number
 
     /**
      * file
      * @type {any}
-     * @memberof InnowacjaAPIApiSaveAttachmentUsingPOST
+     * @memberof BackendApiApiSaveAttachmentUsingPOST
      */
     readonly file: any
 }
 
 /**
- * Request parameters for saveIdeaUsingPOST operation in InnowacjaAPIApi.
+ * Request parameters for saveIdeaUsingPOST operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiSaveIdeaUsingPOSTRequest
+ * @interface BackendApiApiSaveIdeaUsingPOSTRequest
  */
-export interface InnowacjaAPIApiSaveIdeaUsingPOSTRequest {
+export interface BackendApiApiSaveIdeaUsingPOSTRequest {
     /**
      * ideaDto
      * @type {IdeaDto}
-     * @memberof InnowacjaAPIApiSaveIdeaUsingPOST
+     * @memberof BackendApiApiSaveIdeaUsingPOST
      */
     readonly ideaDto: IdeaDto
 }
 
 /**
- * Request parameters for saveSubjectUsingPOST operation in InnowacjaAPIApi.
+ * Request parameters for saveRatingSatingsByIdeaIdUsingPOST operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiSaveSubjectUsingPOSTRequest
+ * @interface BackendApiApiSaveRatingSatingsByIdeaIdUsingPOSTRequest
  */
-export interface InnowacjaAPIApiSaveSubjectUsingPOSTRequest {
+export interface BackendApiApiSaveRatingSatingsByIdeaIdUsingPOSTRequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiSaveRatingSatingsByIdeaIdUsingPOST
+     */
+    readonly ideaId: number
+
+    /**
+     * ratingSettingCreateRequest
+     * @type {RatingSettingCreateRequest}
+     * @memberof BackendApiApiSaveRatingSatingsByIdeaIdUsingPOST
+     */
+    readonly ratingSettingCreateRequest: RatingSettingCreateRequest
+}
+
+/**
+ * Request parameters for saveReviewByIdeaIdUsingPOST operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiSaveReviewByIdeaIdUsingPOSTRequest
+ */
+export interface BackendApiApiSaveReviewByIdeaIdUsingPOSTRequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiSaveReviewByIdeaIdUsingPOST
+     */
+    readonly ideaId: number
+
+    /**
+     * reviewCreateRequest
+     * @type {ReviewCreateRequest}
+     * @memberof BackendApiApiSaveReviewByIdeaIdUsingPOST
+     */
+    readonly reviewCreateRequest: ReviewCreateRequest
+}
+
+/**
+ * Request parameters for saveSubjectUsingPOST operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiSaveSubjectUsingPOSTRequest
+ */
+export interface BackendApiApiSaveSubjectUsingPOSTRequest {
     /**
      * 
      * @type {'Student' | 'Employee' | 'Committee' | 'Admin'}
-     * @memberof InnowacjaAPIApiSaveSubjectUsingPOST
+     * @memberof BackendApiApiSaveSubjectUsingPOST
      */
     readonly audience?: 'Student' | 'Employee' | 'Committee' | 'Admin'
 
     /**
      * 
      * @type {number}
-     * @memberof InnowacjaAPIApiSaveSubjectUsingPOST
+     * @memberof BackendApiApiSaveSubjectUsingPOST
      */
     readonly id?: number
 
     /**
      * 
      * @type {string}
-     * @memberof InnowacjaAPIApiSaveSubjectUsingPOST
+     * @memberof BackendApiApiSaveSubjectUsingPOST
      */
     readonly name?: string
 }
 
 /**
- * Request parameters for updateIdeaUsingPUT operation in InnowacjaAPIApi.
+ * Request parameters for updateExistingRatingSettingsByIdeaIdUsingPUT operation in BackendApiApi.
  * @export
- * @interface InnowacjaAPIApiUpdateIdeaUsingPUTRequest
+ * @interface BackendApiApiUpdateExistingRatingSettingsByIdeaIdUsingPUTRequest
  */
-export interface InnowacjaAPIApiUpdateIdeaUsingPUTRequest {
+export interface BackendApiApiUpdateExistingRatingSettingsByIdeaIdUsingPUTRequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiUpdateExistingRatingSettingsByIdeaIdUsingPUT
+     */
+    readonly ideaId: number
+
+    /**
+     * newRatingSettings
+     * @type {Array<RatingSettingDto>}
+     * @memberof BackendApiApiUpdateExistingRatingSettingsByIdeaIdUsingPUT
+     */
+    readonly newRatingSettings: Array<RatingSettingDto>
+}
+
+/**
+ * Request parameters for updateExistingReviewUsingPUT operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiUpdateExistingReviewUsingPUTRequest
+ */
+export interface BackendApiApiUpdateExistingReviewUsingPUTRequest {
+    /**
+     * reviewDto
+     * @type {ReviewDto}
+     * @memberof BackendApiApiUpdateExistingReviewUsingPUT
+     */
+    readonly reviewDto: ReviewDto
+}
+
+/**
+ * Request parameters for updateIdeaUsingPUT operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiUpdateIdeaUsingPUTRequest
+ */
+export interface BackendApiApiUpdateIdeaUsingPUTRequest {
     /**
      * ideaDto
      * @type {IdeaDto}
-     * @memberof InnowacjaAPIApiUpdateIdeaUsingPUT
+     * @memberof BackendApiApiUpdateIdeaUsingPUT
      */
     readonly ideaDto: IdeaDto
 }
 
 /**
- * InnowacjaAPIApi - object-oriented interface
+ * BackendApiApi - object-oriented interface
  * @export
- * @class InnowacjaAPIApi
+ * @class BackendApiApi
  * @extends {BaseAPI}
  */
-export class InnowacjaAPIApi extends BaseAPI {
+export class BackendApiApi extends BaseAPI {
     /**
      * 
      * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
-     * @param {InnowacjaAPIApiDeleteIdeaByIdUsingDELETERequest} requestParameters Request parameters.
+     * @param {BackendApiApiDeleteIdeaByIdUsingDELETERequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public deleteIdeaByIdUsingDELETE(requestParameters: InnowacjaAPIApiDeleteIdeaByIdUsingDELETERequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).deleteIdeaByIdUsingDELETE(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public deleteIdeaByIdUsingDELETE(requestParameters: BackendApiApiDeleteIdeaByIdUsingDELETERequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).deleteIdeaByIdUsingDELETE(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary deleteRatingSettingsByIdeaId
+     * @param {BackendApiApiDeleteRatingSettingsByIdeaIdUsingDELETERequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public deleteRatingSettingsByIdeaIdUsingDELETE(requestParameters: BackendApiApiDeleteRatingSettingsByIdeaIdUsingDELETERequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).deleteRatingSettingsByIdeaIdUsingDELETE(requestParameters.ideaId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary downloadAttachmentById
-     * @param {InnowacjaAPIApiDownloadAttachmentByIdUsingGETRequest} requestParameters Request parameters.
+     * @param {BackendApiApiDownloadAttachmentByIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public downloadAttachmentByIdUsingGET(requestParameters: InnowacjaAPIApiDownloadAttachmentByIdUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).downloadAttachmentByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public downloadAttachmentByIdUsingGET(requestParameters: BackendApiApiDownloadAttachmentByIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).downloadAttachmentByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1152,10 +2082,10 @@ export class InnowacjaAPIApi extends BaseAPI {
      * @summary Get simplified DTO\'s of all ideas in database (without costs, benefits or attachments)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
     public getAllIdeasUsingGET(options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getAllIdeasUsingGET(options).then((request) => request(this.axios, this.basePath));
+        return BackendApiApiFp(this.configuration).getAllIdeasUsingGET(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1163,106 +2093,213 @@ export class InnowacjaAPIApi extends BaseAPI {
      * @summary Get all subjects
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
     public getAllSubjectsUsingGET(options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getAllSubjectsUsingGET(options).then((request) => request(this.axios, this.basePath));
+        return BackendApiApiFp(this.configuration).getAllSubjectsUsingGET(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Get list of attachment id\'s belonging to given idea.
-     * @param {InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGETRequest} requestParameters Request parameters.
+     * @param {BackendApiApiGetAttachmentIdsByIdeaIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public getAttachmentIdsByIdeaIdUsingGET(requestParameters: InnowacjaAPIApiGetAttachmentIdsByIdeaIdUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getAttachmentIdsByIdeaIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getAttachmentIdsByIdeaIdUsingGET(requestParameters: BackendApiApiGetAttachmentIdsByIdeaIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getAttachmentIdsByIdeaIdUsingGET(requestParameters.ideaId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Get idea with given id
-     * @param {InnowacjaAPIApiGetIdeaByIdUsingGETRequest} requestParameters Request parameters.
+     * @param {BackendApiApiGetIdeaByIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public getIdeaByIdUsingGET(requestParameters: InnowacjaAPIApiGetIdeaByIdUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getIdeaByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getIdeaByIdUsingGET(requestParameters: BackendApiApiGetIdeaByIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getIdeaByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Get all ideas with given subject
-     * @param {InnowacjaAPIApiGetIdeasBySubjectIdUsingGETRequest} requestParameters Request parameters.
+     * @param {BackendApiApiGetIdeasBySubjectIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public getIdeasBySubjectIdUsingGET(requestParameters: InnowacjaAPIApiGetIdeasBySubjectIdUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getIdeasBySubjectIdUsingGET(requestParameters.subjectId, options).then((request) => request(this.axios, this.basePath));
+    public getIdeasBySubjectIdUsingGET(requestParameters: BackendApiApiGetIdeasBySubjectIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getIdeasBySubjectIdUsingGET(requestParameters.subjectId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary getRatingSettingsByIdeaId
+     * @param {BackendApiApiGetRatingSettingsByIdeaIdUsingGETRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public getRatingSettingsByIdeaIdUsingGET(requestParameters: BackendApiApiGetRatingSettingsByIdeaIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getRatingSettingsByIdeaIdUsingGET(requestParameters.ideaId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary getReviewsByIdeaId
+     * @param {BackendApiApiGetReviewsByIdeaIdUsingGETRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public getReviewsByIdeaIdUsingGET(requestParameters: BackendApiApiGetReviewsByIdeaIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getReviewsByIdeaIdUsingGET(requestParameters.ideaId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary getReviewsByUserId
+     * @param {BackendApiApiGetReviewsByUserIdUsingGETRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public getReviewsByUserIdUsingGET(requestParameters: BackendApiApiGetReviewsByUserIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getReviewsByUserIdUsingGET(requestParameters.userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary getReviewsOfCurrentUser
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public getReviewsOfCurrentUserUsingGET(options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getReviewsOfCurrentUserUsingGET(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Get subject with given id
-     * @param {InnowacjaAPIApiGetSubjectByIdUsingGETRequest} requestParameters Request parameters.
+     * @param {BackendApiApiGetSubjectByIdUsingGETRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public getSubjectByIdUsingGET(requestParameters: InnowacjaAPIApiGetSubjectByIdUsingGETRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).getSubjectByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getSubjectByIdUsingGET(requestParameters: BackendApiApiGetSubjectByIdUsingGETRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getSubjectByIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary rateIdeaById
+     * @param {BackendApiApiRateIdeaByIdUsingPUTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public rateIdeaByIdUsingPUT(requestParameters: BackendApiApiRateIdeaByIdUsingPUTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).rateIdeaByIdUsingPUT(requestParameters.ideaId, requestParameters.rating, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Save attachment for given ideaId
-     * @param {InnowacjaAPIApiSaveAttachmentUsingPOSTRequest} requestParameters Request parameters.
+     * @param {BackendApiApiSaveAttachmentUsingPOSTRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public saveAttachmentUsingPOST(requestParameters: InnowacjaAPIApiSaveAttachmentUsingPOSTRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).saveAttachmentUsingPOST(requestParameters.id, requestParameters.file, options).then((request) => request(this.axios, this.basePath));
+    public saveAttachmentUsingPOST(requestParameters: BackendApiApiSaveAttachmentUsingPOSTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).saveAttachmentUsingPOST(requestParameters.ideaId, requestParameters.file, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Save Idea in database, returns id of saved entity
-     * @param {InnowacjaAPIApiSaveIdeaUsingPOSTRequest} requestParameters Request parameters.
+     * @param {BackendApiApiSaveIdeaUsingPOSTRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public saveIdeaUsingPOST(requestParameters: InnowacjaAPIApiSaveIdeaUsingPOSTRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).saveIdeaUsingPOST(requestParameters.ideaDto, options).then((request) => request(this.axios, this.basePath));
+    public saveIdeaUsingPOST(requestParameters: BackendApiApiSaveIdeaUsingPOSTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).saveIdeaUsingPOST(requestParameters.ideaDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary saveRatingSatingsByIdeaId
+     * @param {BackendApiApiSaveRatingSatingsByIdeaIdUsingPOSTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public saveRatingSatingsByIdeaIdUsingPOST(requestParameters: BackendApiApiSaveRatingSatingsByIdeaIdUsingPOSTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).saveRatingSatingsByIdeaIdUsingPOST(requestParameters.ideaId, requestParameters.ratingSettingCreateRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary saveReviewByIdeaId
+     * @param {BackendApiApiSaveReviewByIdeaIdUsingPOSTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public saveReviewByIdeaIdUsingPOST(requestParameters: BackendApiApiSaveReviewByIdeaIdUsingPOSTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).saveReviewByIdeaIdUsingPOST(requestParameters.ideaId, requestParameters.reviewCreateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Save subject in database, returns id of saved entity
-     * @param {InnowacjaAPIApiSaveSubjectUsingPOSTRequest} requestParameters Request parameters.
+     * @param {BackendApiApiSaveSubjectUsingPOSTRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public saveSubjectUsingPOST(requestParameters: InnowacjaAPIApiSaveSubjectUsingPOSTRequest = {}, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).saveSubjectUsingPOST(requestParameters.audience, requestParameters.id, requestParameters.name, options).then((request) => request(this.axios, this.basePath));
+    public saveSubjectUsingPOST(requestParameters: BackendApiApiSaveSubjectUsingPOSTRequest = {}, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).saveSubjectUsingPOST(requestParameters.audience, requestParameters.id, requestParameters.name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Update Idea in database, returns true if updated or false if saved new entity
-     * @param {InnowacjaAPIApiUpdateIdeaUsingPUTRequest} requestParameters Request parameters.
+     * @summary updateExistingRatingSettingsByIdeaId
+     * @param {BackendApiApiUpdateExistingRatingSettingsByIdeaIdUsingPUTRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof InnowacjaAPIApi
+     * @memberof BackendApiApi
      */
-    public updateIdeaUsingPUT(requestParameters: InnowacjaAPIApiUpdateIdeaUsingPUTRequest, options?: AxiosRequestConfig) {
-        return InnowacjaAPIApiFp(this.configuration).updateIdeaUsingPUT(requestParameters.ideaDto, options).then((request) => request(this.axios, this.basePath));
+    public updateExistingRatingSettingsByIdeaIdUsingPUT(requestParameters: BackendApiApiUpdateExistingRatingSettingsByIdeaIdUsingPUTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).updateExistingRatingSettingsByIdeaIdUsingPUT(requestParameters.ideaId, requestParameters.newRatingSettings, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary updateExistingReview
+     * @param {BackendApiApiUpdateExistingReviewUsingPUTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public updateExistingReviewUsingPUT(requestParameters: BackendApiApiUpdateExistingReviewUsingPUTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).updateExistingReviewUsingPUT(requestParameters.reviewDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update existing Idea in database.
+     * @param {BackendApiApiUpdateIdeaUsingPUTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public updateIdeaUsingPUT(requestParameters: BackendApiApiUpdateIdeaUsingPUTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).updateIdeaUsingPUT(requestParameters.ideaDto, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
