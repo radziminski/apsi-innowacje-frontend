@@ -66,7 +66,17 @@ const createReviewIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) 
     state.isCreatingReview = false;
     state.isCreateReviewError = false;
     state.createdReviews = [...state.createdReviews, action.meta.arg.ideaId];
-    getIdeas();
+    if (state.ideas)
+      state.ideas = state.ideas.map(idea => {
+        if (idea.id === action.meta.arg.ideaId) {
+          return {
+            ...idea,
+            alreadyReviewed: true
+          };
+        }
+
+        return idea;
+      });
   });
   builder.addCase(reviewIdea.pending, state => {
     state.isCreateReviewError = false;
@@ -105,6 +115,18 @@ export const ideasSlice = createSlice({
   reducers: {
     clearReviewError: state => {
       state.isCreateReviewError = false;
+    },
+    clearIdeasState: state => {
+      state.ideas = null;
+      state.isLoading = false;
+      state.isError = false;
+      state.error = null;
+      state.isCreatingReview = false;
+      state.isCreateReviewError = false;
+      state.createdReviews = [];
+      state.isLoadingReviews = false;
+      state.isReviewsError = false;
+      state.reviews = {};
     }
   },
   extraReducers: builder => {
@@ -114,6 +136,6 @@ export const ideasSlice = createSlice({
   }
 });
 
-export const { clearReviewError } = ideasSlice.actions;
+export const { clearReviewError, clearIdeasState } = ideasSlice.actions;
 
 export default ideasSlice.reducer;

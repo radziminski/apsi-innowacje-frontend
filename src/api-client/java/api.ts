@@ -24,6 +24,38 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface AddRatingSettingsDto
+ */
+export interface AddRatingSettingsDto {
+    /**
+     * 
+     * @type {Array<RatingSetting>}
+     * @memberof AddRatingSettingsDto
+     */
+    'ratingSettings'?: Array<RatingSetting>;
+}
+/**
+ * 
+ * @export
+ * @interface AddReviewDto
+ */
+export interface AddReviewDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof AddReviewDto
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AddReviewDto
+     */
+    'rating'?: number;
+}
+/**
+ * 
+ * @export
  * @interface BenefitDto
  */
 export interface BenefitDto {
@@ -74,9 +106,47 @@ export interface CostDto {
 /**
  * 
  * @export
+ * @interface DecisionDto
+ */
+export interface DecisionDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof DecisionDto
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DecisionDto
+     */
+    'ideaStatus'?: DecisionDtoIdeaStatusEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum DecisionDtoIdeaStatusEnum {
+    New = 'New',
+    Accepted = 'Accepted',
+    Rejected = 'Rejected',
+    ReuqestForDetails = 'ReuqestForDetails',
+    PutAway = 'PutAway'
+}
+
+/**
+ * 
+ * @export
  * @interface IdeaDto
  */
 export interface IdeaDto {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IdeaDto
+     */
+    'alreadyReviewed'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -209,19 +279,6 @@ export enum RatingSettingUserRoleEnum {
 /**
  * 
  * @export
- * @interface RatingSettingCreateRequest
- */
-export interface RatingSettingCreateRequest {
-    /**
-     * 
-     * @type {Array<RatingSetting>}
-     * @memberof RatingSettingCreateRequest
-     */
-    'ratingSettings'?: Array<RatingSetting>;
-}
-/**
- * 
- * @export
  * @interface RatingSettingDto
  */
 export interface RatingSettingDto {
@@ -262,25 +319,6 @@ export enum RatingSettingDtoUserRoleEnum {
     Admin = 'Admin'
 }
 
-/**
- * 
- * @export
- * @interface ReviewCreateRequest
- */
-export interface ReviewCreateRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof ReviewCreateRequest
-     */
-    'description'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ReviewCreateRequest
-     */
-    'rating'?: number;
-}
 /**
  * 
  * @export
@@ -368,6 +406,49 @@ export enum SubjectDtoAudienceEnum {
  */
 export const BackendApiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary addDecisionForIdea
+         * @param {number} ideaId ideaId
+         * @param {DecisionDto} decisionDto decisionDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addDecisionForIdeaUsingPUT: async (ideaId: number, decisionDto: DecisionDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ideaId' is not null or undefined
+            assertParamExists('addDecisionForIdeaUsingPUT', 'ideaId', ideaId)
+            // verify required parameter 'decisionDto' is not null or undefined
+            assertParamExists('addDecisionForIdeaUsingPUT', 'decisionDto', decisionDto)
+            const localVarPath = `/ideas/{ideaId}/decision`
+                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(decisionDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
@@ -842,50 +923,6 @@ export const BackendApiApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
-         * @summary rateIdeaById
-         * @param {number} ideaId ideaId
-         * @param {number} rating rating
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        rateIdeaByIdUsingPUT: async (ideaId: number, rating: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'ideaId' is not null or undefined
-            assertParamExists('rateIdeaByIdUsingPUT', 'ideaId', ideaId)
-            // verify required parameter 'rating' is not null or undefined
-            assertParamExists('rateIdeaByIdUsingPUT', 'rating', rating)
-            const localVarPath = `/ideas/{ideaId}/rating`
-                .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-            if (rating !== undefined) {
-                localVarQueryParameter['rating'] = rating;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Save attachment for given ideaId
          * @param {number} ideaId ideaId
          * @param {any} file file
@@ -975,15 +1012,15 @@ export const BackendApiApiAxiosParamCreator = function (configuration?: Configur
          * 
          * @summary saveRatingSatingsByIdeaId
          * @param {number} ideaId ideaId
-         * @param {RatingSettingCreateRequest} ratingSettingCreateRequest ratingSettingCreateRequest
+         * @param {AddRatingSettingsDto} addRatingSettingsDto addRatingSettingsDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveRatingSatingsByIdeaIdUsingPOST: async (ideaId: number, ratingSettingCreateRequest: RatingSettingCreateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        saveRatingSatingsByIdeaIdUsingPOST: async (ideaId: number, addRatingSettingsDto: AddRatingSettingsDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'ideaId' is not null or undefined
             assertParamExists('saveRatingSatingsByIdeaIdUsingPOST', 'ideaId', ideaId)
-            // verify required parameter 'ratingSettingCreateRequest' is not null or undefined
-            assertParamExists('saveRatingSatingsByIdeaIdUsingPOST', 'ratingSettingCreateRequest', ratingSettingCreateRequest)
+            // verify required parameter 'addRatingSettingsDto' is not null or undefined
+            assertParamExists('saveRatingSatingsByIdeaIdUsingPOST', 'addRatingSettingsDto', addRatingSettingsDto)
             const localVarPath = `/ideas/{ideaId}/rating-settings`
                 .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1007,7 +1044,7 @@ export const BackendApiApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(ratingSettingCreateRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(addRatingSettingsDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1018,15 +1055,15 @@ export const BackendApiApiAxiosParamCreator = function (configuration?: Configur
          * 
          * @summary saveReviewByIdeaId
          * @param {number} ideaId ideaId
-         * @param {ReviewCreateRequest} reviewCreateRequest reviewCreateRequest
+         * @param {AddReviewDto} addReviewDto addReviewDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveReviewByIdeaIdUsingPOST: async (ideaId: number, reviewCreateRequest: ReviewCreateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        saveReviewByIdeaIdUsingPOST: async (ideaId: number, addReviewDto: AddReviewDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'ideaId' is not null or undefined
             assertParamExists('saveReviewByIdeaIdUsingPOST', 'ideaId', ideaId)
-            // verify required parameter 'reviewCreateRequest' is not null or undefined
-            assertParamExists('saveReviewByIdeaIdUsingPOST', 'reviewCreateRequest', reviewCreateRequest)
+            // verify required parameter 'addReviewDto' is not null or undefined
+            assertParamExists('saveReviewByIdeaIdUsingPOST', 'addReviewDto', addReviewDto)
             const localVarPath = `/ideas/{ideaId}/reviews`
                 .replace(`{${"ideaId"}}`, encodeURIComponent(String(ideaId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1050,7 +1087,7 @@ export const BackendApiApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(reviewCreateRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(addReviewDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1238,6 +1275,18 @@ export const BackendApiApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary addDecisionForIdea
+         * @param {number} ideaId ideaId
+         * @param {DecisionDto} decisionDto decisionDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addDecisionForIdeaUsingPUT(ideaId: number, decisionDto: DecisionDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addDecisionForIdeaUsingPUT(ideaId, decisionDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
          * @param {number} id id
          * @param {*} [options] Override http request option.
@@ -1378,18 +1427,6 @@ export const BackendApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary rateIdeaById
-         * @param {number} ideaId ideaId
-         * @param {number} rating rating
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async rateIdeaByIdUsingPUT(ideaId: number, rating: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.rateIdeaByIdUsingPUT(ideaId, rating, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @summary Save attachment for given ideaId
          * @param {number} ideaId ideaId
          * @param {any} file file
@@ -1415,24 +1452,24 @@ export const BackendApiApiFp = function(configuration?: Configuration) {
          * 
          * @summary saveRatingSatingsByIdeaId
          * @param {number} ideaId ideaId
-         * @param {RatingSettingCreateRequest} ratingSettingCreateRequest ratingSettingCreateRequest
+         * @param {AddRatingSettingsDto} addRatingSettingsDto addRatingSettingsDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveRatingSatingsByIdeaIdUsingPOST(ideaId: number, ratingSettingCreateRequest: RatingSettingCreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.saveRatingSatingsByIdeaIdUsingPOST(ideaId, ratingSettingCreateRequest, options);
+        async saveRatingSatingsByIdeaIdUsingPOST(ideaId: number, addRatingSettingsDto: AddRatingSettingsDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveRatingSatingsByIdeaIdUsingPOST(ideaId, addRatingSettingsDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary saveReviewByIdeaId
          * @param {number} ideaId ideaId
-         * @param {ReviewCreateRequest} reviewCreateRequest reviewCreateRequest
+         * @param {AddReviewDto} addReviewDto addReviewDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveReviewByIdeaIdUsingPOST(ideaId: number, reviewCreateRequest: ReviewCreateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.saveReviewByIdeaIdUsingPOST(ideaId, reviewCreateRequest, options);
+        async saveReviewByIdeaIdUsingPOST(ideaId: number, addReviewDto: AddReviewDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveReviewByIdeaIdUsingPOST(ideaId, addReviewDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1492,6 +1529,17 @@ export const BackendApiApiFp = function(configuration?: Configuration) {
 export const BackendApiApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = BackendApiApiFp(configuration)
     return {
+        /**
+         * 
+         * @summary addDecisionForIdea
+         * @param {number} ideaId ideaId
+         * @param {DecisionDto} decisionDto decisionDto
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addDecisionForIdeaUsingPUT(ideaId: number, decisionDto: DecisionDto, options?: any): AxiosPromise<void> {
+            return localVarFp.addDecisionForIdeaUsingPUT(ideaId, decisionDto, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
@@ -1621,17 +1669,6 @@ export const BackendApiApiFactory = function (configuration?: Configuration, bas
         },
         /**
          * 
-         * @summary rateIdeaById
-         * @param {number} ideaId ideaId
-         * @param {number} rating rating
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        rateIdeaByIdUsingPUT(ideaId: number, rating: number, options?: any): AxiosPromise<void> {
-            return localVarFp.rateIdeaByIdUsingPUT(ideaId, rating, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary Save attachment for given ideaId
          * @param {number} ideaId ideaId
          * @param {any} file file
@@ -1655,23 +1692,23 @@ export const BackendApiApiFactory = function (configuration?: Configuration, bas
          * 
          * @summary saveRatingSatingsByIdeaId
          * @param {number} ideaId ideaId
-         * @param {RatingSettingCreateRequest} ratingSettingCreateRequest ratingSettingCreateRequest
+         * @param {AddRatingSettingsDto} addRatingSettingsDto addRatingSettingsDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveRatingSatingsByIdeaIdUsingPOST(ideaId: number, ratingSettingCreateRequest: RatingSettingCreateRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.saveRatingSatingsByIdeaIdUsingPOST(ideaId, ratingSettingCreateRequest, options).then((request) => request(axios, basePath));
+        saveRatingSatingsByIdeaIdUsingPOST(ideaId: number, addRatingSettingsDto: AddRatingSettingsDto, options?: any): AxiosPromise<void> {
+            return localVarFp.saveRatingSatingsByIdeaIdUsingPOST(ideaId, addRatingSettingsDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary saveReviewByIdeaId
          * @param {number} ideaId ideaId
-         * @param {ReviewCreateRequest} reviewCreateRequest reviewCreateRequest
+         * @param {AddReviewDto} addReviewDto addReviewDto
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveReviewByIdeaIdUsingPOST(ideaId: number, reviewCreateRequest: ReviewCreateRequest, options?: any): AxiosPromise<number> {
-            return localVarFp.saveReviewByIdeaIdUsingPOST(ideaId, reviewCreateRequest, options).then((request) => request(axios, basePath));
+        saveReviewByIdeaIdUsingPOST(ideaId: number, addReviewDto: AddReviewDto, options?: any): AxiosPromise<number> {
+            return localVarFp.saveReviewByIdeaIdUsingPOST(ideaId, addReviewDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1718,6 +1755,27 @@ export const BackendApiApiFactory = function (configuration?: Configuration, bas
         },
     };
 };
+
+/**
+ * Request parameters for addDecisionForIdeaUsingPUT operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiAddDecisionForIdeaUsingPUTRequest
+ */
+export interface BackendApiApiAddDecisionForIdeaUsingPUTRequest {
+    /**
+     * ideaId
+     * @type {number}
+     * @memberof BackendApiApiAddDecisionForIdeaUsingPUT
+     */
+    readonly ideaId: number
+
+    /**
+     * decisionDto
+     * @type {DecisionDto}
+     * @memberof BackendApiApiAddDecisionForIdeaUsingPUT
+     */
+    readonly decisionDto: DecisionDto
+}
 
 /**
  * Request parameters for deleteIdeaByIdUsingDELETE operation in BackendApiApi.
@@ -1860,27 +1918,6 @@ export interface BackendApiApiGetSubjectByIdUsingGETRequest {
 }
 
 /**
- * Request parameters for rateIdeaByIdUsingPUT operation in BackendApiApi.
- * @export
- * @interface BackendApiApiRateIdeaByIdUsingPUTRequest
- */
-export interface BackendApiApiRateIdeaByIdUsingPUTRequest {
-    /**
-     * ideaId
-     * @type {number}
-     * @memberof BackendApiApiRateIdeaByIdUsingPUT
-     */
-    readonly ideaId: number
-
-    /**
-     * rating
-     * @type {number}
-     * @memberof BackendApiApiRateIdeaByIdUsingPUT
-     */
-    readonly rating: number
-}
-
-/**
  * Request parameters for saveAttachmentUsingPOST operation in BackendApiApi.
  * @export
  * @interface BackendApiApiSaveAttachmentUsingPOSTRequest
@@ -1929,11 +1966,11 @@ export interface BackendApiApiSaveRatingSatingsByIdeaIdUsingPOSTRequest {
     readonly ideaId: number
 
     /**
-     * ratingSettingCreateRequest
-     * @type {RatingSettingCreateRequest}
+     * addRatingSettingsDto
+     * @type {AddRatingSettingsDto}
      * @memberof BackendApiApiSaveRatingSatingsByIdeaIdUsingPOST
      */
-    readonly ratingSettingCreateRequest: RatingSettingCreateRequest
+    readonly addRatingSettingsDto: AddRatingSettingsDto
 }
 
 /**
@@ -1950,11 +1987,11 @@ export interface BackendApiApiSaveReviewByIdeaIdUsingPOSTRequest {
     readonly ideaId: number
 
     /**
-     * reviewCreateRequest
-     * @type {ReviewCreateRequest}
+     * addReviewDto
+     * @type {AddReviewDto}
      * @memberof BackendApiApiSaveReviewByIdeaIdUsingPOST
      */
-    readonly reviewCreateRequest: ReviewCreateRequest
+    readonly addReviewDto: AddReviewDto
 }
 
 /**
@@ -2041,6 +2078,18 @@ export interface BackendApiApiUpdateIdeaUsingPUTRequest {
  * @extends {BaseAPI}
  */
 export class BackendApiApi extends BaseAPI {
+    /**
+     * 
+     * @summary addDecisionForIdea
+     * @param {BackendApiApiAddDecisionForIdeaUsingPUTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public addDecisionForIdeaUsingPUT(requestParameters: BackendApiApiAddDecisionForIdeaUsingPUTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).addDecisionForIdeaUsingPUT(requestParameters.ideaId, requestParameters.decisionDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Delete Idea with given id (also deletes all of its attachments, costs and benefits)
@@ -2196,18 +2245,6 @@ export class BackendApiApi extends BaseAPI {
 
     /**
      * 
-     * @summary rateIdeaById
-     * @param {BackendApiApiRateIdeaByIdUsingPUTRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BackendApiApi
-     */
-    public rateIdeaByIdUsingPUT(requestParameters: BackendApiApiRateIdeaByIdUsingPUTRequest, options?: AxiosRequestConfig) {
-        return BackendApiApiFp(this.configuration).rateIdeaByIdUsingPUT(requestParameters.ideaId, requestParameters.rating, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary Save attachment for given ideaId
      * @param {BackendApiApiSaveAttachmentUsingPOSTRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -2239,7 +2276,7 @@ export class BackendApiApi extends BaseAPI {
      * @memberof BackendApiApi
      */
     public saveRatingSatingsByIdeaIdUsingPOST(requestParameters: BackendApiApiSaveRatingSatingsByIdeaIdUsingPOSTRequest, options?: AxiosRequestConfig) {
-        return BackendApiApiFp(this.configuration).saveRatingSatingsByIdeaIdUsingPOST(requestParameters.ideaId, requestParameters.ratingSettingCreateRequest, options).then((request) => request(this.axios, this.basePath));
+        return BackendApiApiFp(this.configuration).saveRatingSatingsByIdeaIdUsingPOST(requestParameters.ideaId, requestParameters.addRatingSettingsDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2251,7 +2288,7 @@ export class BackendApiApi extends BaseAPI {
      * @memberof BackendApiApi
      */
     public saveReviewByIdeaIdUsingPOST(requestParameters: BackendApiApiSaveReviewByIdeaIdUsingPOSTRequest, options?: AxiosRequestConfig) {
-        return BackendApiApiFp(this.configuration).saveReviewByIdeaIdUsingPOST(requestParameters.ideaId, requestParameters.reviewCreateRequest, options).then((request) => request(this.axios, this.basePath));
+        return BackendApiApiFp(this.configuration).saveReviewByIdeaIdUsingPOST(requestParameters.ideaId, requestParameters.addReviewDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

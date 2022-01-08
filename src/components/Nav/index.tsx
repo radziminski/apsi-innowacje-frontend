@@ -25,6 +25,7 @@ import { logout } from '~/store/slices/CreateUserSlice';
 import useDevice from '~/hooks/useDevice';
 import { UserRole } from '~/api-client';
 import { useSelector } from '~/store/hooks';
+import { clearIdeasState } from '~/store/slices/CreateIdeasSlice';
 
 const ICON_SIZE = 22;
 
@@ -94,7 +95,14 @@ export const Nav: React.FC = () => {
           />
         </Box>
         <Box paddingY="1.25rem">
-          <NavItem onClick={() => dispatch(logout())} icon={<MdLogout size={ICON_SIZE} />} label="Wyloguj" />
+          <NavItem
+            onClick={() => {
+              dispatch(logout());
+              dispatch(clearIdeasState());
+            }}
+            icon={<MdLogout size={ICON_SIZE} />}
+            label="Wyloguj"
+          />
         </Box>
       </Box>
     </FlexBox>

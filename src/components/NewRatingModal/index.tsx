@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Rating from 'react-rating';
 import { useDispatch } from 'react-redux';
 import { useSelector } from '~/store/hooks';
-import { clearReviewError, reviewIdea } from '~/store/slices/CreateIdeasSlice';
+import { clearReviewError, getIdeas, reviewIdea } from '~/store/slices/CreateIdeasSlice';
 import Box, { Center, FlexBox } from '../Box';
 import { Button } from '../Button';
 import CommonModal from '../CommonModal';
@@ -24,8 +24,11 @@ const NewRatingModal: React.FC<Props> = ({ onClose, ideaId, ideaTitle, isVisible
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (createdReviews.includes(ideaId)) onCloseModal();
-  }, [ideaId]);
+    if (isVisible && createdReviews.includes(ideaId)) {
+      onCloseModal();
+      dispatch(getIdeas());
+    }
+  }, [createdReviews, ideaId]);
 
   const onCloseModal = () => {
     if (isVisible && onClose) {

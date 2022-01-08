@@ -27,20 +27,27 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
       <Card>
         <FlexBox flexDirection="column" width="100%">
           <FlexBox>
-            <FlexBox as="button" alignItems="center" cursor="pointer" onClick={seeReviews}>
+            <FlexBox
+              as="button"
+              alignItems="center"
+              cursor={!idea.rating ? 'not-allowed' : 'pointer'}
+              disabled={!idea.rating}
+              onClick={seeReviews}>
               <Box transform="scale(0.6) translateX(-5rem)">
                 <FlexBox alignItems="center">
-                  <Rating initialRating={3} readonly />
+                  <Rating initialRating={idea.rating} readonly />
                   <Box marginRight="0.6rem" />
-                  <Box>{'(34 ocen)'}</Box>
+                  <Box>{idea.rating ? `(ocena: ${Math.round(idea.rating * 10) / 10})` : '(brak ocen)'}</Box>
                 </FlexBox>
               </Box>
             </FlexBox>
-            <ReviewButton onClick={onAddReview}>
-              <AiFillStar />
-              <Box marginRight="0.25rem" />
-              <Heading5 fontWeight={400}>Oceń pomysł</Heading5>
-            </ReviewButton>
+            {!idea.alreadyReviewed && (
+              <ReviewButton onClick={onAddReview}>
+                <AiFillStar />
+                <Box marginRight="0.25rem" />
+                <Heading5 fontWeight={400}>Oceń pomysł</Heading5>
+              </ReviewButton>
+            )}
           </FlexBox>
 
           <FlexBox alignItems="center">
