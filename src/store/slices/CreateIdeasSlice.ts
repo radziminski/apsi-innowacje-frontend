@@ -13,6 +13,9 @@ export interface IdeasState {
   isLoadingReviews: boolean;
   isReviewsError: boolean;
   reviews: Record<number, ReviewDto[]>;
+  isDeleteError: boolean;
+  isDeleting: boolean;
+  deletedPosts: number[];
 }
 
 const initialState: IdeasState = {
@@ -25,7 +28,10 @@ const initialState: IdeasState = {
   createdReviews: [],
   isLoadingReviews: false,
   isReviewsError: false,
-  reviews: {}
+  reviews: {},
+  isDeleting: false,
+  isDeleteError: false,
+  deletedPosts: []
 };
 
 export const getIdeas = createAsyncThunk<IdeaDto[], void>('ideas/getAll', async () => {
@@ -109,12 +115,39 @@ const getIdeaReviewsReducers = (builder: ActionReducerMapBuilder<IdeasState>) =>
   });
 };
 
+export const deleteIdea = createAsyncThunk<void, number>('ideas/delete', async args => {
+  await apiClient.deleteIdeaByIdUsingDELETE(args);
+});
+
+const deleteIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(deleteIdea.fulfilled, (state, action) => {
+    state.isDeleting = false;
+    state.isDeleteError = false;
+    state.deletedPosts = [...state.deletedPosts, action.meta.arg];
+    state.ideas = state.ideas?.filter(idea => idea.id !== action.meta.arg) || null;
+  });
+  builder.addCase(deleteIdea.pending, state => {
+    state.isDeleting = true;
+    state.isDeleteError = false;
+  });
+  builder.addCase(deleteIdea.rejected, state => {
+    state.isDeleting = false;
+    state.isDeleteError = true;
+  });
+};
+
 export const ideasSlice = createSlice({
   name: 'ideas',
   initialState,
   reducers: {
     clearReviewError: state => {
       state.isCreateReviewError = false;
+    },
+    clearDeleteError: state => {
+      state.isDeleteError = false;
+    },
+    clearReviewsError: state => {
+      state.isReviewsError = false;
     },
     clearIdeasState: state => {
       state.ideas = null;
@@ -127,15 +160,19 @@ export const ideasSlice = createSlice({
       state.isLoadingReviews = false;
       state.isReviewsError = false;
       state.reviews = {};
+      state.isDeleteError = false;
+      state.isDeleting = false;
+      state.deletedPosts = [];
     }
   },
   extraReducers: builder => {
     createGetIdeasReducers(builder);
     createReviewIdeaReducers(builder);
     getIdeaReviewsReducers(builder);
+    deleteIdeaReducers(builder);
   }
 });
 
-export const { clearReviewError, clearIdeasState } = ideasSlice.actions;
+export const { clearReviewError, clearDeleteError, clearReviewsError, clearIdeasState } = ideasSlice.actions;
 
 export default ideasSlice.reducer;
