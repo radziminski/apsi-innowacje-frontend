@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
+import Rating from 'react-rating';
 import { IdeaDto } from '~/api-client';
 import Box, { Card, FlexBox } from '../Box';
-import RatingModal from '../RatingModal';
+import NewRatingModal from '../NewRatingModal';
 import { Heading4, Heading5, Heading6, Paragraph } from '../Text';
 import { ReviewButton } from './parts';
 
@@ -13,14 +14,30 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
   const [reviewModalOpened, setReviewModalOpened] = useState(false);
 
   const onAddReview = () => {
-    // todo
     setReviewModalOpened(true);
   };
 
   return (
     <>
       <Card>
-        <FlexBox flexDirection="column">
+        <FlexBox flexDirection="column" width="100%">
+          <FlexBox>
+            <FlexBox alignItems="center">
+              <Box transform="scale(0.6) translateX(-5rem)">
+                <FlexBox alignItems="center">
+                  <Rating initialRating={3} readonly />
+                  <Box marginRight="0.6rem" />
+                  <Box>{'(34 ocen)'}</Box>
+                </FlexBox>
+              </Box>
+            </FlexBox>
+            <ReviewButton onClick={onAddReview}>
+              <AiFillStar />
+              <Box marginRight="0.25rem" />
+              <Heading5 fontWeight={400}>Oceń pomysł</Heading5>
+            </ReviewButton>
+          </FlexBox>
+
           <FlexBox alignItems="center">
             <Heading6 fontWeight={400}>
               {idea.anonymous ? 'Anonimowy użytkownik' : `Użytkownik ${idea.authorId}`}
@@ -31,20 +48,16 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
               </Heading6>
             </Box>
             <Heading6 fontWeight={400}>{idea.date}</Heading6>
-
-            <ReviewButton onClick={onAddReview}>
-              <AiFillStar />
-              <Box marginRight="0.25rem" />
-              <Heading5 fontWeight={400}>Oceń pomysł</Heading5>
-            </ReviewButton>
           </FlexBox>
           <Box paddingBottom="0.5rem" />
-          <Heading4 fontSize="1.35rem" fontWeight={500}>
-            {idea.title ?? 'Nieznany tytuł'}
-          </Heading4>
-          <Box paddingBottom="1rem" />
-          <Paragraph>{idea.description}</Paragraph>
-          <Box paddingBottom="1rem" />
+          <Box paddingBottom="1rem" overflow="hidden">
+            <Heading4 fontSize="1.35rem" fontWeight={500}>
+              {idea.title ?? 'Nieznany tytuł'}
+            </Heading4>
+          </Box>
+          <Box paddingBottom="1rem" overflow="hidden">
+            <Paragraph>{idea.description}</Paragraph>
+          </Box>
 
           {idea.costs && (
             <Heading6 fontWeight={400} fontSize="0.75rem">
@@ -55,7 +68,7 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
         </FlexBox>
       </Card>
       {idea && idea.id && (
-        <RatingModal
+        <NewRatingModal
           ideaId={idea.id}
           ideaTitle={idea.title}
           isVisible={reviewModalOpened}

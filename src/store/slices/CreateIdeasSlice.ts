@@ -5,6 +5,9 @@ export interface IdeasState {
   ideas: IdeaDto[] | null;
   isLoading: boolean;
   isError: boolean;
+  isCreatingReview: boolean;
+  isReviewError: boolean;
+  createdReviews: number[];
   error: SerializedError | null;
 }
 
@@ -12,6 +15,9 @@ const initialState: IdeasState = {
   ideas: null,
   isLoading: false,
   isError: false,
+  isCreatingReview: false,
+  isReviewError: false,
+  createdReviews: [],
   error: null
 };
 
@@ -39,13 +45,46 @@ const createGetIdeasReducers = (builder: ActionReducerMapBuilder<IdeasState>) =>
   });
 };
 
+export const reviewIdea = createAsyncThunk<number, { ideaId: number; rating: number; description?: string }>(
+  'ideas/rate',
+  async args => {
+    const { ideaId, ...ratingDetails } = args;
+    const response = await apiClient.saveReviewByIdeaIdUsingPOST(ideaId, ratingDetails);
+    return response.data;
+  }
+);
+
+const createReviewIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(reviewIdea.fulfilled, (state, action) => {
+    state.isCreatingReview = false;
+    state.isReviewError = false;
+    state.createdReviews = [...state.createdReviews, action.meta.arg.ideaId];
+    getIdeas();
+  });
+  builder.addCase(reviewIdea.pending, state => {
+    state.isReviewError = false;
+    state.isCreatingReview = true;
+  });
+  builder.addCase(reviewIdea.rejected, state => {
+    state.isCreatingReview = false;
+    state.isReviewError = true;
+  });
+};
+
 export const ideasSlice = createSlice({
   name: 'ideas',
   initialState,
-  reducers: {},
+  reducers: {
+    clearReviewError: state => {
+      state.isReviewError = false;
+    }
+  },
   extraReducers: builder => {
     createGetIdeasReducers(builder);
+    createReviewIdeaReducers(builder);
   }
 });
+
+export const { clearReviewError } = ideasSlice.actions;
 
 export default ideasSlice.reducer;
