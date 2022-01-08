@@ -15,7 +15,10 @@ export interface IdeasState {
   reviews: Record<number, ReviewDto[]>;
   isDeleteError: boolean;
   isDeleting: boolean;
-  deletedPosts: number[];
+  deletedIdeas: number[];
+  isBlockError: boolean;
+  isBlocking: boolean;
+  blockedIdeas: number[];
 }
 
 const initialState: IdeasState = {
@@ -31,7 +34,10 @@ const initialState: IdeasState = {
   reviews: {},
   isDeleting: false,
   isDeleteError: false,
-  deletedPosts: []
+  deletedIdeas: [],
+  isBlocking: false,
+  isBlockError: false,
+  blockedIdeas: []
 };
 
 export const getIdeas = createAsyncThunk<IdeaDto[], void>('ideas/getAll', async () => {
@@ -123,7 +129,7 @@ const deleteIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(deleteIdea.fulfilled, (state, action) => {
     state.isDeleting = false;
     state.isDeleteError = false;
-    state.deletedPosts = [...state.deletedPosts, action.meta.arg];
+    state.deletedIdeas = [...state.deletedIdeas, action.meta.arg];
     state.ideas = state.ideas?.filter(idea => idea.id !== action.meta.arg) || null;
   });
   builder.addCase(deleteIdea.pending, state => {
@@ -133,6 +139,27 @@ const deleteIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(deleteIdea.rejected, state => {
     state.isDeleting = false;
     state.isDeleteError = true;
+  });
+};
+
+export const blockIdea = createAsyncThunk<void, IdeaDto>('ideas/block', async args => {
+  await apiClient.updateIdeaUsingPUT(args);
+});
+
+const blockIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(blockIdea.fulfilled, (state, action) => {
+    state.isBlocking = false;
+    state.isBlockError = false;
+    if (action.meta.arg.id) state.blockedIdeas = [...state.deletedIdeas, action.meta.arg.id];
+    state.ideas = state.ideas?.map(idea => (idea.id === action.meta.arg ? { ...idea, blocked: true } : idea)) || null;
+  });
+  builder.addCase(blockIdea.pending, state => {
+    state.isBlocking = true;
+    state.isBlockError = false;
+  });
+  builder.addCase(blockIdea.rejected, state => {
+    state.isBlocking = false;
+    state.isBlockError = true;
   });
 };
 
@@ -149,6 +176,9 @@ export const ideasSlice = createSlice({
     clearReviewsError: state => {
       state.isReviewsError = false;
     },
+    clearBlockError: state => {
+      state.isBlockError = false;
+    },
     clearIdeasState: state => {
       state.ideas = null;
       state.isLoading = false;
@@ -162,7 +192,7 @@ export const ideasSlice = createSlice({
       state.reviews = {};
       state.isDeleteError = false;
       state.isDeleting = false;
-      state.deletedPosts = [];
+      state.deletedIdeas = [];
     }
   },
   extraReducers: builder => {
@@ -170,9 +200,11 @@ export const ideasSlice = createSlice({
     createReviewIdeaReducers(builder);
     getIdeaReviewsReducers(builder);
     deleteIdeaReducers(builder);
+    blockIdeaReducers(builder);
   }
 });
 
-export const { clearReviewError, clearDeleteError, clearReviewsError, clearIdeasState } = ideasSlice.actions;
+export const { clearReviewError, clearBlockError, clearDeleteError, clearReviewsError, clearIdeasState } =
+  ideasSlice.actions;
 
 export default ideasSlice.reducer;

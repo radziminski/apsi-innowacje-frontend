@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
-import { MdDeleteForever } from 'react-icons/md';
+import { MdBlock, MdDeleteForever } from 'react-icons/md';
 import Rating from 'react-rating';
 import { useDispatch } from 'react-redux';
-import { IdeaDto } from '~/api-client';
+import { IdeaDto, UserRole } from '~/api-client';
 import { useSelector } from '~/store/hooks';
-import { clearDeleteError, deleteIdea } from '~/store/slices/CreateIdeasSlice';
+import { blockIdea, clearBlockError, clearDeleteError, deleteIdea } from '~/store/slices/CreateIdeasSlice';
 import Box, { Card, FlexBox } from '../Box';
 import ConfirmModal from '../ConfirmModal';
 import IdeaRatingsModal from '../IdeaRatingsModal';
@@ -20,8 +20,11 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
   const [newReviewModalOpened, setNewReviewModalOpened] = useState(false);
   const [reviewsModalOpened, setReviewsModalOpened] = useState(false);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+  const [blockModalOpened, setBlockModalOpened] = useState(false);
   const { currentUser } = useSelector(state => state.user);
-  const { deletedPosts, isDeleting, isDeleteError } = useSelector(state => state.ideas);
+  const { deletedIdeas, isDeleting, isDeleteError, blockedIdeas, isBlocking, isBlockError } = useSelector(
+    state => state.ideas
+  );
   const dispatch = useDispatch();
 
   const onAddReview = () => {
@@ -32,17 +35,26 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
     setReviewsModalOpened(true);
   };
 
-  const onDeleteModal = () => {
+  const onDelete = () => {
     idea.id && dispatch(deleteIdea(idea.id));
   };
 
+  const onBlock = () => {
+    dispatch(blockIdea(idea));
+  };
+
   useEffect(() => {
-    if (deleteModalOpened && idea.id && deletedPosts.includes(idea.id)) setDeleteModalOpened(false);
-  }, [idea, deleteModalOpened, deletedPosts]);
+    if (deleteModalOpened && idea.id && deletedIdeas.includes(idea.id)) setDeleteModalOpened(false);
+  }, [idea, deleteModalOpened, deletedIdeas]);
+
+  useEffect(() => {
+    if (blockModalOpened && idea.id && blockedIdeas.includes(idea.id)) setBlockModalOpened(false);
+  }, [idea, deleteModalOpened, deletedIdeas]);
 
   const canBeDeleted = idea.authorId == currentUser?.id;
+  const canBeBlocked = currentUser?.userRole && [UserRole.Admin, UserRole.Committee].includes(currentUser?.userRole);
 
-  if (idea.id && deletedPosts.includes(idea.id)) return null;
+  if (idea.id && deletedIdeas.includes(idea.id)) return null;
 
   if (idea.blocked) {
     return (
@@ -82,6 +94,11 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
             {canBeDeleted && (
               <Box as="button" transform="scale(1.2)" paddingLeft="0.5rem" onClick={() => setDeleteModalOpened(true)}>
                 <MdDeleteForever />
+              </Box>
+            )}
+            {canBeBlocked && (
+              <Box as="button" transform="scale(1.2)" paddingLeft="0.5rem" onClick={() => setBlockModalOpened(true)}>
+                <MdBlock />
               </Box>
             )}
           </FlexBox>
@@ -137,9 +154,22 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
                 dispatch(clearDeleteError());
               }}
               title={`Czy na pewno chcesz usunąć pomysł "${idea.title ?? 'Nieznany tytuł'}"`}
-              onConfirm={onDeleteModal}
+              onConfirm={onDelete}
               isLoading={isDeleting}
               isError={isDeleteError}
+            />
+          )}
+          {canBeBlocked && (
+            <ConfirmModal
+              isVisible={blockModalOpened}
+              onClose={() => {
+                setBlockModalOpened(false);
+                dispatch(clearBlockError());
+              }}
+              title={`Czy na pewno chcesz zablokować pomysł "${idea.title ?? 'Nieznany tytuł'}"`}
+              onConfirm={onBlock}
+              isLoading={isBlocking}
+              isError={isBlockError}
             />
           )}
         </>
