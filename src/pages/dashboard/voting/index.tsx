@@ -28,7 +28,11 @@ export const VotingPage: React.FC = () => {
     setVotedOption(option);
   };
 
-  const vote = () => {};
+  const vote = () => {
+    console.log(selectedIdea);
+    console.log(explenation);
+    console.log(votedOption);
+  };
 
   return (
     <DashboardContent title="Głosowanie na pomysły" icon={<MdOutlineRateReview size={28} />}>
