@@ -1,3 +1,4 @@
+import { ReviewDto } from './../../api-client/java/api';
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import apiClient, { IdeaDto } from '~/api-client';
 
@@ -5,20 +6,26 @@ export interface IdeasState {
   ideas: IdeaDto[] | null;
   isLoading: boolean;
   isError: boolean;
-  isCreatingReview: boolean;
-  isReviewError: boolean;
-  createdReviews: number[];
   error: SerializedError | null;
+  isCreatingReview: boolean;
+  isCreateReviewError: boolean;
+  createdReviews: number[];
+  isLoadingReviews: boolean;
+  isReviewsError: boolean;
+  reviews: Record<number, ReviewDto[]>;
 }
 
 const initialState: IdeasState = {
   ideas: null,
   isLoading: false,
   isError: false,
+  error: null,
   isCreatingReview: false,
-  isReviewError: false,
+  isCreateReviewError: false,
   createdReviews: [],
-  error: null
+  isLoadingReviews: false,
+  isReviewsError: false,
+  reviews: {}
 };
 
 export const getIdeas = createAsyncThunk<IdeaDto[], void>('ideas/getAll', async () => {
@@ -57,17 +64,38 @@ export const reviewIdea = createAsyncThunk<number, { ideaId: number; rating: num
 const createReviewIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(reviewIdea.fulfilled, (state, action) => {
     state.isCreatingReview = false;
-    state.isReviewError = false;
+    state.isCreateReviewError = false;
     state.createdReviews = [...state.createdReviews, action.meta.arg.ideaId];
     getIdeas();
   });
   builder.addCase(reviewIdea.pending, state => {
-    state.isReviewError = false;
+    state.isCreateReviewError = false;
     state.isCreatingReview = true;
   });
   builder.addCase(reviewIdea.rejected, state => {
     state.isCreatingReview = false;
-    state.isReviewError = true;
+    state.isCreateReviewError = true;
+  });
+};
+
+export const getIdeaReviews = createAsyncThunk<ReviewDto[], number>('ideas/ratings', async args => {
+  const response = await apiClient.getReviewsByIdeaIdUsingGET(args);
+  return response.data;
+});
+
+const getIdeaReviewsReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(getIdeaReviews.fulfilled, (state, action) => {
+    state.isLoadingReviews = false;
+    state.isReviewsError = false;
+    state.reviews[action.meta.arg] = action.payload;
+  });
+  builder.addCase(getIdeaReviews.pending, state => {
+    state.isLoadingReviews = true;
+    state.isReviewsError = false;
+  });
+  builder.addCase(getIdeaReviews.rejected, state => {
+    state.isLoadingReviews = false;
+    state.isReviewsError = true;
   });
 };
 
@@ -76,12 +104,13 @@ export const ideasSlice = createSlice({
   initialState,
   reducers: {
     clearReviewError: state => {
-      state.isReviewError = false;
+      state.isCreateReviewError = false;
     }
   },
   extraReducers: builder => {
     createGetIdeasReducers(builder);
     createReviewIdeaReducers(builder);
+    getIdeaReviewsReducers(builder);
   }
 });
 

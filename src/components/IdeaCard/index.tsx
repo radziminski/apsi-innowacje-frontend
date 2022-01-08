@@ -3,6 +3,7 @@ import { AiFillStar } from 'react-icons/ai';
 import Rating from 'react-rating';
 import { IdeaDto } from '~/api-client';
 import Box, { Card, FlexBox } from '../Box';
+import IdeaRatingsModal from '../IdeaRatingsModal';
 import NewRatingModal from '../NewRatingModal';
 import { Heading4, Heading5, Heading6, Paragraph } from '../Text';
 import { ReviewButton } from './parts';
@@ -11,10 +12,14 @@ interface Props {
   idea: IdeaDto;
 }
 export const IdeaCard: React.FC<Props> = ({ idea }) => {
-  const [reviewModalOpened, setReviewModalOpened] = useState(false);
+  const [newReviewModalOpened, setNewReviewModalOpened] = useState(false);
+  const [reviewsModalOpened, setReviewsModalOpened] = useState(false);
 
   const onAddReview = () => {
-    setReviewModalOpened(true);
+    setNewReviewModalOpened(true);
+  };
+  const seeReviews = () => {
+    setReviewsModalOpened(true);
   };
 
   return (
@@ -22,7 +27,7 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
       <Card>
         <FlexBox flexDirection="column" width="100%">
           <FlexBox>
-            <FlexBox alignItems="center">
+            <FlexBox as="button" alignItems="center" cursor="pointer" onClick={seeReviews}>
               <Box transform="scale(0.6) translateX(-5rem)">
                 <FlexBox alignItems="center">
                   <Rating initialRating={3} readonly />
@@ -68,12 +73,20 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
         </FlexBox>
       </Card>
       {idea && idea.id && (
-        <NewRatingModal
-          ideaId={idea.id}
-          ideaTitle={idea.title}
-          isVisible={reviewModalOpened}
-          onClose={() => setReviewModalOpened(false)}
-        />
+        <>
+          <IdeaRatingsModal
+            ideaId={idea.id}
+            ideaTitle={idea.title}
+            isVisible={reviewsModalOpened}
+            onClose={() => setReviewsModalOpened(false)}
+          />
+          <NewRatingModal
+            ideaId={idea.id}
+            ideaTitle={idea.title}
+            isVisible={newReviewModalOpened}
+            onClose={() => setNewReviewModalOpened(false)}
+          />
+        </>
       )}
     </>
   );
