@@ -6,11 +6,12 @@ import { useDispatch } from 'react-redux';
 import { IdeaDto, UserRole } from '~/api-client';
 import { useSelector } from '~/store/hooks';
 import { blockIdea, clearBlockError, clearDeleteError, deleteIdea } from '~/store/slices/CreateIdeasSlice';
+import { COLORS } from '~/styles/variables';
 import Box, { Card, FlexBox } from '../Box';
 import ConfirmModal from '../ConfirmModal';
 import IdeaRatingsModal from '../IdeaRatingsModal';
 import NewRatingModal from '../NewRatingModal';
-import { Heading4, Heading5, Heading6, Paragraph } from '../Text';
+import Text, { Heading4, Heading5, Heading6, Paragraph } from '../Text';
 import { ReviewButton } from './parts';
 
 interface Props {
@@ -115,11 +116,28 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
             <Heading6 fontWeight={400}>{idea.date}</Heading6>
           </FlexBox>
           <Box paddingBottom="0.5rem" />
-          <Box paddingBottom="1rem" overflow="hidden">
+          <Box paddingBottom="0.8rem" overflow="hidden">
             <Heading4 fontSize="1.35rem" fontWeight={500}>
               {idea.title ?? 'Nieznany tytuł'}
             </Heading4>
           </Box>
+          {!!idea.keywords?.length && (
+            <FlexBox paddingBottom="1rem" overflow="hidden">
+              {idea.keywords.map(keyword =>
+                keyword ? (
+                  <Box
+                    key={keyword}
+                    padding="0.2rem"
+                    borderRadius="4px"
+                    background={COLORS.primary}
+                    color={COLORS.white}
+                    marginRight="0.5rem">
+                    <Text fontSize="0.75rem">{keyword}</Text>
+                  </Box>
+                ) : null
+              )}
+            </FlexBox>
+          )}
           <Box paddingBottom="1rem" overflow="hidden">
             <Paragraph>{idea.description}</Paragraph>
           </Box>
