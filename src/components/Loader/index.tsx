@@ -2,9 +2,16 @@ import React from 'react';
 import { Center } from '../Box';
 import { Container } from './parts';
 
-export const Loader: React.FC = () => {
+interface Props {
+  size?: number;
+  color?: string;
+  borderSize?: number;
+  margin?: number;
+}
+
+export const Loader: React.FC<Props> = props => {
   return (
-    <Container>
+    <Container {...props}>
       <div></div>
       <div></div>
       <div></div>
@@ -13,10 +20,10 @@ export const Loader: React.FC = () => {
   );
 };
 
-export const CenteredLoader: React.FC = () => {
+export const CenteredLoader: React.FC<Props> = props => {
   return (
     <Center>
-      <Loader />
+      <Loader {...props} />
     </Center>
   );
 };

@@ -14,12 +14,14 @@ const ModalWindowBase = React.forwardRef<HTMLDivElement, React.PropsWithChildren
 export const ModalWindow = styled(ModalWindowBase)`
   > div {
     background-color: ${({ theme }) => theme.colors.white};
-    padding: ${({ theme }) => theme.spacing.s} ${({ theme }) => theme.spacing.s};
+    padding: ${({ theme }) => theme.spacing.m} ${({ theme }) => theme.spacing.m};
     top: 50%;
     left: 50%;
     position: fixed;
     transform: translate(-50%, -50%);
     max-height: 90%;
     max-width: 90%;
+    border-radius: ${({ theme }) => theme.borderRadiuses.small};
+    overflow-y: auto;
   }
 `;
