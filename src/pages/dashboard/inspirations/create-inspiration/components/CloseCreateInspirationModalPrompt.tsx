@@ -14,17 +14,17 @@ export const CloseCreateInspirationModalPrompt = styled((props: CloseCreateInspi
   return (
     <div className={props.className}>
       <Modal
-        textContent={<Text>Czy na pewno chcesz zakończyć tworzenie posta? Zmiany nie zostaną zapisane.</Text>}
+        content={<Text>Czy na pewno chcesz zakończyć tworzenie posta? Zmiany nie zostaną zapisane.</Text>}
         buttons={[
-          {
-            text: 'Tak',
-            onClick: () => props.closeModal(true),
-            primary: true
-          },
           {
             text: 'Nie',
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             onClick: () => props.closeModal(false)
+          },
+          {
+            text: 'Tak',
+            onClick: () => props.closeModal(true),
+            primary: true
           }
         ]}
       />

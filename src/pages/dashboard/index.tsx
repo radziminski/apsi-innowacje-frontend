@@ -21,7 +21,7 @@ export const DashboardRoutes: React.FC = (props: React.PropsWithChildren<{ class
   return (
     <DashboardLayout>
       <div className={props.className}>
-        <ToastContainer />
+        <ToastContainer newestOnTop />
         <Switch>
           <Route path={getIdeasPath()} component={IdeasPage} />
           <Route path={getCreateIdeaPath()} component={CreateIdeaPage} />

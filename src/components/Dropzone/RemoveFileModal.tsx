@@ -10,7 +10,7 @@ interface RemoveFileModalProps {
 export const RemoveFileModal = (props: RemoveFileModalProps) => {
   return (
     <Modal
-      textContent={<span>Czy na pewno chcesz usunąć plik {props.filename}?</span>}
+      content={<span>Czy na pewno chcesz usunąć plik {props.filename}?</span>}
       buttons={[
         {
           text: 'Tak',

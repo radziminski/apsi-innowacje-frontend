@@ -42,7 +42,7 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
     setPromptModalVisible(true);
   }, []);
 
-  const exitCreation = React.useCallback(
+  const exitCreationHandleAnswer = React.useCallback(
     (exitCreation: boolean) => {
       setPromptModalVisible(false);
       exitCreation && props.closeSelf();
@@ -107,11 +107,11 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
 
   return (
     <Modal
-      textContent={
-        <div>
+      content={
+        <FlexBox className={props.className}>
           {requestStatus && requestStatus === 'pending' && <InspirationRequestPendingModal />}
           <FormProvider {...methods}>
-            <Center className={props.className}>
+            <Center>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <Heading3 fontSize="1.4rem" fontWeight={500}>
                   Stwórz inspirację
@@ -127,21 +127,20 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
                 />
                 <ContentEditor id={'content'} />
                 <FlexBox className={'create-inspiration__buttons'}>
+                  <Button text={'Anuluj'} type={'button'} onClick={promptCloseModal} />
                   <Button text={'Wyślij'} type={'submit'} primary />
-                  <Button text={'Anuluj'} onClick={promptCloseModal} />
                 </FlexBox>
               </form>
             </Center>
-            {promptModalVisible && <CloseCreateInspirationModalPrompt closeModal={exitCreation} />}
+            {promptModalVisible && <CloseCreateInspirationModalPrompt closeModal={exitCreationHandleAnswer} />}
           </FormProvider>
-        </div>
+        </FlexBox>
       }
     />
   );
 };
 
 export const CreateInspirationModal = styled(CreateInspirationModalBase)`
-  flex-direction: column;
   .create-inspiration__buttons {
     width: 100%;
     justify-content: flex-end;

@@ -13,7 +13,7 @@ export const FilesToLargeModal = styled((props: FilesToLargeModalProps) => {
 
   return (
     <Modal
-      textContent={
+      content={
         <>
           <span>
             Dodano za duż{files.length > 1 ? 'e' : 'y'} plik{files.length > 1 && 'i'}. Limit to 10MB.

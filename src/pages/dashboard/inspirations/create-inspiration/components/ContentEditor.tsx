@@ -31,8 +31,9 @@ const ControlledSunEditor = styled(
               defaultValue={field.value}
               placeholder="Wpisz treść inspiracji..."
               setOptions={{
-                height: '200',
-                width: '60vw',
+                minHeight: '200px',
+                height: 'auto',
+                width: '70vw',
                 plugins: [image, link],
                 buttonList: [['undo', 'redo', 'image', 'link']],
                 defaultStyle: 'font-family: Poppins, sans-serif'

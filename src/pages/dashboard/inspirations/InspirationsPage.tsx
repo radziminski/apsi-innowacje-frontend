@@ -91,8 +91,8 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
                 )}
               </Box>
               {isLoading && loader}
-              {isError && errorComponent}
-              {hasMore || noMoreComponent}
+              {!isLoading && isError && errorComponent}
+              {hasMore || isLoading || noMoreComponent}
             </div>
             <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
               {chosenInspirationId && chosenInspirationId && (

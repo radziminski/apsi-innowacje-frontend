@@ -10,7 +10,7 @@ export interface TotalSizeTooBigModalModalProps {
 export const TotalSizeTooBigModal = styled((props: TotalSizeTooBigModalModalProps) => {
   return (
     <Modal
-      textContent={<span>Dodane pliki są za duże. Można dodać maksymalnie 1GB danych.</span>}
+      content={<span>Dodane pliki są za duże. Można dodać maksymalnie 1GB danych.</span>}
       buttons={[
         {
           text: 'Ok',

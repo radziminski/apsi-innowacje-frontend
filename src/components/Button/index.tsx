@@ -12,7 +12,6 @@ export interface ButtonProps {
 }
 
 const ButtonBase = (props: ButtonProps & StyledComponentPropsWithRef<'button'>): JSX.Element => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { primary, isLoading, className, text, disabled, children, ...rest } = props;
   return (
     <button className={className} disabled={disabled} {...rest}>

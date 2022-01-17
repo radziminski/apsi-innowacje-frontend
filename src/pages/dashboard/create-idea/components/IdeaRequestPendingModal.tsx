@@ -5,7 +5,7 @@ import { CenteredLoader } from '~/components/Loader';
 
 export const IdeaRequestPendingModal = () => (
   <Modal
-    textContent={
+    content={
       <FlexBox flexDirection={'column'}>
         <span>Trwa dodawanie pomysłu...</span>
         <CenteredLoader />
