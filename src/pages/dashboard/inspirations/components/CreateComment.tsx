@@ -12,6 +12,7 @@ import { AxiosResponse } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/store/store';
 import { toast } from 'react-toastify';
+import Loader from '~/components/Loader';
 
 const schema = yup
   .object({
@@ -29,7 +30,18 @@ interface CreateCommentProps {
   className?: string;
 }
 
+const CommentPendingMsg = () => {
+  return (
+    <FlexBox>
+      <span>
+        Komentarz jest zapisywany... <Loader size={20} borderSize={2} />
+      </span>
+    </FlexBox>
+  );
+};
+
 export const CreateComment = styled((props: CreateCommentProps) => {
+  const commentPendingToast = React.useRef<React.ReactText | null>(null);
   const methods = useForm({
     resolver: yupResolver(schema)
   });
@@ -55,9 +67,9 @@ export const CreateComment = styled((props: CreateCommentProps) => {
 
   const onSubmit = React.useCallback(
     async (data: CommentSchema) => {
-      toast.info('Komentarz zostanie zapisany.', {
+      commentPendingToast.current = toast.info(<CommentPendingMsg />, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: false,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -73,6 +85,9 @@ export const CreateComment = styled((props: CreateCommentProps) => {
         try {
           const response: AxiosResponse<number> = await apiClient.postCreatePostAnswerPost(formData);
           if ([200, 201].includes(response.status)) {
+            if (commentPendingToast.current) {
+              toast.dismiss(commentPendingToast.current);
+            }
             toast.success('Komentarz został dodany.', {
               position: 'top-right',
               autoClose: 5000,
@@ -85,9 +100,15 @@ export const CreateComment = styled((props: CreateCommentProps) => {
             methods.reset();
             props.onCommentAdd && props.onCommentAdd();
           } else {
+            if (commentPendingToast.current) {
+              toast.dismiss(commentPendingToast.current);
+            }
             toastError();
           }
         } catch (e) {
+          if (commentPendingToast.current) {
+            toast.dismiss(commentPendingToast.current);
+          }
           toastError();
         }
         return;

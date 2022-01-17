@@ -5,7 +5,7 @@ import styled from 'styled-components';
 export const InspirationSavedModal = styled((props: { onClose: () => void; className?: string }) => (
   <div className={props.className}>
     <Modal
-      textContent={<span>Dziękujemy za dodanie inspiracji.</span>}
+      content={<span>Dziękujemy za dodanie inspiracji.</span>}
       buttons={[
         {
           text: 'Zamknij',

@@ -19,8 +19,8 @@ export const ModalWindow = styled(ModalWindowBase)`
     left: 50%;
     position: fixed;
     transform: translate(-50%, -50%);
-    max-height: 90%;
-    max-width: 90%;
+    max-height: 90vh;
+    max-width: 90vw;
     border-radius: ${({ theme }) => theme.borderRadiuses.small};
     overflow-y: auto;
   }

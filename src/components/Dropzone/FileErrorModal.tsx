@@ -11,7 +11,7 @@ export interface FileErrorsModalProps {
 export const FileErrorsModal = styled((props: FileErrorsModalProps) => {
   return (
     <Modal
-      textContent={
+      content={
         <>
           <span>Nie udało się dodać plik{props.files.length > 1 ? 'ów' : 'u'}:</span>
           <ul className={props.className}>

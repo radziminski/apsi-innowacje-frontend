@@ -14,7 +14,7 @@ export const DuplicatedEntriesModal = (props: DuplicatedEntriesModalProps) => {
   }, []);
   return (
     <Modal
-      textContent={<span>{`Jeden z dodanych plików został już dodany: ${props.filename || ''}.`}</span>}
+      content={<span>{`Jeden z dodanych plików został już dodany: ${props.filename || ''}.`}</span>}
       buttons={[
         {
           text: 'Ok',

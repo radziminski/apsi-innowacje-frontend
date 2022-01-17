@@ -28,4 +28,11 @@ export const InspirationContent = styled(InspirationContentBase)`
     text-decoration: underline;
     cursor: pointer;
   }
+  .inspiration-content__text-content {
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
 `;

@@ -7,7 +7,7 @@ import styled from 'styled-components';
 export const InspirationRequestPendingModal = styled((props: { className?: string }) => (
   <div className={props.className}>
     <Modal
-      textContent={
+      content={
         <FlexBox flexDirection={'column'}>
           <span>Trwa dodawanie inspiracji...</span>
           <CenteredLoader />
