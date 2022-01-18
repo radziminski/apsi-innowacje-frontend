@@ -11,7 +11,7 @@ interface Props {
 
 const VotingOptions: React.FC<Props> = ({ voteOption, selected }) => {
   return (
-    <FlexBox justifyContent="center">
+    <FlexBox justifyContent="center" flexDirection="column">
       <Heading3>Decyzja:</Heading3>
       <OptionsGrid>
         <OptionButton

@@ -14,12 +14,13 @@ import { DecisionDto, DecisionDtoIdeaStatusEnum, IdeaDtoStatusEnum } from '~/api
 import { TextInput } from '~/components/forms/FormTextInput/TextInput';
 import { voteIdea } from '~/store/slices/CreateVoteSlice';
 import { useDispatch } from 'react-redux';
+import { getIdeas } from '~/store/slices/CreateIdeasSlice';
 
 export const VotingPage: React.FC = () => {
   const SunEditor = React.lazy(() => import('suneditor-react'));
 
   const [selectedIdea, setSelectedIdea] = useState<number | undefined>(undefined);
-  const [description, setdDescription] = useState('');
+  const [description, setDescription] = useState('');
   const [votedOption, setVotedOption] = useState<DecisionDtoIdeaStatusEnum | undefined>(undefined);
   const dispatch = useDispatch();
 
@@ -28,7 +29,7 @@ export const VotingPage: React.FC = () => {
   };
 
   const changeDescription = e => {
-    setdDescription(e.target.value);
+    setDescription(e.target.value);
   };
 
   const voteOption = (option: DecisionDtoIdeaStatusEnum) => {
@@ -38,20 +39,24 @@ export const VotingPage: React.FC = () => {
   const vote = () => {
     if (selectedIdea && votedOption) {
       dispatch(voteIdea({ ideaId: selectedIdea, decision: { ideaStatus: votedOption, description } }));
+      dispatch(getIdeas());
+      setSelectedIdea(undefined);
+      setVotedOption(undefined);
+      setDescription('');
     }
   };
 
   return (
     <DashboardContent title="Głosowanie na pomysły" icon={<MdOutlineRateReview size={28} />}>
       <FlexBox>
-        <Box>
+        <Box width="900px">
           <VotingList select={selectIdea} selectedIdeaId={selectedIdea} />
         </Box>
         <VotingConsole marginLeft="2rem">
           <VotingOptions voteOption={voteOption} selected={votedOption} />
           <Heading3>Wyjasnienie:</Heading3>
           <Box margin=".7rem 0">
-            <TextInput onChange={changeDescription} />
+            <TextInput onChange={changeDescription} value={description} />
           </Box>
           <FlexBox justifyContent="flex-end" margin=".7rem 0">
             <Button text={'Zaglosuj'} onClick={vote} />

@@ -6,6 +6,7 @@ export const OptionsGrid = styled(Box)`
   display: grid;
   grid-template-columns: 50% 50%;
   grid-template-rows: 50% 50%;
+  margin: 0.7rem 0;
 `;
 
 export const OptionButton = styled(Button)`

@@ -1,7 +1,6 @@
 import { DecisionDto } from './../../api-client/java/api';
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import apiClient from '~/api-client';
-import { getIdeas } from './CreateIdeasSlice';
 
 export interface VoteState {
   isLoading: boolean;
@@ -28,7 +27,6 @@ const createVoteIdeaReducers = (builder: ActionReducerMapBuilder<VoteState>) => 
     state.isLoading = false;
     state.isError = false;
     state.error = null;
-    getIdeas();
   });
   builder.addCase(voteIdea.pending, state => {
     state.isError = false;
