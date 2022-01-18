@@ -10,7 +10,7 @@ export const DashboardLayout: React.FC = ({ children }) => {
 
   return (
     <FlexBox
-      width="100%"
+      width="100vw"
       minHeight="100vh"
       flexDirection={isTab ? 'column' : 'row'}
       overflow={isTab ? undefined : 'hidden'}>

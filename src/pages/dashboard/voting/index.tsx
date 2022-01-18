@@ -36,9 +36,9 @@ export const VotingPage: React.FC = () => {
     setVotedOption(option);
   };
 
-  const vote = () => {
+  const vote = async () => {
     if (selectedIdea && votedOption) {
-      dispatch(voteIdea({ ideaId: selectedIdea, decision: { ideaStatus: votedOption, description } }));
+      await dispatch(voteIdea({ ideaId: selectedIdea, decision: { ideaStatus: votedOption, description } }));
       dispatch(getIdeas());
       setSelectedIdea(undefined);
       setVotedOption(undefined);
@@ -49,7 +49,7 @@ export const VotingPage: React.FC = () => {
   return (
     <DashboardContent title="Głosowanie na pomysły" icon={<MdOutlineRateReview size={28} />}>
       <FlexBox>
-        <Box width="900px">
+        <Box flexGrow={1} width="1px">
           <VotingList select={selectIdea} selectedIdeaId={selectedIdea} />
         </Box>
         <VotingConsole marginLeft="2rem">
@@ -63,7 +63,7 @@ export const VotingPage: React.FC = () => {
           </FlexBox>
         </VotingConsole>
       </FlexBox>
-    </DashboardContent>
+    </DashboardContent >
   );
 };
 

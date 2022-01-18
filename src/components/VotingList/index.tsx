@@ -26,7 +26,7 @@ export const VotingList: React.FC<Props> = ({ select, selectedIdeaId }) => {
       errorMessage="Wystąpił błąd z odświeżaniem pomysłów.">
       {ideas &&
         ideas.map(idea => (
-          <Box key={idea.id} width="100%">
+          <Box key={idea.id}>
             <VotingCard isSelected={idea.id === selectedIdeaId} idea={idea} select={select} />
           </Box>
         ))}
