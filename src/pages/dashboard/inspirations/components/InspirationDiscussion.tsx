@@ -9,7 +9,6 @@ import Text from '~/components/Text';
 
 interface InspirationDiscussionProps {
   inspiration: PostDto;
-  onCommentAdd?: () => void;
   className?: string;
 }
 
@@ -21,7 +20,7 @@ const InspirationDiscussionBase = (props: InspirationDiscussionProps) => {
       <Text>Dyskusja:</Text>
       {props.inspiration.id && (
         <>
-          <CreateComment inspirationId={props.inspiration.id} onCommentAdd={props.onCommentAdd} />
+          <CreateComment inspirationId={props.inspiration.id} />
           <HorizontalRuler />
         </>
       )}

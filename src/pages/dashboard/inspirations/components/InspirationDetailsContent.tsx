@@ -10,8 +10,6 @@ import useDevice from '~/hooks/useDevice';
 import { InspirationHeader } from '~/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 import { useSelector } from '~/store/hooks';
-import { useDispatch } from 'react-redux';
-import { getSingleInspiration } from '~/store/slices/CreateInspirationsSlice';
 
 const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isOpened'>) => {
   const { isTab } = useDevice();
@@ -19,11 +17,6 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
   const inspiration = useSelector(state =>
     state.inspirations.inspirations ? state.inspirations.inspirations.find(ins => ins.id === inspirationId) : null
   );
-  const dispatch = useDispatch();
-
-  const onCommentAdded = React.useCallback(() => {
-    props.inspirationId && dispatch(getSingleInspiration({ id: props.inspirationId }));
-  }, [props.inspirationId]);
 
   return (
     <Card className={className}>
@@ -38,7 +31,7 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
           </FlexBox>
           <InspirationTitle title={inspiration.title} />
           <InspirationContent inspiration={inspiration} />
-          <InspirationDiscussion inspiration={inspiration} onCommentAdd={onCommentAdded} />
+          <InspirationDiscussion inspiration={inspiration} />
         </>
       )}
     </Card>
