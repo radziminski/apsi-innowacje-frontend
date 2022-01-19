@@ -18,6 +18,7 @@ import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea/util';
 import { components } from 'react-select';
 import { toast } from 'react-toastify';
 import { RequestStatus } from '~/constants/constants';
+import { getIdeas } from '~/store/slices/CreateIdeasSlice';
 
 export interface CreateIdeaFormSchema {
   [CreateIdeaFormFields.title]: string;
@@ -132,6 +133,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                     draggable: true,
                     progress: undefined
                   });
+                  dispatch(getIdeas());
                 } else {
                   setRequestStatus('error');
                   toastError('Niestety nie udało się zapisać załączników.');
