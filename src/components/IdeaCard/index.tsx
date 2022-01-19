@@ -3,7 +3,7 @@ import { AiFillStar } from 'react-icons/ai';
 import { MdBlock, MdDeleteForever } from 'react-icons/md';
 import Rating from 'react-rating';
 import { useDispatch } from 'react-redux';
-import { IdeaDto, UserRole } from '~/api-client';
+import { IdeaDto, UserRole, IdeaDtoStatusEnum } from '~/api-client';
 import { useSelector } from '~/store/hooks';
 import { blockIdea, clearBlockError, clearDeleteError, deleteIdea } from '~/store/slices/CreateIdeasSlice';
 import { COLORS } from '~/styles/variables';
@@ -17,6 +17,22 @@ import { ReviewButton } from './parts';
 interface Props {
   idea: IdeaDto;
 }
+
+const getStatusString = (status: IdeaDtoStatusEnum) => {
+  switch (status) {
+    case IdeaDtoStatusEnum.New:
+      return 'Nowo dodany';
+    case IdeaDtoStatusEnum.Accepted:
+      return 'Zaakceptowany';
+    case IdeaDtoStatusEnum.Rejected:
+      return 'Odrzucony';
+    case IdeaDtoStatusEnum.PutAway:
+      return 'Odroczony';
+    case IdeaDtoStatusEnum.ReuqestForDetails:
+      return 'Prośba o szczegóły';
+  }
+};
+
 export const IdeaCard: React.FC<Props> = ({ idea }) => {
   const [newReviewModalOpened, setNewReviewModalOpened] = useState(false);
   const [reviewsModalOpened, setReviewsModalOpened] = useState(false);
@@ -115,7 +131,20 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
             </Box>
             <Heading6 fontWeight={400}>{idea.date}</Heading6>
           </FlexBox>
-          <Box paddingBottom="0.5rem" />
+          <Box paddingBottom="0.25rem" />
+
+          {idea.status && (
+            <FlexBox>
+              <Paragraph as="span" fontWeight={500} fontSize="0.75rem">
+                Status:{' '}
+              </Paragraph>
+              <Box marginRight="0.25rem" />
+              <Paragraph fontSize="0.75rem">{getStatusString(idea.status)}</Paragraph>
+            </FlexBox>
+          )}
+
+          <Box paddingBottom="0.25rem" />
+
           <Box paddingBottom="0.8rem" overflow="hidden">
             <Heading4 fontSize="1.35rem" fontWeight={500}>
               {idea.title ?? 'Nieznany tytuł'}
@@ -143,11 +172,27 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
           </Box>
 
           {idea.costs && (
-            <Heading6 fontWeight={400} fontSize="0.75rem">
-              Koszt: {idea.costs.map(cost => cost + ' | ')}
+            <Heading6 fontWeight={300} fontSize="1rem">
+              <Paragraph as="span" fontWeight={500}>
+                Koszt:{' '}
+              </Paragraph>
+              {idea.costs.map(({ value }, i) => value + (i === (idea.costs?.length || 0) - 1 ? 'zł' : 'zł - '))}
             </Heading6>
           )}
-          {idea.keywords}
+          <Box paddingBottom="1rem" />
+
+          {idea.benefits && (
+            <>
+              <Paragraph as="span" fontWeight={500}>
+                Korzyści:
+              </Paragraph>
+              {idea.benefits.map(benefit => (
+                <Box key={benefit.id} paddingY="0.25rem">
+                  {benefit.description}
+                </Box>
+              ))}
+            </>
+          )}
         </FlexBox>
       </Card>
       {idea && idea.id && (
