@@ -20,13 +20,16 @@ export interface FormRowPropsBase {
   customFormComponent?: JSX.Element;
   className?: string;
   required?: boolean;
+  labelWidth?: string;
+  inputWidth?: string;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FormRowProps = FormRowPropsBase & any;
 
 const FormRowBase = (props: FormRowProps): JSX.Element => {
-  const { label, formId, className, customFormComponent, required, ...rest } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { label, formId, className, customFormComponent, required, labelWidth, inputWidth, ...rest } = props;
   const type = props.type || '';
 
   const getFormComponent = (type: FormType): JSX.Element => {
@@ -59,22 +62,23 @@ const FormRowBase = (props: FormRowProps): JSX.Element => {
 
 export const FormRow = styled(FormRowBase)`
   flex-direction: row;
-  margin: ${({ theme }) => theme.margins.small};
+  flex: 0 0 auto;
+  margin: ${({ theme }) => theme.spacing.s} 0;
   align-items: center;
 
   > div {
     display: flex;
-    margin: 0 ${({ theme }) => theme.margins.small};
+    margin: 0 ${({ theme }) => theme.spacing.s};
     label {
       font-weight: 400;
     }
 
     &:first-child {
-      width: 40%;
+      width: ${({ labelWidth }) => labelWidth || '40%'};
       display: inline;
     }
     &:nth-child(2) {
-      width: 60%;
+      width: ${({ inputWidth }) => inputWidth || '60%'};
     }
   }
 `;

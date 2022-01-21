@@ -8,6 +8,7 @@ const useDevice = () => {
     isDesktop: width <= BREAKPOINTS.desktop,
     isMobile: width <= BREAKPOINTS.mobile,
     isTab: width <= BREAKPOINTS.tab,
+    isWideTab: width <= BREAKPOINTS['wide-tab']
   };
 };
 

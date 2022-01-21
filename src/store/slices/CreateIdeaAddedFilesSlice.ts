@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-function* generateId() {
+export function* generateId() {
   let id = 0;
 
   while (true) {

@@ -3,6 +3,7 @@ import CreatableSelect from 'react-select/creatable';
 import styled from 'styled-components';
 import React from 'react';
 import { customSelectStyles, FormComponentProps } from '~/components/forms';
+import { ErrorLabel } from '~/components/forms/ErrorLabel';
 
 const FormCreateableSelectBase = (props: FormComponentProps) => {
   const { id, className, ...rest } = props;
@@ -20,24 +21,22 @@ const FormCreateableSelectBase = (props: FormComponentProps) => {
         render={({ field }) => (
           <CreatableSelect
             isMulti
+            {...register(id)}
+            {...field}
+            value={field.value ?? null}
             noOptionsMessage={() => 'Wpisz słowo by je dodać'}
             formatCreateLabel={(inputValue: string) => `Dodaj "${inputValue}"`}
             isClearable={false}
             styles={customSelectStyles(!!errors[id])}
-            {...register(id)}
-            {...field}
             {...rest}
           />
         )}
       />
-      {errors[id] && <p>{errors[id].message}</p>}
+      {errors[id] && <ErrorLabel text={errors[id].message} />}
     </div>
   );
 };
 
 export const FormCreateableSelect = styled(FormCreateableSelectBase)`
   width: 100%;
-  p {
-    margin-top: 5px;
-  }
 `;

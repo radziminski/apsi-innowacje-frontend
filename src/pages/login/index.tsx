@@ -31,7 +31,7 @@ export const LoginPage: React.FC = () => {
           flexDirection="column"
           backgroundColor={COLORS.white}
           borderRadius="16px"
-          padding={defaultTheme.margins.medium}>
+          padding={defaultTheme.spacing.m}>
           <Logo />
           <LoginForm onSubmit={onSubmit} />
         </Center>

@@ -11,10 +11,10 @@ interface FixedMenuWrapperProps {
 const FixedMenuWrapperBase = (props: React.PropsWithChildren<FixedMenuWrapperProps>) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { isOpened, className, children } = props;
-  const { isTab } = useDevice();
+  const { isWideTab } = useDevice();
 
   useEffect(() => {
-    if (isTab) {
+    if (isWideTab) {
       if (isOpened) {
         document.body.style.overflowY = 'hidden';
       } else {
@@ -24,7 +24,7 @@ const FixedMenuWrapperBase = (props: React.PropsWithChildren<FixedMenuWrapperPro
     return () => {
       document.body.style.overflowY = 'visible';
     };
-  }, [isOpened]);
+  }, [isOpened, isWideTab]);
 
   return <FlexBox className={className}>{children}</FlexBox>;
 };
@@ -35,9 +35,8 @@ export const FixedMenuWrapper = styled(FixedMenuWrapperBase)`
   bottom: 0;
   position: fixed;
   width: 100%;
-  min-height: 100vh;
+  max-height: 100%;
 
-  // min-height: 100vh;
   > div {
     overflow-y: scroll;
   }

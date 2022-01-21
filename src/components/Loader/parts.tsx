@@ -1,23 +1,23 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Container = styled.div<{ size?: number; margin?: number; borderSize?: number; color?: string }>`
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: ${({ size }) => size ?? 80}px;
+  height: ${({ size }) => size ?? 80}px;
   opacity: 0.75;
 
   div {
     box-sizing: border-box;
     display: block;
     position: absolute;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border: 6px solid #000;
+    width: ${({ size }) => (size ?? 80) * 0.8}px;
+    height: ${({ size }) => (size ?? 80) * 0.8}px;
+    margin: ${({ margin }) => margin ?? 8}px;
+    border: ${({ borderSize }) => borderSize ?? 6}px solid transparent;
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #000 transparent transparent transparent;
+    border-color: ${({ color }) => color ?? 'currentColor'} transparent transparent transparent;
   }
   div:nth-child(1) {
     animation-delay: -0.45s;

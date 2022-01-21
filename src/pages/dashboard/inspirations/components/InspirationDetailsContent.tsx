@@ -2,26 +2,38 @@ import React from 'react';
 import styled from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Card, FlexBox } from '~/components/Box';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
+import { InspirationTitle } from '~/pages/dashboard/inspirations/components/InspirationTitle';
 import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
 import { InspirationDiscussion } from '~/pages/dashboard/inspirations/components/InspirationDiscussion';
 import { InspirationDetailsProps } from '~/pages/dashboard/inspirations/InspirationDetails';
 import useDevice from '~/hooks/useDevice';
+import { InspirationHeader } from '~/components/InspirationHeader';
+import parseISO from 'date-fns/parseISO';
+import { useSelector } from '~/store/hooks';
 
 const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isOpened'>) => {
   const { isTab } = useDevice();
-  const { inspiration, onClose, className } = props;
+  const { inspirationId, onClose, className } = props;
+  const inspiration = useSelector(state =>
+    state.inspirations.inspirations ? state.inspirations.inspirations.find(ins => ins.id === inspirationId) : null
+  );
 
   return (
     <Card className={className}>
-      <FlexBox className={'inspiration-details__pre-header'}>
-        {/*  TODO proper date*/}
-        <span>{new Date().toLocaleDateString() + ' o ' + new Date().toLocaleTimeString()}</span>
-        <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
-      </FlexBox>
-      <AuthorInfoComponent authorInfo={inspiration.author} />
-      <InspirationContent inspiration={inspiration} />
-      <InspirationDiscussion comments={inspiration.comments} />
+      {inspiration && (
+        <>
+          <FlexBox className={'inspiration-details__pre-header'}>
+            <InspirationHeader
+              authorInfo={inspiration.author}
+              date={inspiration.date ? parseISO(inspiration.date) : new Date()}
+            />
+            <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
+          </FlexBox>
+          <InspirationTitle title={inspiration.title} />
+          <InspirationContent inspiration={inspiration} />
+          <InspirationDiscussion inspiration={inspiration} />
+        </>
+      )}
     </Card>
   );
 };
@@ -32,10 +44,9 @@ export const InspirationDetailsContent = styled(InspirationDetailsContentBase)`
 
   .inspiration-details__pre-header {
     justify-content: space-between;
-    padding-bottom: ${({ theme }) => theme.margins.small};
     svg {
       cursor: pointer;
-      transition: 0.15s ease-in-out;
+      transition: 0.2s ease-in-out;
       &:hover {
         color: ${({ theme }) => theme.colors.primary};
       }

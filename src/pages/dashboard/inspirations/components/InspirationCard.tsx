@@ -1,13 +1,16 @@
 import React, { ForwardedRef } from 'react';
 import styled from 'styled-components';
-import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
 import { Card } from '~/components/Box';
-import { AuthorInfoComponent } from '~/pages/dashboard/inspirations/components/AuthorInfo';
+import { InspirationTitle } from '~/pages/dashboard/inspirations/components/InspirationTitle';
 import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
 import { InspirationFooter } from '~/pages/dashboard/inspirations/components/InspirationFooter';
+import { InspirationHeader } from '~/components/InspirationHeader';
+import parseISO from 'date-fns/parseISO';
+import classNames from 'classnames';
+import { PostDto } from '~/api-client';
 
 interface InspirationProps {
-  inspiration: InspirationModel;
+  inspiration: PostDto;
   onClick: () => void;
   customClassName?: string;
   className?: string;
@@ -15,19 +18,23 @@ interface InspirationProps {
 
 const InspirationBase = React.forwardRef((props: InspirationProps, ref: ForwardedRef<HTMLDivElement>) => {
   return (
-    <Card className={`${props.className} ${props.customClassName || ''}`} ref={ref} onClick={props.onClick}>
-      <AuthorInfoComponent authorInfo={props.inspiration.author} />
+    <Card className={classNames(props.className, props.customClassName)} ref={ref} onClick={props.onClick}>
+      <InspirationHeader
+        authorInfo={props.inspiration.author}
+        date={props.inspiration.date ? parseISO(props.inspiration.date) : new Date()}
+      />
+      <InspirationTitle title={props.inspiration.title} />
       <InspirationContent inspiration={props.inspiration} />
       <InspirationFooter
         // upvotes={props.inspiration.upvotes}
         // downvotes={props.inspiration.downvotes}
-        comments={props.inspiration.comments.length}
+        comments={props.inspiration.postAnswers ? props.inspiration.postAnswers.length : 0}
       />
     </Card>
   );
 });
 
-export const Inspiration = styled(InspirationBase)`
+export const InspirationCard = styled(InspirationBase)`
   cursor: pointer;
   flex-direction: column;
 `;

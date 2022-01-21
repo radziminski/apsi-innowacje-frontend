@@ -1,4 +1,4 @@
-import { COLORS, FONT_WEIGHTS, Z_INDEX, BREAKPOINTS, MEDIA_QUERIES, MARGINS, BORDER_RADIUSES } from './variables';
+import { COLORS, FONT_WEIGHTS, Z_INDEX, BREAKPOINTS, MEDIA_QUERIES, SPACING, BORDER_RADIUSES } from './variables';
 import { DefaultTheme } from 'styled-components';
 
 export const defaultTheme: DefaultTheme = {
@@ -8,5 +8,5 @@ export const defaultTheme: DefaultTheme = {
   zIndex: Z_INDEX,
   breakpoints: BREAKPOINTS,
   mediaQueries: MEDIA_QUERIES,
-  margins: MARGINS
+  spacing: SPACING
 };

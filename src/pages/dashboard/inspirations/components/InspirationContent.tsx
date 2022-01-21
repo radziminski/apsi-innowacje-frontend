@@ -1,21 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
-import { InspirationModel } from '~/pages/dashboard/inspirations/InspirationPage';
+import { PostDto } from '~/api-client';
 
 interface InspirationContentProps {
-  inspiration: InspirationModel;
+  inspiration: PostDto;
   className?: string;
 }
 
 const InspirationContentBase = (props: InspirationContentProps) => {
   return (
     <div className={props.className}>
-      <div className={'inspiration-content__text-content'}>{props.inspiration.content}</div>
+      {props.inspiration.text && (
+        <div
+          className={'inspiration-content__text-content'}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          dangerouslySetInnerHTML={{ __html: props.inspiration.text! }}
+        />
+      )}
       {/*<div className={'inspiration-content__images'}>{props.inspiration.images}</div>*/}
     </div>
   );
 };
 
 export const InspirationContent = styled(InspirationContentBase)`
-  margin: ${({ theme }) => theme.margins.small};
+  margin: ${({ theme }) => theme.spacing.s};
+  a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .inspiration-content__text-content {
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
 `;

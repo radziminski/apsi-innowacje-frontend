@@ -7,7 +7,7 @@ import styled from 'styled-components';
 export const LoadingModal = styled((props: { textContent?: string; className?: string }) => (
   <ModalOverlay isVisible>
     <Modal
-      textContent={
+      content={
         <>
           <RollerLoader />
           {props.textContent && <span className={props.className}>{props.textContent}</span>}
@@ -16,5 +16,5 @@ export const LoadingModal = styled((props: { textContent?: string; className?: s
     />
   </ModalOverlay>
 ))`
-  margin-top: ${({ theme }) => theme.margins.small};
+  margin-top: ${({ theme }) => theme.spacing.s};
 `;

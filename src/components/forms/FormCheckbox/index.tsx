@@ -6,6 +6,38 @@ import { FlexBox } from '~/components/Box';
 import { AiOutlineCheck } from 'react-icons/ai';
 import { COLORS } from '~/styles/variables';
 
+const Checkbox = styled(
+  (props: { checked: boolean; onClick: (e: React.MouseEvent<HTMLDivElement>) => void; className?: string }) => {
+    return (
+      <div className={props.className} onClick={props.onClick}>
+        <AiOutlineCheck size={13} color={props.checked ? COLORS.white : COLORS.gray} />
+      </div>
+    );
+  }
+)`
+  box-shadow: 0 0 0.3rem ${({ theme }) => theme.colors.gray}AF;
+  background-color: ${({ checked, theme }) => (checked ? theme.colors.primary : theme.colors.white)};
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  margin: 0.7rem 0;
+
+  svg {
+    transform: translate(6px, 3px);
+  }
+
+  &:hover {
+    box-shadow: 0 0 0.6rem ${({ theme }) => theme.colors.primary}AF;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease-in;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
+  }
+`;
+
 const FormCheckboxBase = (props: FormComponentProps) => {
   const { id, className, ...rest } = props;
   const methods = useFormContext();
@@ -50,9 +82,7 @@ const FormCheckboxBase = (props: FormComponentProps) => {
           />
         )}
       />
-      <div className={`form_checkbox${checked ? '--checked' : ''}`} onClick={onDivClick}>
-        <AiOutlineCheck size={13} color={checked ? COLORS.white : COLORS.gray} />
-      </div>
+      <Checkbox checked={checked} onClick={onDivClick} />
     </FlexBox>
   );
 };
@@ -61,41 +91,5 @@ export const FormCheckbox = styled(FormCheckboxBase)`
   flex-direction: column;
   .form_input {
     display: none;
-  }
-  .form_checkbox,
-  .form_checkbox--checked {
-    box-shadow: 0 0 0.3rem ${({ theme }) => theme.colors.gray}AF;
-    transition: box-shadow 0.15s ease-in-out;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background-color: ${({ theme }) => theme.colors.white};
-    border-radius: 100%;
-    margin: 0.7rem 0;
-  }
-
-  svg {
-    transform: translate(3px, 1px);
-  }
-
-  .form_checkbox {
-    &:hover,
-    &--checked:hover {
-      box-shadow: 0 0 0.6rem ${({ theme }) => theme.colors.primary}AF;
-      cursor: pointer;
-    }
-
-    &--checked {
-      background-color: ${({ theme }) => theme.colors.primary};
-    }
-
-    &:focus,
-    &--checked:focus {
-      box-shadow: 0 0 0.25rem ${({ theme }) => theme.colors.primary}AF;
-    }
-
-    &--checked:hover {
-      transition: box-shadow 0.15s ease-in;
-    }
   }
 `;

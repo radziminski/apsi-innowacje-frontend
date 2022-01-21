@@ -3,6 +3,8 @@ import React from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
 import { customSelectStyles, FormComponentProps, SelectOption } from '~/components/forms';
+import classNames from 'classnames';
+import { ErrorLabel } from '~/components/forms/ErrorLabel';
 
 export interface FormSelectProps extends FormComponentProps {
   options: SelectOption[];
@@ -25,22 +27,20 @@ const FormSelectBase = (props: FormSelectProps) => {
         render={({ field }) => (
           <Select
             {...{ options }}
-            className={customClassName || ''}
-            styles={customSelectStyles(!!errors[id])}
             {...register(id)}
             {...field}
+            value={field.value ?? null}
+            className={classNames(customClassName)}
+            styles={customSelectStyles(!!errors[id])}
             {...rest}
           />
         )}
       />
-      {errors[id] && <p>{errors[id].message}</p>}
+      {errors[id] && <ErrorLabel text={errors[id].message} />}
     </div>
   );
 };
 
 export const FormSelect = styled(FormSelectBase)`
   width: 100%;
-  p {
-    margin-top: 5px;
-  }
 `;

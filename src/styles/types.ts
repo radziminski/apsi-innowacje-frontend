@@ -1,5 +1,6 @@
 export enum Device {
   Desktop = 'desktop',
+  WideTab = 'wide-tab',
   Tab = 'tab',
   Mobile = 'mobile'
 }
@@ -10,8 +11,13 @@ export interface CustomTheme {
     transparent: string;
     white: string;
     primary: string;
+    primaryHover: string;
+    primaryActive: string;
     primaryDark: string;
     primaryLight: string;
+    secondary: string;
+    secondaryHover: string;
+    secondaryActive: string;
     background: string;
     accent1: string;
     accent2: string;
@@ -40,11 +46,12 @@ export interface CustomTheme {
   };
   breakpoints: Record<Device, number>;
   mediaQueries: Record<Device, string>;
-  margins: {
-    small: string;
-    medium: string;
-    big: string;
-    large: string;
+  spacing: {
+    s: string;
+    m: string;
+    l: string;
+    xl: string;
+    xxl: string;
   };
   zIndex: {
     backgroundBack: number;

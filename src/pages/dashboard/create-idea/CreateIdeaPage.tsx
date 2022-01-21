@@ -1,7 +1,5 @@
 import React from 'react';
 import CreateIdeaForm from '~/pages/dashboard/create-idea/components/CreateIdeaForm';
-import styled from 'styled-components';
-import { MARGINS } from '~/styles/variables';
 import { Asterisk } from '~/components/forms/Asterisk/Asterisk';
 import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import { MdOutlineDashboardCustomize } from 'react-icons/md';
@@ -22,18 +20,4 @@ const CreateIdeaPage = (): JSX.Element => {
   );
 };
 
-export default styled(CreateIdeaPage)`
-  > div:first-of-type {
-    margin-top: ${MARGINS.big};
-  }
-  h3 {
-    margin-bottom: ${MARGINS.medium};
-  }
-  .required-field-info {
-    margin: 15px 0 10px 30px;
-    @media ${({ theme }) => theme.mediaQueries.mobile} {
-      margin: 15px 0 10px 10px;
-    }
-    font-weight: 400;
-  }
-`;
+export default CreateIdeaPage;
