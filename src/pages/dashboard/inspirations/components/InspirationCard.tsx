@@ -4,7 +4,7 @@ import { Card } from '~/components/Box';
 import { InspirationTitle } from '~/pages/dashboard/inspirations/components/InspirationTitle';
 import { InspirationContent } from '~/pages/dashboard/inspirations/components/InspirationContent';
 import { InspirationFooter } from '~/pages/dashboard/inspirations/components/InspirationFooter';
-import { InspirationHeader } from '~/components/InspirationHeader';
+import { InspirationHeader } from '~/pages/dashboard/inspirations/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 import classNames from 'classnames';
 import { PostDto } from '~/api-client';
@@ -14,6 +14,7 @@ interface InspirationProps {
   onClick: () => void;
   customClassName?: string;
   className?: string;
+  deleteComponent: JSX.Element;
 }
 
 const InspirationBase = React.forwardRef((props: InspirationProps, ref: ForwardedRef<HTMLDivElement>) => {
@@ -22,14 +23,11 @@ const InspirationBase = React.forwardRef((props: InspirationProps, ref: Forwarde
       <InspirationHeader
         authorInfo={props.inspiration.author}
         date={props.inspiration.date ? parseISO(props.inspiration.date) : new Date()}
+        deleteComponent={props.deleteComponent}
       />
       <InspirationTitle title={props.inspiration.title} />
       <InspirationContent inspiration={props.inspiration} />
-      <InspirationFooter
-        // upvotes={props.inspiration.upvotes}
-        // downvotes={props.inspiration.downvotes}
-        comments={props.inspiration.postAnswers ? props.inspiration.postAnswers.length : 0}
-      />
+      <InspirationFooter comments={props.inspiration.postAnswers ? props.inspiration.postAnswers.length : 0} />
     </Card>
   );
 });

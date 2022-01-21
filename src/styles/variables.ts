@@ -24,6 +24,7 @@ export const COLORS = {
 };
 
 export const SPACING = {
+  xs: '0.5rem',
   s: '1rem',
   m: '1.5rem',
   l: '2rem',

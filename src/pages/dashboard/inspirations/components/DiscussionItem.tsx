@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
 import { PostAnswerDto } from '~/api-client';
-import { InspirationHeader } from '~/components/InspirationHeader';
+import { InspirationHeader } from '~/pages/dashboard/inspirations/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 interface DiscussionItemProps {
   comment: PostAnswerDto;
@@ -15,6 +15,7 @@ const DiscussionItemBase = (props: DiscussionItemProps) => {
       <InspirationHeader
         date={props.comment.date ? parseISO(props.comment.date) : new Date()}
         authorInfo={props.comment.author}
+        deleteComponent={<div>a</div>}
       />
       {<p>{props.comment.text ?? ''}</p>}
     </FlexBox>
@@ -25,5 +26,6 @@ export const DiscussionItem = styled(DiscussionItemBase)`
   flex-direction: column;
   p {
     margin: 0 ${({ theme }) => theme.spacing.s};
+    white-space: pre-line;
   }
 `;

@@ -7,7 +7,7 @@ import { InspirationContent } from '~/pages/dashboard/inspirations/components/In
 import { InspirationDiscussion } from '~/pages/dashboard/inspirations/components/InspirationDiscussion';
 import { InspirationDetailsProps } from '~/pages/dashboard/inspirations/InspirationDetails';
 import useDevice from '~/hooks/useDevice';
-import { InspirationHeader } from '~/components/InspirationHeader';
+import { InspirationHeader } from '~/pages/dashboard/inspirations/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 import { useSelector } from '~/store/hooks';
 
@@ -26,6 +26,7 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
             <InspirationHeader
               authorInfo={inspiration.author}
               date={inspiration.date ? parseISO(inspiration.date) : new Date()}
+              deleteComponent={props.deleteComponent}
             />
             <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
           </FlexBox>

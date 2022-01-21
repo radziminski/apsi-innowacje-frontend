@@ -14,6 +14,8 @@ import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useSelector } from '~/store/hooks';
 import { RootState } from '~/store/store';
 import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
+import { Modal } from '~/components/Modal';
+import { MdDeleteForever } from 'react-icons/md';
 
 interface InspirationsPageProps {
   className?: string;
@@ -21,12 +23,60 @@ interface InspirationsPageProps {
 
 const PAGE_SIZE = 8;
 
+interface DeleteInspirationModalProps {
+  onConfirm: (e) => void;
+  onClose: (e) => void;
+}
+
+const DeleteInspirationModal = (props: DeleteInspirationModalProps) => {
+  return (
+    <Modal
+      content={<span>Czy na pewno chcesz usunąć tę inspirację?</span>}
+      buttons={[
+        {
+          text: 'Powrót',
+          onClick: props.onClose
+        },
+        {
+          text: 'Tak',
+          onClick: props.onClose,
+          primary: true
+        }
+      ]}
+    />
+  );
+};
+
+const DeleteComponent = (props: { onDeleteInspirationClick: (e) => void }) => (
+  <>
+    <Box as="button" transform="scale(1.2)" paddingLeft="0.5rem" onClick={e => props.onDeleteInspirationClick(e)}>
+      <MdDeleteForever />
+    </Box>
+  </>
+);
+
 const InspirationsPageBase = (props: InspirationsPageProps) => {
   const [chosenInspirationId, setChosenInspirationId] = React.useState<number | undefined>(undefined);
   const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
+  const [deleteInspirationModalVisible, setDeleteInspirationModalVisible] = React.useState<boolean>(false);
   const { inspirations } = useSelector(state => state.inspirations);
-
   const { isWideTab } = useDevice();
+
+  const onDeleteInspirationClick = React.useCallback((e, inspirationId: number | null | undefined) => {
+    e.stopPropagation();
+    if (inspirationId) {
+      setDeleteInspirationModalVisible(true);
+    }
+  }, []);
+
+  const onDeleteInspirationModalConfirm = React.useCallback(() => {
+    setDeleteInspirationModalVisible(false);
+  }, []);
+
+  const onCloseDeleteInspirationModal = React.useCallback(e => {
+    e.stopPropagation();
+    setDeleteInspirationModalVisible(false);
+  }, []);
 
   const closeInspirationDetails = React.useCallback(() => {
     setIsDetailsOpened(false);
@@ -65,6 +115,12 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
           <FlexBox className={props.className}>
             <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
               <CreateInspiration />
+              {deleteInspirationModalVisible && (
+                <DeleteInspirationModal
+                  onConfirm={onDeleteInspirationModalConfirm}
+                  onClose={onCloseDeleteInspirationModal}
+                />
+              )}
               <Box>
                 {inspirations.map((inspiration, index) =>
                   inspiration.id ? (
@@ -79,6 +135,11 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
                           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                           onInspirationClick(inspiration.id!);
                         }}
+                        deleteComponent={
+                          <DeleteComponent
+                            onDeleteInspirationClick={e => onDeleteInspirationClick(e, inspiration.id)}
+                          />
+                        }
                         ref={ref => {
                           if (inspirations.length === index + 1) {
                             lastElementRef(ref);
@@ -101,6 +162,11 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
                     inspirationId={chosenInspirationId}
                     onClose={closeInspirationDetails}
                     isOpened={isDetailsOpened}
+                    deleteComponent={
+                      <DeleteComponent
+                        onDeleteInspirationClick={e => onDeleteInspirationClick(e, chosenInspirationId)}
+                      />
+                    }
                   />
                 </FlexBox>
               )}
