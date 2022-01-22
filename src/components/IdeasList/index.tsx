@@ -21,7 +21,7 @@ export const IdeasList: React.FC = () => {
       errorMessage="Wystąpił błąd z odświeżaniem pomysłów.">
       {ideas &&
         ideas.map(idea => (
-          <Box key={idea.id} maxWidth="900px">
+          <Box key={idea.id} width={'100%'}>
             <IdeaCard idea={idea} />
           </Box>
         ))}
