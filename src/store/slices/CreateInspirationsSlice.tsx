@@ -8,7 +8,7 @@ import Loader from '~/components/Loader';
 import { toast } from 'react-toastify';
 
 export interface InspirationsState {
-  inspirations: PostDto[] | null;
+  inspirations: PostDto[];
   lastResultEmpty: boolean;
   isLoading: boolean;
   isError: boolean;
@@ -18,10 +18,11 @@ export interface InspirationsState {
   isCreateCommentError: boolean;
   isCreateCommentSuccess: boolean;
   creatingCommentToastIds: React.ReactText[];
+  isRemovingInspiration: boolean;
 }
 
 const initialState: InspirationsState = {
-  inspirations: null,
+  inspirations: [],
   lastResultEmpty: false,
   isLoading: false,
   isError: false,
@@ -30,7 +31,8 @@ const initialState: InspirationsState = {
   isCreatingComment: false,
   isCreateCommentError: false,
   isCreateCommentSuccess: true,
-  creatingCommentToastIds: []
+  creatingCommentToastIds: [],
+  isRemovingInspiration: false
 };
 
 const CommentPendingMsg = () => {
@@ -56,57 +58,16 @@ export const getInspirations = createAsyncThunk<PostDto[], PageableApiArgs>(
   }
 );
 
-const createGetInspirationsReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
-  builder.addCase(getInspirations.fulfilled, (state, action) => {
-    state.inspirations = uniqBy([...(state.inspirations || []), ...action.payload], obj => obj.id);
-    state.lastResultEmpty = action.payload.length === 0;
-    state.isLoading = false;
-    state.isError = false;
-    state.error = null;
-    state.currentPage++;
-  });
-  builder.addCase(getInspirations.pending, state => {
-    state.isError = false;
-    state.lastResultEmpty = false;
-    state.error = null;
-    state.isLoading = true;
-  });
-  builder.addCase(getInspirations.rejected, (state, action) => {
-    state.isLoading = false;
-    state.lastResultEmpty = false;
-    state.isError = true;
-    state.error = action.error;
-  });
-};
-
-const createGetSingleInspirationReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
-  builder.addCase(getSingleInspiration.fulfilled, (state, action) => {
-    const newInspirationIndex = state.inspirations
-      ? state.inspirations.findIndex(obj => obj.id === action.payload.id)
-      : -1;
-    if (newInspirationIndex > -1) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.inspirations![newInspirationIndex] = action.payload;
-    } else if (state.inspirations === null) {
-      state.inspirations = [action.payload];
-    } else {
-      state.inspirations = [...state.inspirations, action.payload];
-    }
-    state.isLoading = false;
-    state.isError = false;
-    state.error = null;
-  });
-  builder.addCase(getSingleInspiration.pending, state => {
-    state.isError = false;
-    state.error = null;
-    state.isLoading = true;
-  });
-  builder.addCase(getSingleInspiration.rejected, (state, action) => {
-    state.isLoading = false;
-    state.isError = true;
-    state.error = action.error;
-  });
-};
+export const deleteInspiration = createAsyncThunk<{ responseStatus: number; inspirationId: number }, number>(
+  'inspirations/deleteSingle',
+  async inspirationId => {
+    const response = await apiClient.postDeletePostDelete(inspirationId);
+    return {
+      responseStatus: response.status,
+      inspirationId
+    };
+  }
+);
 
 interface CreateCommentThunkReturn {
   responseStatus: number;
@@ -131,6 +92,96 @@ export const createCommentAndThenUpdateInspiration = createAsyncThunk<void, Requ
     await dispatch(getSingleInspiration(formData.postId));
   }
 );
+
+const createGetInspirationsReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
+  builder.addCase(getInspirations.fulfilled, (state, action) => {
+    state.inspirations = uniqBy([...state.inspirations, ...action.payload], obj => obj.id);
+    state.lastResultEmpty = action.payload.length === 0;
+    state.isLoading = false;
+    state.isError = false;
+    state.error = null;
+    state.currentPage++;
+  });
+  builder.addCase(getInspirations.pending, state => {
+    state.isError = false;
+    state.lastResultEmpty = false;
+    state.error = null;
+    state.isLoading = true;
+  });
+  builder.addCase(getInspirations.rejected, (state, action) => {
+    state.isLoading = false;
+    state.lastResultEmpty = false;
+    state.isError = true;
+    state.error = action.error;
+  });
+};
+
+const createGetSingleInspirationReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
+  builder.addCase(getSingleInspiration.fulfilled, (state, action) => {
+    const newInspirationIndex = state.inspirations.findIndex(obj => obj.id === action.payload.id);
+    if (newInspirationIndex > -1) {
+      state.inspirations[newInspirationIndex] = action.payload;
+    } else {
+      state.inspirations = [...state.inspirations, action.payload];
+    }
+    state.isLoading = false;
+    state.isError = false;
+    state.error = null;
+  });
+  builder.addCase(getSingleInspiration.pending, state => {
+    state.isError = false;
+    state.error = null;
+    state.isLoading = true;
+  });
+  builder.addCase(getSingleInspiration.rejected, (state, action) => {
+    state.isLoading = false;
+    state.isError = true;
+    state.error = action.error;
+  });
+};
+
+const createDeleteSingleInspirationReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
+  builder.addCase(deleteInspiration.fulfilled, (state, action) => {
+    if (200 === action.payload.responseStatus) {
+      toast.success('Inspiracja została usunięta.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+      state.inspirations = state.inspirations.filter(insp => insp.id !== action.payload.inspirationId);
+    } else {
+      toast.error('Wystąpił problem podczas usuwania inspiracji i nie została ona usunięta.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+    }
+    state.isRemovingInspiration = false;
+  });
+  builder.addCase(deleteInspiration.pending, state => {
+    state.isRemovingInspiration = true;
+  });
+  builder.addCase(deleteInspiration.rejected, state => {
+    toast.error('Wystąpił problem podczas usuwania inspiracji i nie została ona usunięta.', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined
+    });
+    state.isRemovingInspiration = false;
+  });
+};
 
 const createCreateCommentReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
   builder.addCase(createComment.fulfilled, (state, action) => {
@@ -210,6 +261,7 @@ export const inspirationsSlice = createSlice({
     createGetInspirationsReducers(builder);
     createGetSingleInspirationReducers(builder);
     createCreateCommentReducers(builder);
+    createDeleteSingleInspirationReducers(builder);
   }
 });
 

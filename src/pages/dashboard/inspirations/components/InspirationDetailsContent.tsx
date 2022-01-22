@@ -14,9 +14,7 @@ import { useSelector } from '~/store/hooks';
 const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isOpened'>) => {
   const { isTab } = useDevice();
   const { inspirationId, onClose, className } = props;
-  const inspiration = useSelector(state =>
-    state.inspirations.inspirations ? state.inspirations.inspirations.find(ins => ins.id === inspirationId) : null
-  );
+  const inspiration = useSelector(state => state.inspirations.inspirations.find(ins => ins.id === inspirationId));
 
   return (
     <Card className={className}>

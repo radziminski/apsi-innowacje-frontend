@@ -13,9 +13,11 @@ import { CenteredLoader } from '~/components/Loader';
 import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useSelector } from '~/store/hooks';
 import { RootState } from '~/store/store';
-import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
-import { Modal } from '~/components/Modal';
+import { deleteInspiration, getInspirations } from '~/store/slices/CreateInspirationsSlice';
 import { MdDeleteForever } from 'react-icons/md';
+import { DeleteInspirationModal } from './modals/DeleteInspirationModal';
+import { DeletingInspirationModal } from './modals/DeletingInspirationModal';
+import { useDispatch } from 'react-redux';
 
 interface InspirationsPageProps {
   className?: string;
@@ -23,58 +25,52 @@ interface InspirationsPageProps {
 
 const PAGE_SIZE = 8;
 
-interface DeleteInspirationModalProps {
-  onConfirm: (e) => void;
-  onClose: (e) => void;
-}
-
-const DeleteInspirationModal = (props: DeleteInspirationModalProps) => {
-  return (
-    <Modal
-      content={<span>Czy na pewno chcesz usunąć tę inspirację?</span>}
-      buttons={[
-        {
-          text: 'Powrót',
-          onClick: props.onClose
-        },
-        {
-          text: 'Tak',
-          onClick: props.onClose,
-          primary: true
-        }
-      ]}
-    />
-  );
-};
-
-const DeleteComponent = (props: { onDeleteInspirationClick: (e) => void }) => (
+const DeleteIconComponent = styled((props: { onDeleteInspirationClick: (e) => void; className?: string }) => (
   <>
-    <Box as="button" transform="scale(1.2)" paddingLeft="0.5rem" onClick={e => props.onDeleteInspirationClick(e)}>
+    <Box
+      className={props.className}
+      as="button"
+      transform="scale(1.3)"
+      marginTop={'-5px'}
+      paddingLeft="0.5rem"
+      onClick={e => props.onDeleteInspirationClick(e)}>
       <MdDeleteForever />
     </Box>
   </>
-);
+))`
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+  transition: all 0.3s;
+`;
 
 const InspirationsPageBase = (props: InspirationsPageProps) => {
   const [chosenInspirationId, setChosenInspirationId] = React.useState<number | undefined>(undefined);
   const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
   const [deleteInspirationModalVisible, setDeleteInspirationModalVisible] = React.useState<boolean>(false);
-  const { inspirations } = useSelector(state => state.inspirations);
+  const inspirationIdToDelete = React.useRef<number | null>(null);
+  const { inspirations, isRemovingInspiration } = useSelector(state => state.inspirations);
   const { isWideTab } = useDevice();
+  const dispatch = useDispatch();
 
   const onDeleteInspirationClick = React.useCallback((e, inspirationId: number | null | undefined) => {
     e.stopPropagation();
     if (inspirationId) {
+      inspirationIdToDelete.current = inspirationId;
       setDeleteInspirationModalVisible(true);
     }
   }, []);
 
   const onDeleteInspirationModalConfirm = React.useCallback(() => {
+    if (inspirationIdToDelete.current !== null) {
+      dispatch(deleteInspiration(inspirationIdToDelete.current));
+    }
     setDeleteInspirationModalVisible(false);
-  }, []);
+  }, [inspirationIdToDelete.current]);
 
   const onCloseDeleteInspirationModal = React.useCallback(e => {
     e.stopPropagation();
+    inspirationIdToDelete.current = null;
     setDeleteInspirationModalVisible(false);
   }, []);
 
@@ -113,14 +109,15 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
         errorMessage="Wystąpił błąd z odświeżaniem pomysłów.">
         {inspirations && (
           <FlexBox className={props.className}>
+            {deleteInspirationModalVisible && (
+              <DeleteInspirationModal
+                onConfirm={onDeleteInspirationModalConfirm}
+                onClose={onCloseDeleteInspirationModal}
+              />
+            )}
+            {isRemovingInspiration && <DeletingInspirationModal />}
             <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
               <CreateInspiration />
-              {deleteInspirationModalVisible && (
-                <DeleteInspirationModal
-                  onConfirm={onDeleteInspirationModalConfirm}
-                  onClose={onCloseDeleteInspirationModal}
-                />
-              )}
               <Box>
                 {inspirations.map((inspiration, index) =>
                   inspiration.id ? (
@@ -136,7 +133,7 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
                           onInspirationClick(inspiration.id!);
                         }}
                         deleteComponent={
-                          <DeleteComponent
+                          <DeleteIconComponent
                             onDeleteInspirationClick={e => onDeleteInspirationClick(e, inspiration.id)}
                           />
                         }
@@ -163,7 +160,7 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
                     onClose={closeInspirationDetails}
                     isOpened={isDetailsOpened}
                     deleteComponent={
-                      <DeleteComponent
+                      <DeleteIconComponent
                         onDeleteInspirationClick={e => onDeleteInspirationClick(e, chosenInspirationId)}
                       />
                     }
