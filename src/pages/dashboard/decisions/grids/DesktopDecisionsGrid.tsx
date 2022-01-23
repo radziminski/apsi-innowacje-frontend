@@ -78,7 +78,7 @@ export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) =>
       padding-bottom: ${({ theme }) => theme.spacing.s};
     }
     td {
-      padding-top: 1rem;
+      padding: 0.5rem 0;
       + td {
         padding-left: 0.5rem;
       }
@@ -92,7 +92,6 @@ export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) =>
     .button-accept,
     .button-decline {
       height: 1rem;
-      margin-bottom: ${({ theme }) => theme.spacing.xs};
       width: 100%;
       min-width: 0;
     }
@@ -100,6 +99,7 @@ export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) =>
     .button-accept {
       background-color: ${({ theme }) => theme.colors.accent4};
       color: ${({ theme }) => theme.colors.white};
+      margin-bottom: ${({ theme }) => theme.spacing.xs};
 
       &:hover {
         background-color: #009730;

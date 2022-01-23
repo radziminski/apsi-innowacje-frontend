@@ -86,8 +86,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
   const onSubmit = React.useCallback(
     async (data: CreateIdeaFormSchema) => {
-      // eslint-disable-next-line no-console
-      console.log(data);
       if (currentUser && currentUser.id) {
         const ideaDTO = formSchemaToIdeaDTO(data, currentUser.id);
         try {
