@@ -3,8 +3,14 @@ import { Button } from '~/components/Button';
 import React from 'react';
 import styled from 'styled-components';
 import { Heading4 } from '~/components/Text';
+import { IdeaDto } from '~/api-client';
 
-export const DesktopDecisionsGrid = styled((props: { className?: string }) => {
+interface DesktopDecisionsGridProps {
+  ideas: IdeaDto[];
+  className?: string;
+}
+
+export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) => {
   return (
     <div className={props.className}>
       <table className={'decisions-grid'}>
@@ -29,33 +35,31 @@ export const DesktopDecisionsGrid = styled((props: { className?: string }) => {
           </th>
         </thead>
         <tbody>
-          {Array(4)
-            .fill(1)
-            .map((el, index) => (
-              <tr key={index}>
-                <td className={'decisions-grid__idea-title'}>
-                  <div>Tabelka z ratingiem i możliwościami Accept/Decline</div>
-                </td>
-                <td>
-                  <div>4.5/5</div>
-                </td>
+          {props.ideas.map((idea, index) => (
+            <tr key={index}>
+              <td className={'decisions-grid__idea-title'}>
+                <div>{idea.title}</div>
+              </td>
+              <td>
+                <div>25/50</div>
+              </td>
 
-                <td>
-                  <div>25/50</div>
-                </td>
+              <td>
+                <div>4.5/5</div>
+              </td>
 
-                <td>
-                  <FlexBox flexDirection={'column'}>
-                    <div>
-                      <Button className={'button-accept'}>Akceptuj</Button>
-                    </div>
-                    <div>
-                      <Button className={'button-decline'}>Odrzuć</Button>
-                    </div>
-                  </FlexBox>
-                </td>
-              </tr>
-            ))}
+              <td>
+                <FlexBox flexDirection={'column'}>
+                  <div>
+                    <Button className={'button-accept'}>Akceptuj</Button>
+                  </div>
+                  <div>
+                    <Button className={'button-decline'}>Odrzuć</Button>
+                  </div>
+                </FlexBox>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

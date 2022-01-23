@@ -3,13 +3,15 @@ import addedFilesReducer from './slices/CreateIdeaAddedFilesSlice';
 import userReducer from './slices/CreateUserSlice';
 import ideasReducer from './slices/CreateIdeasSlice';
 import inspirationsReducer from './slices/CreateInspirationsSlice';
+import decisionsIdeasReducer from '~/store/slices/CreateDecisionsIdeasSlice';
 
 export const store = configureStore({
   reducer: {
     addedFiles: addedFilesReducer,
     user: userReducer,
     ideas: ideasReducer,
-    inspirations: inspirationsReducer
+    inspirations: inspirationsReducer,
+    decisionsIdeas: decisionsIdeasReducer
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

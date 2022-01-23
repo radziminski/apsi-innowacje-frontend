@@ -4,8 +4,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { Heading5 } from '~/components/Text';
 import { HorizontalRuler } from '~/components/HorizontalRuler';
+import { IdeaDto } from '~/api-client';
 
-export const MobileDecisionsGrid = styled((props: { className?: string }) => {
+interface MobileDecisionsGridProps {
+  ideas: IdeaDto[];
+  className?: string;
+}
+
+export const MobileDecisionsGrid = styled((props: MobileDecisionsGridProps) => {
   return (
     <div className={props.className}>
       <FlexBox className={'decisions-grid'} flexDirection={'column'}>
@@ -21,12 +27,10 @@ export const MobileDecisionsGrid = styled((props: { className?: string }) => {
                 </span>
               </div>
               <div>
-                <Heading5 style={{ display: 'inline' }}>Ocena komisji:</Heading5> Tabelka z ratingiem i możliwościami
-                Accept
+                <Heading5 style={{ display: 'inline' }}>Ocena komisji:</Heading5> 25/50
               </div>
               <div>
-                <Heading5 style={{ display: 'inline' }}>Ocena użytkowników:</Heading5> Tabelka z ratingiem i
-                możliwościami Accept/Decline
+                <Heading5 style={{ display: 'inline' }}>Ocena użytkowników:</Heading5> 4.5/5
               </div>
               <FlexBox alignItems={'center'} justifyContent={'flex-start'}>
                 <Heading5 style={{ display: 'inline' }}>Decyzja: </Heading5>
