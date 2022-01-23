@@ -8,7 +8,7 @@ import {
   TextShadowProps,
   typography,
   TypographyProps,
-  system,
+  system
 } from 'styled-system';
 
 export type TextProps = ColorProps &
@@ -27,7 +27,7 @@ const textStyledSystem = compose(
     textOverflow: true,
     textTransform: true,
     whiteSpace: true,
-    maxWidth: true,
+    maxWidth: true
   })
 );
 
@@ -49,4 +49,6 @@ export const Heading5 = styled(Text).attrs(() => ({ as: 'h5' }))``;
 
 export const Heading6 = styled(Text).attrs(() => ({ as: 'h6' }))``;
 
-export const Paragraph = styled(Text).attrs(() => ({ as: 'p' }))``;
+export const Paragraph = styled(Text).attrs(() => ({ as: 'p' }))`
+  word-break: break-word;
+`;

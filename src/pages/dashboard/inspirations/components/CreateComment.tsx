@@ -65,10 +65,16 @@ export const CreateComment = styled((props: CreateCommentProps) => {
   return (
     <FormProvider {...methods}>
       <FlexBox className={props.className}>
-        <Paragraph>Dodaj komentarz:</Paragraph>
+        <Paragraph className={'create-comment__title'}>Dodaj komentarz:</Paragraph>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <FlexBox className={'create-comment__form-container'}>
-            <FormTextArea id={'comment'} rows={1} onKeyPress={handleUserKeyPress} />
+            <FormTextArea
+              id={'comment'}
+              rows={6}
+              style={{ fontSize: '0.8rem' }}
+              onKeyPress={handleUserKeyPress}
+              placeholder={'Treść komentarza'}
+            />
             <Button text={'Dodaj'} type={'submit'} primary />
           </FlexBox>
         </form>
@@ -87,6 +93,9 @@ export const CreateComment = styled((props: CreateCommentProps) => {
   }
   .create-comment__form-container {
     flex-direction: column;
+  }
+  .create-comment__title {
+    margin: ${({ theme }) => theme.spacing.xs} 0;
   }
   textarea {
     margin: 5px 0;

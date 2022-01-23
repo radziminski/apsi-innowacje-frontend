@@ -8,6 +8,7 @@ export interface InspirationDetailsProps {
   onClose: () => void;
   isOpened?: boolean;
   className?: string;
+  deleteComponent: JSX.Element;
 }
 
 export const InspirationDetails = (props: InspirationDetailsProps) => {

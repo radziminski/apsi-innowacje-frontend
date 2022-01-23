@@ -3,7 +3,7 @@ import { AiFillStar } from 'react-icons/ai';
 import { MdBlock, MdDeleteForever } from 'react-icons/md';
 import Rating from 'react-rating';
 import { useDispatch } from 'react-redux';
-import { IdeaDto, UserRole, IdeaDtoStatusEnum } from '~/api-client';
+import { IdeaDto, IdeaDtoStatusEnum, UserRole } from '~/api-client';
 import { useSelector } from '~/store/hooks';
 import { blockIdea, clearBlockError, clearDeleteError, deleteIdea } from '~/store/slices/CreateIdeasSlice';
 import { COLORS } from '~/styles/variables';
@@ -12,7 +12,7 @@ import ConfirmModal from '../ConfirmModal';
 import IdeaRatingsModal from '../IdeaRatingsModal';
 import NewRatingModal from '../NewRatingModal';
 import Text, { Heading4, Heading5, Heading6, Paragraph } from '../Text';
-import { ReviewButton } from './parts';
+import { RatingSettings, ReviewButton } from './parts';
 
 interface Props {
   idea: IdeaDto;
@@ -70,6 +70,7 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
 
   const canBeDeleted = idea.authorId == currentUser?.id;
   const canBeBlocked = currentUser?.userRole && [UserRole.Admin, UserRole.Committee].includes(currentUser?.userRole);
+  const isAdmin = currentUser?.userRole && UserRole.Admin === currentUser?.userRole;
 
   if (idea.id && deletedIdeas.includes(idea.id)) return null;
 
@@ -118,6 +119,8 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
                 <MdBlock />
               </Box>
             )}
+            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+            {isAdmin && <RatingSettings ideaId={idea.id!} />}
           </FlexBox>
 
           <FlexBox alignItems="center">

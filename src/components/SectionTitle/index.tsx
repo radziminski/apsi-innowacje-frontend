@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import Box, { FlexBox } from '../Box';
-import { Heading2, Heading3 } from '../Text';
+import { Heading2, Heading4 } from '../Text';
 
 interface Props {
   title: string;
@@ -21,9 +21,9 @@ export const SectionTitle: React.FC<Props> = ({ title, subTitle, icon }) => {
         </Heading2>
       </FlexBox>
       {subTitle && (
-        <Heading3 fontSize="1rem" fontWeight={400}>
+        <Heading4>
           {subTitle}
-        </Heading3>
+        </Heading4>
       )}
     </Box>
   );

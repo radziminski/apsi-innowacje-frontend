@@ -12,13 +12,14 @@ import { CreateIdeaFormFields, schema } from '~/pages/dashboard/create-idea/sche
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SelectOption } from '~/components/forms';
 import { IdeaRequestPendingModal } from '~/pages/dashboard/create-idea/components/IdeaRequestPendingModal';
-import apiClient, { SubjectDto, SubjectDtoAudienceEnum } from '~/api-client';
+import apiClient, { SubjectDto } from '~/api-client';
 import { AxiosResponse } from 'axios';
 import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea/util';
 import { components } from 'react-select';
 import { toast } from 'react-toastify';
 import { RequestStatus } from '~/constants/constants';
 import { getIdeas } from '~/store/slices/CreateIdeasSlice';
+import { subjectDTOAudienceToSelectText } from '~/utils/utils';
 
 export interface CreateIdeaFormSchema {
   [CreateIdeaFormFields.title]: string;
@@ -45,28 +46,6 @@ export const CustomSubjectSelectOption = ({ innerRef, innerProps, ...restProps }
     </div>
   );
 };
-
-function subjectDTOAudienceToSelectText(
-  audience:
-    | SubjectDtoAudienceEnum.Student
-    | SubjectDtoAudienceEnum.Employee
-    | SubjectDtoAudienceEnum.Committee
-    | SubjectDtoAudienceEnum.Admin
-    | null
-    | undefined
-): string {
-  switch (audience) {
-    case SubjectDtoAudienceEnum.Student:
-      return 'Studenci';
-    case SubjectDtoAudienceEnum.Employee:
-      return 'Wykładowcy';
-    case SubjectDtoAudienceEnum.Committee:
-      return 'Komisja';
-    case SubjectDtoAudienceEnum.Admin:
-      return 'Administratorzy';
-  }
-  return 'Nieznana';
-}
 
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm({
@@ -107,8 +86,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
   const onSubmit = React.useCallback(
     async (data: CreateIdeaFormSchema) => {
-      // eslint-disable-next-line no-console
-      console.log(data);
       if (currentUser && currentUser.id) {
         const ideaDTO = formSchemaToIdeaDTO(data, currentUser.id);
         try {

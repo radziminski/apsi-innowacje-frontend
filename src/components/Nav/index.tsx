@@ -14,7 +14,8 @@ import {
   getCreateIdeaPath,
   getInspirationsPagePath,
   getVotingPath,
-  getAccountDetailsPath
+  getAccountDetailsPath,
+  getDecisionsPath
 } from '~/constants/paths';
 import { COLORS } from '~/styles/variables';
 import Box, { FlexBox } from '../Box';
@@ -44,7 +45,13 @@ const NAV_LINKS = [
     icon: <MdOutlineRateReview size={ICON_SIZE} />,
     to: getVotingPath(),
     label: 'Głosowanie',
-    restrictedTo: [UserRole.Admin, UserRole.Committee]
+    restrictedTo: [UserRole.Committee]
+  },
+  {
+    icon: <MdOutlineRateReview size={ICON_SIZE} />,
+    to: getDecisionsPath(),
+    label: 'Decyzje',
+    restrictedTo: [UserRole.Admin]
   },
   {
     icon: <BiMessageDetail size={ICON_SIZE} />,
@@ -65,7 +72,9 @@ export const Nav: React.FC = () => {
       return 5.4;
     }
     return Math.max(
-      NAV_LINKS.findIndex(link => location.pathname.startsWith(link.to)),
+      NAV_LINKS.filter(
+        link => !(link.restrictedTo && currentUser?.userRole && !link.restrictedTo.includes(currentUser.userRole))
+      ).findIndex(link => location.pathname.startsWith(link.to)),
       0
     );
   };

@@ -5,12 +5,13 @@ import { FormComponentProps } from '~/components/forms';
 import { FlexBox } from '~/components/Box';
 import { AiOutlineCheck } from 'react-icons/ai';
 import { COLORS } from '~/styles/variables';
+import { MdClear } from 'react-icons/md';
 
 const Checkbox = styled(
   (props: { checked: boolean; onClick: (e: React.MouseEvent<HTMLDivElement>) => void; className?: string }) => {
     return (
       <div className={props.className} onClick={props.onClick}>
-        <AiOutlineCheck size={13} color={props.checked ? COLORS.white : COLORS.gray} />
+        {props.checked ? <AiOutlineCheck size={13} color={COLORS.white} /> : <MdClear size={13} color={COLORS.gray} />}
       </div>
     );
   }
@@ -22,15 +23,15 @@ const Checkbox = styled(
   height: 25px;
   border-radius: 100%;
   margin: 0.7rem 0;
+  transition: box-shadow 0.15s ease-in;
 
   svg {
-    transform: translate(6px, 3px);
+    transform: translate(6px, 4px);
   }
 
   &:hover {
     box-shadow: 0 0 0.6rem ${({ theme }) => theme.colors.primary}AF;
     cursor: pointer;
-    transition: box-shadow 0.15s ease-in;
   }
 
   &:focus {
