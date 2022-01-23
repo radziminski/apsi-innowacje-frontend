@@ -20,7 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ProtectedRoute from '~/components/ProtectedRoute';
 import { useSelector } from '~/store/hooks';
 import { UserRole } from '~/api-client';
-import { DecisionsPage } from '~/pages/dashboard/DecisionsPage';
+import { DecisionsPage } from '~/pages/dashboard/decisions/DecisionsPage';
 import { getMe } from '~/store/slices/CreateUserSlice';
 import { useDispatch } from 'react-redux';
 
