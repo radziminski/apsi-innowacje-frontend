@@ -13,11 +13,14 @@ import { CenteredLoader } from '~/components/Loader';
 import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useSelector } from '~/store/hooks';
 import { RootState } from '~/store/store';
-import { deleteInspiration, getInspirations } from '~/store/slices/CreateInspirationsSlice';
+import {
+  deleteCommentAndThenUpdateInspiration,
+  deleteInspiration,
+  getInspirations
+} from '~/store/slices/CreateInspirationsSlice';
 import { MdDeleteForever } from 'react-icons/md';
-import { DeleteInspirationModal } from './modals/DeleteInspirationModal';
-import { DeletingInspirationModal } from './modals/DeletingInspirationModal';
 import { useDispatch } from 'react-redux';
+import ConfirmModal from '~/components/ConfirmModal';
 
 interface InspirationsPageProps {
   className?: string;
@@ -25,7 +28,7 @@ interface InspirationsPageProps {
 
 const PAGE_SIZE = 8;
 
-const DeleteIconComponent = styled((props: { onDeleteInspirationClick: (e) => void; className?: string }) => (
+export const DeleteIconComponent = styled((props: { onDeleteClick: (e) => void; className?: string }) => (
   <>
     <Box
       className={props.className}
@@ -33,7 +36,7 @@ const DeleteIconComponent = styled((props: { onDeleteInspirationClick: (e) => vo
       transform="scale(1.3)"
       marginTop={'-5px'}
       paddingLeft="0.5rem"
-      onClick={e => props.onDeleteInspirationClick(e)}>
+      onClick={e => props.onDeleteClick(e)}>
       <MdDeleteForever />
     </Box>
   </>
@@ -48,10 +51,41 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
   const [chosenInspirationId, setChosenInspirationId] = React.useState<number | undefined>(undefined);
   const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
   const [deleteInspirationModalVisible, setDeleteInspirationModalVisible] = React.useState<boolean>(false);
+  const [deleteCommentModalVisible, setDeleteCommentModalVisible] = React.useState<boolean>(false);
   const inspirationIdToDelete = React.useRef<number | null>(null);
-  const { inspirations, isRemovingInspiration } = useSelector(state => state.inspirations);
+  const commentIdToDelete = React.useRef<number | null>(null);
+  const { inspirations, isDeletingInspirationSuccess } = useSelector(state => state.inspirations);
   const { isWideTab } = useDevice();
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (isDeletingInspirationSuccess === true) {
+      setChosenInspirationId(undefined);
+      setIsDetailsOpened(false);
+    }
+  }, [isDeletingInspirationSuccess]);
+
+  const onDeleteComment = React.useCallback((commentId: number) => {
+    setDeleteCommentModalVisible(true);
+    commentIdToDelete.current = commentId;
+  }, []);
+
+  const onDeleteCommentModalConfirm = React.useCallback(() => {
+    if (commentIdToDelete.current !== null && chosenInspirationId !== undefined) {
+      dispatch(
+        deleteCommentAndThenUpdateInspiration({
+          commentId: commentIdToDelete.current,
+          inspirationId: chosenInspirationId
+        })
+      );
+    }
+    setDeleteCommentModalVisible(false);
+  }, [commentIdToDelete.current]);
+
+  const onCloseDeleteCommentModal = React.useCallback(() => {
+    commentIdToDelete.current = null;
+    setDeleteCommentModalVisible(false);
+  }, []);
 
   const onDeleteInspirationClick = React.useCallback((e, inspirationId: number | null | undefined) => {
     e.stopPropagation();
@@ -68,8 +102,7 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
     setDeleteInspirationModalVisible(false);
   }, [inspirationIdToDelete.current]);
 
-  const onCloseDeleteInspirationModal = React.useCallback(e => {
-    e.stopPropagation();
+  const onCloseDeleteInspirationModal = React.useCallback(() => {
     inspirationIdToDelete.current = null;
     setDeleteInspirationModalVisible(false);
   }, []);
@@ -109,13 +142,18 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
         errorMessage="Wystąpił błąd z odświeżaniem pomysłów.">
         {inspirations && (
           <FlexBox className={props.className}>
-            {deleteInspirationModalVisible && (
-              <DeleteInspirationModal
-                onConfirm={onDeleteInspirationModalConfirm}
-                onClose={onCloseDeleteInspirationModal}
-              />
-            )}
-            {isRemovingInspiration && <DeletingInspirationModal />}
+            <ConfirmModal
+              title={'Czy na pewno chcesz usunąć tę inspirację?'}
+              onConfirm={onDeleteInspirationModalConfirm}
+              onClose={onCloseDeleteInspirationModal}
+              isVisible={deleteInspirationModalVisible}
+            />
+            <ConfirmModal
+              title={'Czy na pewno chcesz usunąć ten komentarz?'}
+              onConfirm={onDeleteCommentModalConfirm}
+              onClose={onCloseDeleteCommentModal}
+              isVisible={deleteCommentModalVisible}
+            />
             <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
               <CreateInspiration />
               <Box>
@@ -133,9 +171,7 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
                           onInspirationClick(inspiration.id!);
                         }}
                         deleteComponent={
-                          <DeleteIconComponent
-                            onDeleteInspirationClick={e => onDeleteInspirationClick(e, inspiration.id)}
-                          />
+                          <DeleteIconComponent onDeleteClick={e => onDeleteInspirationClick(e, inspiration.id)} />
                         }
                         ref={ref => {
                           if (inspirations.length === index + 1) {
@@ -153,17 +189,16 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
               {hasMore || isLoading || noMoreComponent}
             </div>
             <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
-              {chosenInspirationId && chosenInspirationId && (
+              {chosenInspirationId && (
                 <FlexBox>
                   <InspirationDetails
                     inspirationId={chosenInspirationId}
                     onClose={closeInspirationDetails}
                     isOpened={isDetailsOpened}
                     deleteComponent={
-                      <DeleteIconComponent
-                        onDeleteInspirationClick={e => onDeleteInspirationClick(e, chosenInspirationId)}
-                      />
+                      <DeleteIconComponent onDeleteClick={e => onDeleteInspirationClick(e, chosenInspirationId)} />
                     }
+                    onDeleteComment={onDeleteComment}
                   />
                 </FlexBox>
               )}

@@ -12,6 +12,7 @@ import { Button } from '~/components/Button';
 import apiClient, { RatingSettingDto, RatingSettingDtoUserRoleEnum } from '~/api-client';
 import Loader from '~/components/Loader';
 import { toast } from 'react-toastify';
+import { Heading4 } from '~/components/Text';
 
 export const ReviewButton = styled.button`
   display: flex;
@@ -172,17 +173,7 @@ export const RatingSettings = styled((props: RatingSettingsProps) => {
 
   return (
     <div className={props.className}>
-      <Box
-        as="button"
-        transform="scale(1.2)"
-        paddingLeft="0.5rem"
-        onClick={handleSettingsClick}
-        // ref={ref => (ratingSettingsButton.current = ref)}
-        // data-tip
-        // data-event="click"
-        // data-iscapture="true"
-        // data-scroll-hide="false">
-      >
+      <Box as="button" transform="scale(1.2)" paddingLeft="0.5rem" onClick={handleSettingsClick}>
         <FiSettings />
       </Box>
       {ratingSettingWindowOpen && (
@@ -192,55 +183,59 @@ export const RatingSettings = styled((props: RatingSettingsProps) => {
           ) : ratingSettings === null ? (
             <Loader />
           ) : (
-            <FormProvider {...methods}>
-              <form onSubmit={methods.handleSubmit(onSubmit)}>
-                {[
-                  {
-                    label: 'Waga dla roli Student:',
-                    formId: RatingSettingDtoUserRoleEnum.Student,
-                    defaultValue: ratingSettings.filter(set => set.userRole === RatingSettingDtoUserRoleEnum.Student)[0]
-                      .weight
-                  },
-                  {
-                    label: 'Waga dla roli Wykładowca:',
-                    formId: RatingSettingDtoUserRoleEnum.Employee,
-                    defaultValue: ratingSettings.filter(
-                      set => set.userRole === RatingSettingDtoUserRoleEnum.Employee
-                    )[0].weight
-                  },
-                  {
-                    label: 'Waga dla roli Komisja:',
-                    formId: RatingSettingDtoUserRoleEnum.Committee,
-                    defaultValue: ratingSettings.filter(
-                      set => set.userRole === RatingSettingDtoUserRoleEnum.Committee
-                    )[0].weight
-                  },
-                  {
-                    label: 'Waga dla roli Admin:',
-                    formId: RatingSettingDtoUserRoleEnum.Admin,
-                    defaultValue: ratingSettings.filter(set => set.userRole === RatingSettingDtoUserRoleEnum.Admin)[0]
-                      .weight
-                  }
-                ].map(el => {
-                  return (
-                    <FormRow
-                      key={JSON.stringify(el)}
-                      inputWidth={'100px'}
-                      label={el.label}
-                      labelWidth={'120px'}
-                      formId={el.formId}
-                      customFormComponent={<NumberInput />}
-                      defaultValue={el.defaultValue}
-                      required
-                    />
-                  );
-                })}
-                <FlexBox className={'rating-settings__modal__buttons'}>
-                  <Button type={'button'} text={'Anuluj'} onClick={cancelRatingSettings} />
-                  <Button type={'submit'} text={'Ustaw'} primary />
-                </FlexBox>
-              </form>
-            </FormProvider>
+            <FlexBox flexDirection={'column'}>
+              <Heading4 style={{ marginLeft: '1rem' }}>Konfiguracja wag ocen</Heading4>
+              <FormProvider {...methods}>
+                <form onSubmit={methods.handleSubmit(onSubmit)}>
+                  {[
+                    {
+                      label: 'Waga dla roli Student:',
+                      formId: RatingSettingDtoUserRoleEnum.Student,
+                      defaultValue: ratingSettings.filter(
+                        set => set.userRole === RatingSettingDtoUserRoleEnum.Student
+                      )[0].weight
+                    },
+                    {
+                      label: 'Waga dla roli Wykładowca:',
+                      formId: RatingSettingDtoUserRoleEnum.Employee,
+                      defaultValue: ratingSettings.filter(
+                        set => set.userRole === RatingSettingDtoUserRoleEnum.Employee
+                      )[0].weight
+                    },
+                    {
+                      label: 'Waga dla roli Komisja:',
+                      formId: RatingSettingDtoUserRoleEnum.Committee,
+                      defaultValue: ratingSettings.filter(
+                        set => set.userRole === RatingSettingDtoUserRoleEnum.Committee
+                      )[0].weight
+                    },
+                    {
+                      label: 'Waga dla roli Admin:',
+                      formId: RatingSettingDtoUserRoleEnum.Admin,
+                      defaultValue: ratingSettings.filter(set => set.userRole === RatingSettingDtoUserRoleEnum.Admin)[0]
+                        .weight
+                    }
+                  ].map(el => {
+                    return (
+                      <FormRow
+                        key={JSON.stringify(el)}
+                        inputWidth={'100px'}
+                        label={el.label}
+                        labelWidth={'120px'}
+                        formId={el.formId}
+                        customFormComponent={<NumberInput />}
+                        defaultValue={el.defaultValue}
+                        required
+                      />
+                    );
+                  })}
+                  <FlexBox className={'rating-settings__modal__buttons'}>
+                    <Button type={'button'} text={'Anuluj'} onClick={cancelRatingSettings} />
+                    <Button type={'submit'} text={'Ustaw'} primary />
+                  </FlexBox>
+                </form>
+              </FormProvider>
+            </FlexBox>
           )}
         </FlexBox>
       )}

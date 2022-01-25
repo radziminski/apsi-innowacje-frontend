@@ -4,48 +4,63 @@ import React from 'react';
 import styled from 'styled-components';
 import { Heading5 } from '~/components/Text';
 import { HorizontalRuler } from '~/components/HorizontalRuler';
-import { IdeaDto } from '~/api-client';
+import { DecisionsGridCommonProps } from '~/pages/dashboard/decisions/DecisionsPage';
+import { useIdeasGrid } from '~/pages/dashboard/decisions/grids/useIdeasGrid';
 
-interface MobileDecisionsGridProps {
-  ideas: IdeaDto[];
-  className?: string;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface MobileDecisionsGridProps extends DecisionsGridCommonProps {}
 
 export const MobileDecisionsGrid = styled((props: MobileDecisionsGridProps) => {
+  const [onClickAccept, onClickDecline, onRowClick] = useIdeasGrid(props);
+
   return (
     <div className={props.className}>
       <FlexBox className={'decisions-grid'} flexDirection={'column'}>
-        {Array(4)
-          .fill(1)
-          .map((el, index, list) => (
-            <FlexBox className={'decisions-grid__item'} key={index} flexDirection={'column'}>
-              <div>
-                <Heading5 style={{ display: 'inline' }}>Tytuł:</Heading5>
-                <span className={'decisions-grid__item-title'}>
-                  {' '}
-                  Tabelka z ratingiem i możliwościami Accept/Decline
-                </span>
-              </div>
-              <div>
-                <Heading5 style={{ display: 'inline' }}>Ocena komisji:</Heading5> 25/50
-              </div>
-              <div>
-                <Heading5 style={{ display: 'inline' }}>Ocena użytkowników:</Heading5> 4.5/5
-              </div>
-              <FlexBox alignItems={'center'} justifyContent={'flex-start'}>
-                <Heading5 style={{ display: 'inline' }}>Decyzja: </Heading5>
-                <Button className={'button-accept'}>Akceptuj</Button>
-                <Button className={'button-decline'}>Odrzuć</Button>
-              </FlexBox>
-              {index !== list.length - 1 && (
-                <>
-                  <Box padding={'0.5rem 0'} />
-                  <HorizontalRuler />
-                  <Box padding={'0.5rem 0'} />
-                </>
-              )}
+        {props.ideas.map((idea, index, list) => (
+          <FlexBox
+            className={'decisions-grid__item'}
+            key={index}
+            flexDirection={'column'}
+            onClick={() => onRowClick(idea)}>
+            <div>
+              <Heading5 style={{ display: 'inline' }}>Tytuł:</Heading5>
+              <span className={'decisions-grid__item-title'}> Tabelka z ratingiem i możliwościami Accept/Decline</span>
+            </div>
+            <div>
+              <Heading5 style={{ display: 'inline' }}>Ocena komisji:</Heading5> {idea.votesSum}/
+              {props.maxCommitteeScore}
+            </div>
+            <div>
+              <Heading5 style={{ display: 'inline' }}>Ocena użytkowników:</Heading5> 4.5/5
+            </div>
+            <FlexBox alignItems={'center'} justifyContent={'flex-start'}>
+              <Heading5 style={{ display: 'inline' }}>Decyzja: </Heading5>
+              <Button
+                className={'button-accept'}
+                onClick={e => {
+                  e.stopPropagation();
+                  onClickAccept(idea);
+                }}>
+                Akceptuj
+              </Button>
+              <Button
+                className={'button-decline'}
+                onClick={e => {
+                  e.stopPropagation();
+                  onClickDecline(idea);
+                }}>
+                Odrzuć
+              </Button>
             </FlexBox>
-          ))}
+            {index !== list.length - 1 && (
+              <>
+                <Box padding={'0.5rem 0'} />
+                <HorizontalRuler />
+                <Box padding={'0.5rem 0'} />
+              </>
+            )}
+          </FlexBox>
+        ))}
       </FlexBox>
     </div>
   );
@@ -55,6 +70,9 @@ export const MobileDecisionsGrid = styled((props: MobileDecisionsGridProps) => {
     text-align: left;
     width: 100%;
 
+    .decisions-grid__item:hover {
+      cursor: pointer;
+    }
     .decisions-grid__item > div {
       padding-bottom: 0.5rem;
     }

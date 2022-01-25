@@ -9,6 +9,7 @@ export interface InspirationDetailsProps {
   isOpened?: boolean;
   className?: string;
   deleteComponent: JSX.Element;
+  onDeleteComment: (commentId: number) => void;
 }
 
 export const InspirationDetails = (props: InspirationDetailsProps) => {
