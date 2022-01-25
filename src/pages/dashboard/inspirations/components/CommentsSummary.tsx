@@ -21,5 +21,6 @@ const CommentsSummaryBase = (props: CommentsSummaryProps) => {
 export const CommentsSummary = styled(CommentsSummaryBase)`
   span {
     margin: 0 5px;
+    transform: translateY(-2px);
   }
 `;

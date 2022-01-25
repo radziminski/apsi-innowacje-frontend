@@ -16,16 +16,33 @@ import { useSelector } from '~/store/hooks';
 import { IdeaDto } from '~/api-client/java/api';
 import { useDispatch } from 'react-redux';
 import { getIdeasBySubject } from '~/store/slices/CreateDecisionsIdeasSlice';
+import { CenteredLoader } from '~/components/Loader';
+import { IdeaDetailsModal } from '~/pages/dashboard/decisions/components/IdeaDetailsModal';
 
 const getFilteredOptions = (fetchedOptions: SelectOption[], inputValue: string) => {
   return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
 };
 
+export interface DecisionsGridCommonProps {
+  ideas: IdeaDto[];
+  maxCommitteeScore: number;
+  onIdeaClick: (idea: IdeaDto) => void;
+  onAccept: (idea: IdeaDto) => void;
+  onDecline: (idea: IdeaDto) => void;
+  className?: string;
+}
+
 export const DecisionsPage = styled((props: { className?: string }) => {
   const { isTab, isWideTab, isMobile } = useDevice();
   const [selectedSubject, setSelectedSubject] = React.useState<SelectOption | null>(null);
   const [ideas, setIdeas] = React.useState<IdeaDto[] | null>(null);
-  const { ideasBySubject } = useSelector(state => state.decisionsIdeas);
+  const [maxVotes, setMaxVotes] = React.useState<number | null>(null);
+  const [committeeMembers, setCommitteeMembers] = React.useState<number[] | null>(null);
+  const [ideaModalDetails, setIdeaModalDetails] = React.useState<IdeaDto | null>(null);
+  const [ideaModalVisible, setIdeaModalVisible] = React.useState<boolean>(false);
+  const { ideasBySubject, maxVotesBySubject, committeeMembersBySubject, isLoading } = useSelector(
+    state => state.decisionsIdeas
+  );
   const dispath = useDispatch();
   const fetchSubjects = React.useCallback(async (inputValue: string) => {
     const fetchedSubjects: SubjectDto[] = (await apiClient.getAllSubjectsUsingGET()).data;
@@ -50,24 +67,39 @@ export const DecisionsPage = styled((props: { className?: string }) => {
     if (selectedSubject === null) {
       setIdeas(null);
     } else {
-      const allIdeas = ideasBySubject[parseInt(selectedSubject.value)];
-      if (allIdeas) {
-        const filteredIdeas = ideasBySubject[parseInt(selectedSubject.value)].filter(
-          idea => idea.subjectId === parseInt(selectedSubject.value)
-        );
-        if (filteredIdeas) {
-          if (filteredIdeas.length > 0) {
-            setIdeas(filteredIdeas);
-          } else {
-            setIdeas([]);
-          }
-        }
+      const currentSubjectIdeas = ideasBySubject[parseInt(selectedSubject.value)];
+      const currentMaxVotes = maxVotesBySubject[parseInt(selectedSubject.value)];
+      const currentCommitteeMembers = committeeMembersBySubject[parseInt(selectedSubject.value)];
+      if (currentSubjectIdeas && currentMaxVotes && currentCommitteeMembers) {
+        setIdeas(currentSubjectIdeas);
+        setMaxVotes(currentMaxVotes);
+        setCommitteeMembers(currentCommitteeMembers);
       } else {
         dispath(getIdeasBySubject(parseInt(selectedSubject.value)));
         setIdeas(null);
+        setMaxVotes(null);
+        setCommitteeMembers(null);
       }
     }
   }, [ideasBySubject, selectedSubject]);
+
+  const onIdeaClick = React.useCallback((idea: IdeaDto) => {
+    setIdeaModalDetails(idea);
+    setIdeaModalVisible(true);
+  }, []);
+
+  const onIdeaDetailsModalClose = () => {
+    setIdeaModalVisible(false);
+    setTimeout(() => setIdeaModalDetails(null), 500);
+  };
+
+  const onAccept = React.useCallback(() => {
+    return;
+  }, []);
+
+  const onDecline = React.useCallback(() => {
+    return;
+  }, []);
 
   return (
     <DashboardContent
@@ -75,6 +107,7 @@ export const DecisionsPage = styled((props: { className?: string }) => {
       icon={<MdOutlineRateReview size={28} />}
       subTitle={'W tym panelu możesz akceptować bądź odrzucać pomysły ocenione przez komisję.'}>
       <div className={props.className}>
+        {<IdeaDetailsModal isVisible={ideaModalVisible} idea={ideaModalDetails} onClose={onIdeaDetailsModalClose} />}
         <FlexBox className="select-category">
           <span>Wybierz kategorię pomysłów: </span>
           <Box width={'300px'}>
@@ -93,15 +126,29 @@ export const DecisionsPage = styled((props: { className?: string }) => {
         </FlexBox>
         <Box paddingBottom={'1rem'} />
         {selectedSubject && <Paragraph fontWeight={500}>{`Pomysły w kategorii "${selectedSubject.label}":`}</Paragraph>}
-        {ideas && (
+        {ideas && maxVotes && committeeMembers ? (
           <Card>
             {(isWideTab && !isTab) || isMobile ? (
-              <MobileDecisionsGrid ideas={ideas} />
+              <MobileDecisionsGrid
+                ideas={ideas}
+                maxCommitteeScore={maxVotes * committeeMembers.length}
+                onIdeaClick={onIdeaClick}
+                onAccept={onAccept}
+                onDecline={onDecline}
+              />
             ) : (
-              <DesktopDecisionsGrid ideas={ideas} />
+              <DesktopDecisionsGrid
+                ideas={ideas}
+                maxCommitteeScore={maxVotes * committeeMembers.length}
+                onIdeaClick={onIdeaClick}
+                onAccept={onAccept}
+                onDecline={onDecline}
+              />
             )}
           </Card>
-        )}
+        ) : isLoading ? (
+          <CenteredLoader />
+        ) : null}
       </div>
     </DashboardContent>
   );

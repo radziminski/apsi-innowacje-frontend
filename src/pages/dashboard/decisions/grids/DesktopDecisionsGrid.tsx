@@ -3,14 +3,15 @@ import { Button } from '~/components/Button';
 import React from 'react';
 import styled from 'styled-components';
 import { Heading4 } from '~/components/Text';
-import { IdeaDto } from '~/api-client';
+import { DecisionsGridCommonProps } from '~/pages/dashboard/decisions/DecisionsPage';
+import { useIdeasGrid } from '~/pages/dashboard/decisions/grids/useIdeasGrid';
 
-interface DesktopDecisionsGridProps {
-  ideas: IdeaDto[];
-  className?: string;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface DesktopDecisionsGridProps extends DecisionsGridCommonProps {}
 
 export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) => {
+  const [onClickAccept, onClickDecline, onRowClick] = useIdeasGrid(props);
+
   return (
     <div className={props.className}>
       <table className={'decisions-grid'}>
@@ -36,12 +37,14 @@ export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) =>
         </thead>
         <tbody>
           {props.ideas.map((idea, index) => (
-            <tr key={index}>
+            <tr key={index} onClick={() => onRowClick(idea)}>
               <td className={'decisions-grid__idea-title'}>
                 <div>{idea.title}</div>
               </td>
               <td>
-                <div>25/50</div>
+                <div>
+                  {idea.votesSum}/{props.maxCommitteeScore}
+                </div>
               </td>
 
               <td>
@@ -51,10 +54,24 @@ export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) =>
               <td>
                 <FlexBox flexDirection={'column'}>
                   <div>
-                    <Button className={'button-accept'}>Akceptuj</Button>
+                    <Button
+                      className={'button-accept'}
+                      onClick={e => {
+                        e.stopPropagation();
+                        onClickAccept(idea);
+                      }}>
+                      Akceptuj
+                    </Button>
                   </div>
                   <div>
-                    <Button className={'button-decline'}>Odrzuć</Button>
+                    <Button
+                      className={'button-decline'}
+                      onClick={e => {
+                        e.stopPropagation();
+                        onClickDecline(idea);
+                      }}>
+                      Odrzuć
+                    </Button>
                   </div>
                 </FlexBox>
               </td>
@@ -71,9 +88,6 @@ export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) =>
     text-align: left;
     table-layout: fixed;
     width: 100%;
-    &:hover {
-      cursor: pointer;
-    }
     .decisions-grid__table-heading {
       padding-bottom: ${({ theme }) => theme.spacing.s};
     }
@@ -87,6 +101,9 @@ export const DesktopDecisionsGrid = styled((props: DesktopDecisionsGridProps) =>
       padding-left: 0.5rem;
     }
     tr:hover {
+      &:hover {
+        cursor: pointer;
+      }
       background-color: #eee;
     }
     .button-accept,

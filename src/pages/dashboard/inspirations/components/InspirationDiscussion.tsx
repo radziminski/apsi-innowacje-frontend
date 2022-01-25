@@ -6,13 +6,22 @@ import { DiscussionItem } from '~/pages/dashboard/inspirations/components/Discus
 import { CreateComment } from '~/pages/dashboard/inspirations/components/CreateComment';
 import { PostDto } from '~/api-client';
 import Text from '~/components/Text';
+import { DeleteIconComponent } from '~/pages/dashboard/inspirations/InspirationsPage';
 
 interface InspirationDiscussionProps {
   inspiration: PostDto;
+  deleteComponent: JSX.Element;
+  onDeleteComment: (commentId: number) => void;
   className?: string;
 }
 
 const InspirationDiscussionBase = (props: InspirationDiscussionProps) => {
+  const onDeleteCommentClick = (e, commentId: number) => {
+    e.stopPropagation();
+    // eslint-disable-next-line no-console
+    props.onDeleteComment(commentId);
+  };
+
   return (
     <FlexBox className={props.className}>
       <HorizontalRuler />
@@ -26,14 +35,20 @@ const InspirationDiscussionBase = (props: InspirationDiscussionProps) => {
       )}
       <FlexBox className={'inspiration-details__discussion-list'}>
         {props.inspiration.postAnswers &&
-          props.inspiration.postAnswers.map((comment, index) => (
-            <div key={comment.id}>
-              <DiscussionItem comment={comment} />
-              {props.inspiration.postAnswers?.length !== index + 1 && (
-                <HorizontalRuler className={'discussion__horizontal_ruler'} />
-              )}
-            </div>
-          ))}
+          props.inspiration.postAnswers
+            .filter(comment => comment.id)
+            .map((comment, index) => (
+              <div key={comment.id}>
+                <DiscussionItem
+                  comment={comment}
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  deleteComponent={<DeleteIconComponent onDeleteClick={e => onDeleteCommentClick(e, comment.id!)} />}
+                />
+                {props.inspiration.postAnswers?.length !== index + 1 && (
+                  <HorizontalRuler className={'discussion__horizontal_ruler'} />
+                )}
+              </div>
+            ))}
       </FlexBox>
     </FlexBox>
   );

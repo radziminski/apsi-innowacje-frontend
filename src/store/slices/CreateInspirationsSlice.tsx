@@ -18,7 +18,13 @@ export interface InspirationsState {
   isCreateCommentError: boolean;
   isCreateCommentSuccess: boolean;
   creatingCommentToastIds: React.ReactText[];
-  isRemovingInspiration: boolean;
+  isDeletingComment: boolean;
+  isDeleteCommentError: boolean;
+  isDeleteCommentSuccess: boolean;
+  deletingCommentToastIds: React.ReactText[];
+  deletingInspirationToastIds: React.ReactText[];
+  isDeletingInspiration: boolean;
+  isDeletingInspirationSuccess: boolean;
 }
 
 const initialState: InspirationsState = {
@@ -32,14 +38,40 @@ const initialState: InspirationsState = {
   isCreateCommentError: false,
   isCreateCommentSuccess: true,
   creatingCommentToastIds: [],
-  isRemovingInspiration: false
+  isDeletingComment: false,
+  isDeleteCommentError: false,
+  isDeleteCommentSuccess: false,
+  deletingCommentToastIds: [],
+  deletingInspirationToastIds: [],
+  isDeletingInspiration: false,
+  isDeletingInspirationSuccess: false
 };
 
-const CommentPendingMsg = () => {
+const CreateCommentPendingMsg = () => {
   return (
     <FlexBox>
       <span>
         Komentarz jest zapisywany... <Loader size={20} borderSize={2} />
+      </span>
+    </FlexBox>
+  );
+};
+
+const DeleteCommentPendingMsg = () => {
+  return (
+    <FlexBox>
+      <span>
+        Komentarz jest usuwany... <Loader size={20} borderSize={2} />
+      </span>
+    </FlexBox>
+  );
+};
+
+const DeleteInspirationPendingMsg = () => {
+  return (
+    <FlexBox>
+      <span>
+        Inspiracja jest usuwana... <Loader size={20} borderSize={2} />
       </span>
     </FlexBox>
   );
@@ -69,18 +101,12 @@ export const deleteInspiration = createAsyncThunk<{ responseStatus: number; insp
   }
 );
 
-interface CreateCommentThunkReturn {
-  responseStatus: number;
-  postId: number | undefined;
-}
-
-export const createComment = createAsyncThunk<CreateCommentThunkReturn, CreatePostAnswerDto>(
+export const createComment = createAsyncThunk<{ responseStatus: number }, CreatePostAnswerDto>(
   'comments/createComment',
   async (formData: CreatePostAnswerDto) => {
     const response = await apiClient.postCreatePostAnswerPost(formData);
     return {
-      responseStatus: response.status,
-      postId: formData.postId
+      responseStatus: response.status
     };
   }
 );
@@ -92,6 +118,24 @@ export const createCommentAndThenUpdateInspiration = createAsyncThunk<void, Requ
     await dispatch(getSingleInspiration(formData.postId));
   }
 );
+
+export const deleteComment = createAsyncThunk<{ responseStatus: number }, number>(
+  'inspirations/deleteComment',
+  async commentId => {
+    const response = await apiClient.postDeletePostAnswerDelete(commentId);
+    return {
+      responseStatus: response.status
+    };
+  }
+);
+
+export const deleteCommentAndThenUpdateInspiration = createAsyncThunk<
+  void,
+  { commentId: number; inspirationId: number }
+>('inspirations/deleteCommentAndUpdateInspiration', async ({ commentId, inspirationId }, { dispatch }) => {
+  await dispatch(deleteComment(commentId));
+  await dispatch(getSingleInspiration(inspirationId));
+});
 
 const createGetInspirationsReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
   builder.addCase(getInspirations.fulfilled, (state, action) => {
@@ -142,7 +186,11 @@ const createGetSingleInspirationReducers = (builder: ActionReducerMapBuilder<Ins
 
 const createDeleteSingleInspirationReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
   builder.addCase(deleteInspiration.fulfilled, (state, action) => {
+    if (state.deletingInspirationToastIds && state.deletingInspirationToastIds.length) {
+      toast.dismiss(state.deletingInspirationToastIds.pop());
+    }
     if (200 === action.payload.responseStatus) {
+      state.isDeletingInspirationSuccess = true;
       toast.success('Inspiracja została usunięta.', {
         position: 'top-right',
         autoClose: 5000,
@@ -154,6 +202,7 @@ const createDeleteSingleInspirationReducers = (builder: ActionReducerMapBuilder<
       });
       state.inspirations = state.inspirations.filter(insp => insp.id !== action.payload.inspirationId);
     } else {
+      state.isDeletingInspirationSuccess = false;
       toast.error('Wystąpił problem podczas usuwania inspiracji i nie została ona usunięta.', {
         position: 'top-right',
         autoClose: 5000,
@@ -164,12 +213,28 @@ const createDeleteSingleInspirationReducers = (builder: ActionReducerMapBuilder<
         progress: undefined
       });
     }
-    state.isRemovingInspiration = false;
+    state.isDeletingInspiration = false;
   });
   builder.addCase(deleteInspiration.pending, state => {
-    state.isRemovingInspiration = true;
+    state.isDeletingInspiration = true;
+    state.isDeletingInspirationSuccess = false;
+    state.deletingInspirationToastIds.push(
+      toast.info(<DeleteInspirationPendingMsg />, {
+        position: 'top-right',
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      })
+    );
   });
   builder.addCase(deleteInspiration.rejected, state => {
+    state.isDeletingInspirationSuccess = false;
+    if (state.deletingInspirationToastIds && state.deletingInspirationToastIds.length) {
+      toast.dismiss(state.deletingInspirationToastIds.pop());
+    }
     toast.error('Wystąpił problem podczas usuwania inspiracji i nie została ona usunięta.', {
       position: 'top-right',
       autoClose: 5000,
@@ -179,7 +244,7 @@ const createDeleteSingleInspirationReducers = (builder: ActionReducerMapBuilder<
       draggable: true,
       progress: undefined
     });
-    state.isRemovingInspiration = false;
+    state.isDeletingInspiration = false;
   });
 };
 
@@ -219,7 +284,7 @@ const createCreateCommentReducers = (builder: ActionReducerMapBuilder<Inspiratio
   });
   builder.addCase(createComment.pending, state => {
     state.creatingCommentToastIds.push(
-      toast.info(<CommentPendingMsg />, {
+      toast.info(<CreateCommentPendingMsg />, {
         position: 'top-right',
         autoClose: false,
         hideProgressBar: false,
@@ -253,6 +318,76 @@ const createCreateCommentReducers = (builder: ActionReducerMapBuilder<Inspiratio
   });
 };
 
+const createDeleteCommentReducers = (builder: ActionReducerMapBuilder<InspirationsState>) => {
+  builder.addCase(deleteComment.fulfilled, (state, action) => {
+    state.isDeletingComment = false;
+
+    if (state.deletingCommentToastIds && state.deletingCommentToastIds.length) {
+      toast.dismiss(state.deletingCommentToastIds.pop());
+    }
+
+    if (action.payload.responseStatus === 200) {
+      toast.success('Komentarz został usunięty.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+      state.isDeleteCommentError = false;
+      state.isDeleteCommentSuccess = true;
+    } else {
+      toast.error('Wystąpił problem podczas usuwania komentarza.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+      state.isDeleteCommentError = true;
+      state.isDeleteCommentSuccess = false;
+    }
+  });
+  builder.addCase(deleteComment.pending, state => {
+    state.deletingCommentToastIds.push(
+      toast.info(<DeleteCommentPendingMsg />, {
+        position: 'top-right',
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      })
+    );
+    state.isDeletingComment = true;
+    state.isDeleteCommentError = false;
+    state.isDeleteCommentSuccess = false;
+  });
+  builder.addCase(deleteComment.rejected, (state, action) => {
+    state.isDeleteCommentError = true;
+    state.isDeletingComment = false;
+    state.isDeleteCommentSuccess = false;
+    state.error = action.error;
+    if (state.deletingCommentToastIds && state.deletingCommentToastIds.length) {
+      toast.dismiss(state.deletingCommentToastIds.pop());
+    }
+    toast.error('Wystąpił problem podczas usuwania komentarza i nie został on usunięty.', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined
+    });
+  });
+};
+
 export const inspirationsSlice = createSlice({
   name: 'inspirations',
   initialState,
@@ -261,6 +396,7 @@ export const inspirationsSlice = createSlice({
     createGetInspirationsReducers(builder);
     createGetSingleInspirationReducers(builder);
     createCreateCommentReducers(builder);
+    createDeleteCommentReducers(builder);
     createDeleteSingleInspirationReducers(builder);
   }
 });

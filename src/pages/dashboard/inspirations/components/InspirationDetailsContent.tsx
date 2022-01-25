@@ -15,6 +15,8 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
   const { isTab } = useDevice();
   const { inspirationId, onClose, className } = props;
   const inspiration = useSelector(state => state.inspirations.inspirations.find(ins => ins.id === inspirationId));
+  const { currentUser } = useSelector(state => state.user);
+  const canBeDeleted = inspiration?.author?.id == currentUser?.id;
 
   return (
     <Card className={className}>
@@ -25,12 +27,17 @@ const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isO
               authorInfo={inspiration.author}
               date={inspiration.date ? parseISO(inspiration.date) : new Date()}
               deleteComponent={props.deleteComponent}
+              canBeDeleted={canBeDeleted}
             />
             <AiOutlineClose size={isTab ? 35 : 25} onClick={onClose} />
           </FlexBox>
           <InspirationTitle title={inspiration.title} />
           <InspirationContent inspiration={inspiration} />
-          <InspirationDiscussion inspiration={inspiration} />
+          <InspirationDiscussion
+            inspiration={inspiration}
+            deleteComponent={props.deleteComponent}
+            onDeleteComment={props.onDeleteComment}
+          />
         </>
       )}
     </Card>
