@@ -6,6 +6,8 @@ import React from 'react';
 import { FlexBox } from '~/components/Box';
 import Loader from '~/components/Loader';
 import { toast } from 'react-toastify';
+import parseISO from 'date-fns/parseISO';
+import compareDesc from 'date-fns/compareDesc';
 
 export interface InspirationsState {
   inspirations: PostDto[];
@@ -85,7 +87,7 @@ export const getSingleInspiration = createAsyncThunk<PostDto, number>('inspirati
 export const getInspirations = createAsyncThunk<PostDto[], PageableApiArgs>(
   'inspirations/getAll',
   async (args: PageableApiArgs) => {
-    const response = await apiClient.postGetAllGet(args.page, args.count);
+    const response = await apiClient.postGetAllGet(true, true, args.page, args.count);
     return response.data;
   }
 );
@@ -168,6 +170,10 @@ const createGetSingleInspirationReducers = (builder: ActionReducerMapBuilder<Ins
     } else {
       state.inspirations = [...state.inspirations, action.payload];
     }
+    // Additional sorting when new inspiration is added ad hoc
+    state.inspirations.sort((left, right) =>
+      left.date ? (right.date ? compareDesc(parseISO(left.date), parseISO(right.date)) : -1) : 1
+    );
     state.isLoading = false;
     state.isError = false;
     state.error = null;

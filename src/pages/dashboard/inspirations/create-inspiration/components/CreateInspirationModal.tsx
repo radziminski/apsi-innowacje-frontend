@@ -11,12 +11,13 @@ import { ContentEditor } from '~/pages/dashboard/inspirations/create-inspiration
 import { Heading3 } from '~/components/Text';
 import { AxiosResponse } from 'axios';
 import apiClient, { CreatePostDto } from '~/api-client';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '~/store/store';
 import { FormRow } from '~/components/forms/FormRow';
 import { toast } from 'react-toastify';
 import { RequestStatus } from '~/constants/constants';
 import { InspirationRequestPendingModal } from './InspirationRequestPendingModal';
+import { getSingleInspiration } from '~/store/slices/CreateInspirationsSlice';
 
 require('suneditor/dist/css/suneditor.min.css');
 
@@ -37,6 +38,7 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
   const methods = useForm({
     resolver: yupResolver(schema)
   });
+  const dispatch = useDispatch();
 
   const promptCloseModal = React.useCallback(() => {
     setPromptModalVisible(true);
@@ -91,6 +93,8 @@ const CreateInspirationModalBase = (props: CreateInspirationModalProps) => {
               progress: undefined
             });
             setRequestStatus('success');
+            const inspirationId = response.data;
+            dispatch(getSingleInspiration(inspirationId));
           } else {
             setRequestStatus('error');
             toastError();
