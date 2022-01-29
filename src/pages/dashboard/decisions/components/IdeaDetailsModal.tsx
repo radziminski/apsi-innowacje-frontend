@@ -51,7 +51,7 @@ export const IdeaDetailsModal = styled((props: IdeaDetailsModalProps) => {
             </div>
             <div>
               <Paragraph fontWeight={500}>Autor:</Paragraph>
-              {props.idea.anonymous ? 'Anonimow' : props.idea.id ? props.idea.id : 'Nieznany'}
+              {props.idea.anonymous ? 'Anonimowy' : props.idea.id ? props.idea.id : 'Nieznany'}
             </div>
           </FlexBox>
         </div>

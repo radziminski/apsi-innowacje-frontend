@@ -2,8 +2,8 @@ import React from 'react';
 import { IdeaDto } from '~/api-client';
 import { DecisionsGridCommonProps } from '~/pages/dashboard/decisions/DecisionsPage';
 
-export const useIdeasGrid = (
-  props: Pick<DecisionsGridCommonProps, 'onAccept' | 'onDecline' | 'onIdeaClick'>
+export const useIdeasDecisionsGrid = (
+  props: Pick<DecisionsGridCommonProps, 'onAccept' | 'onDecline' | 'onRequestForDetails' | 'onPutAway'>
 ): ((idea: IdeaDto) => void)[] => {
   const onClickAccept = React.useCallback(
     (idea: IdeaDto) => {
@@ -19,12 +19,19 @@ export const useIdeasGrid = (
     [props.onDecline]
   );
 
-  const onRowClick = React.useCallback(
+  const onClickPutAway = React.useCallback(
     (idea: IdeaDto) => {
-      props.onIdeaClick(idea);
+      props.onPutAway(idea);
     },
-    [props.onIdeaClick]
+    [props.onPutAway]
   );
 
-  return [onClickAccept, onClickDecline, onRowClick];
+  const onClickRequestForDetails = React.useCallback(
+    (idea: IdeaDto) => {
+      props.onRequestForDetails(idea);
+    },
+    [props.onRequestForDetails]
+  );
+
+  return [onClickAccept, onClickDecline, onClickPutAway, onClickRequestForDetails];
 };
