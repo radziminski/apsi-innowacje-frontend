@@ -1,56 +1,43 @@
 import Box, { FlexBox } from '~/components/Box';
-import { Button } from '~/components/Button';
 import React from 'react';
 import styled from 'styled-components';
 import { Heading5 } from '~/components/Text';
 import { HorizontalRuler } from '~/components/HorizontalRuler';
 import { DecisionsGridCommonProps } from '~/pages/dashboard/decisions/DecisionsPage';
-import { useIdeasGrid } from '~/pages/dashboard/decisions/grids/useIdeasGrid';
+import { IdeaDto } from '~/api-client';
+import { StatusBadge } from '~/pages/dashboard/decisions/components/StatusBadge';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface MobileDecisionsGridProps extends DecisionsGridCommonProps {}
-
-export const MobileDecisionsGrid = styled((props: MobileDecisionsGridProps) => {
-  const [onClickAccept, onClickDecline, onRowClick] = useIdeasGrid(props);
+export const MobileDecisionsGrid = styled((props: DecisionsGridCommonProps) => {
+  const onRowClick = React.useCallback(
+    (idea: IdeaDto) => {
+      props.onIdeaClick(idea);
+    },
+    [props.onIdeaClick]
+  );
 
   return (
     <div className={props.className}>
       <FlexBox className={'decisions-grid'} flexDirection={'column'}>
         {props.ideas.map((idea, index, list) => (
-          <FlexBox
-            className={'decisions-grid__item'}
-            key={index}
-            flexDirection={'column'}
-            onClick={() => onRowClick(idea)}>
+          <FlexBox className={'decisions-grid__item'} key={index} flexDirection={'column'}>
             <div>
-              <Heading5 style={{ display: 'inline' }}>Tytuł:</Heading5>
-              <span className={'decisions-grid__item-title'}> Tabelka z ratingiem i możliwościami Accept/Decline</span>
+              <Heading5 style={{ display: 'inline' }}>Tytuł: </Heading5>
+              <span onClick={() => onRowClick(idea)} className={'decisions-grid__item-title'}>
+                {idea.title || 'Tytuł nieznany'}
+              </span>
             </div>
             <div>
-              <Heading5 style={{ display: 'inline' }}>Ocena komisji:</Heading5> {idea.votesSum}/
-              {props.maxCommitteeScore}
+              <Heading5 style={{ display: 'inline' }}>Ocena komisji:</Heading5> {idea.votesSum || '-'}/
+              {props.maxCommitteeScore || '-'}
             </div>
             <div>
-              <Heading5 style={{ display: 'inline' }}>Ocena użytkowników:</Heading5> 4.5/5
+              <Heading5 style={{ display: 'inline' }}>Ocena użytkowników:</Heading5> {idea.rating || '-'}/5
             </div>
             <FlexBox alignItems={'center'} justifyContent={'flex-start'}>
               <Heading5 style={{ display: 'inline' }}>Decyzja: </Heading5>
-              <Button
-                className={'button-accept'}
-                onClick={e => {
-                  e.stopPropagation();
-                  onClickAccept(idea);
-                }}>
-                Akceptuj
-              </Button>
-              <Button
-                className={'button-decline'}
-                onClick={e => {
-                  e.stopPropagation();
-                  onClickDecline(idea);
-                }}>
-                Odrzuć
-              </Button>
+              <FlexBox marginX={'0.5rem'} width={'100%'}>
+                {idea.status && <StatusBadge idea={idea} gridProps={props} />}
+              </FlexBox>
             </FlexBox>
             {index !== list.length - 1 && (
               <>
@@ -65,14 +52,11 @@ export const MobileDecisionsGrid = styled((props: MobileDecisionsGridProps) => {
     </div>
   );
 })`
+  width: 100%;
   .decisions-grid {
-    max-width: 100%;
     text-align: left;
     width: 100%;
 
-    .decisions-grid__item:hover {
-      cursor: pointer;
-    }
     .decisions-grid__item > div {
       padding-bottom: 0.5rem;
     }
@@ -81,40 +65,6 @@ export const MobileDecisionsGrid = styled((props: MobileDecisionsGridProps) => {
       text-decoration: underline;
       &:hover {
         cursor: pointer;
-      }
-    }
-    .button-accept,
-    .button-decline {
-      height: 1rem;
-      width: 100%;
-      min-width: 0;
-      max-width: 130px;
-      margin-left: 0.5rem;
-    }
-
-    .button-accept {
-      background-color: ${({ theme }) => theme.colors.accent4};
-      color: ${({ theme }) => theme.colors.white};
-
-      &:hover {
-        background-color: #009730;
-      }
-
-      &:active {
-        background-color: #006725;
-      }
-    }
-
-    .button-decline {
-      background-color: #ff0000;
-      color: ${({ theme }) => theme.colors.white};
-
-      &:hover {
-        background-color: #dd0000;
-      }
-
-      &:active {
-        background-color: #bb0000;
       }
     }
   }
