@@ -16,6 +16,7 @@ import { RatingSettings, ReviewButton } from './parts';
 
 interface Props {
   idea: IdeaDto;
+  votingMode?: boolean;
 }
 
 const getStatusString = (status: IdeaDtoStatusEnum) => {
@@ -33,7 +34,7 @@ const getStatusString = (status: IdeaDtoStatusEnum) => {
   }
 };
 
-export const IdeaCard: React.FC<Props> = ({ idea }) => {
+export const IdeaCard: React.FC<Props> = ({ idea, votingMode }) => {
   const [newReviewModalOpened, setNewReviewModalOpened] = useState(false);
   const [reviewsModalOpened, setReviewsModalOpened] = useState(false);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
@@ -69,9 +70,12 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
   }, [idea, deleteModalOpened, deletedIdeas]);
 
   const canBeDeleted =
-    idea.authorId == currentUser?.id || ((currentUser && currentUser.userRole === UserRole.Admin) as boolean);
-  const canBeBlocked = currentUser?.userRole && [UserRole.Admin, UserRole.Committee].includes(currentUser?.userRole);
+    !votingMode &&
+    (idea.authorId == currentUser?.id || ((currentUser && currentUser.userRole === UserRole.Admin) as boolean));
+
+  const canBeBlocked = currentUser?.userRole && [UserRole.Admin].includes(currentUser?.userRole);
   const isAdmin = currentUser?.userRole && UserRole.Admin === currentUser?.userRole;
+  const canBeReviewed = !votingMode;
 
   if (idea.id && deletedIdeas.includes(idea.id)) return null;
 
@@ -103,7 +107,7 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
                 </FlexBox>
               </Box>
             </FlexBox>
-            {!idea.alreadyReviewed && (
+            {!idea.alreadyReviewed && canBeReviewed && (
               <ReviewButton onClick={onAddReview}>
                 <AiFillStar />
                 <Box marginRight="0.25rem" />

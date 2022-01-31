@@ -1,69 +1,106 @@
 /* eslint-disable */
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { MdOutlineRateReview } from 'react-icons/md';
 import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import 'suneditor/dist/css/suneditor.min.css';
-import { CenteredLoader } from '~/components/Loader';
 import Box, { FlexBox } from '~/components/Box';
-import VotingOptions from '~/components/VotingOptions';
-import VotingList from '~/components/VotingList';
-import { Heading3 } from '~/components/Text';
-import { VotingConsole } from '~/components/VotingOptions/parts';
-import { Button } from '~/components/Button';
-import { DecisionDto, DecisionDtoIdeaStatusEnum, IdeaDtoStatusEnum } from '~/api-client';
-import { TextInput } from '~/components/forms/FormTextInput/TextInput';
-import { voteIdea } from '~/store/slices/CreateVoteSlice';
+import { useSelector } from '~/store/hooks';
+import { getIdeas, getSubjects, getVotesForSubject } from '~/store/slices/CreateIdeasSlice';
+import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useDispatch } from 'react-redux';
-import { getIdeas } from '~/store/slices/CreateIdeasSlice';
+import { SubjectButton } from './parts';
+import { Heading6 } from '~/components/Text';
+import { COLORS } from '~/styles/variables';
+import IdeaCard from '~/components/IdeaCard';
 
 export const VotingPage: React.FC = () => {
-  const SunEditor = React.lazy(() => import('suneditor-react'));
-
-  const [selectedIdea, setSelectedIdea] = useState<number | undefined>(undefined);
-  const [description, setDescription] = useState('');
-  const [votedOption, setVotedOption] = useState<DecisionDtoIdeaStatusEnum | undefined>(undefined);
+  const [selectedSubject, setSelectedSubject] = useState<number>();
+  const {
+    subjects,
+    isLoadingSubjects,
+    isSubjectsError,
+    ideas,
+    isLoading,
+    isError,
+    subjectVotes,
+    isLoadingVotes,
+    isVotesError
+  } = useSelector(state => state.ideas);
+  const { currentUser } = useSelector(state => state.user);
   const dispatch = useDispatch();
 
-  const selectIdea = (ideaId: number | undefined) => {
-    setSelectedIdea(ideaId);
-  };
+  const filteredSubjects = subjects?.filter(
+    subject => currentUser?.id && subject.committeeMembers?.includes(currentUser?.id)
+  );
+  const filteredIdeas = ideas?.filter(idea => idea.subjectId === selectedSubject);
 
-  const changeDescription = e => {
-    setDescription(e.target.value);
-  };
+  useEffect(() => {
+    if (!subjects) dispatch(getSubjects());
+  }, [subjects]);
 
-  const voteOption = (option: DecisionDtoIdeaStatusEnum) => {
-    setVotedOption(option);
-  };
+  useEffect(() => {
+    if (!ideas) dispatch(getIdeas());
+  }, [ideas]);
 
-  const vote = async () => {
-    if (selectedIdea && votedOption) {
-      await dispatch(voteIdea({ ideaId: selectedIdea, decision: { ideaStatus: votedOption, description } }));
-      dispatch(getIdeas());
-      setSelectedIdea(undefined);
-      setVotedOption(undefined);
-      setDescription('');
+  useEffect(() => {
+    if (filteredSubjects) {
+      filteredSubjects.forEach(subject => {
+        if (subject.id && !subjectVotes[subject.id]) dispatch(getVotesForSubject(subject.id));
+      });
     }
-  };
+  }, [filteredSubjects]);
 
   return (
     <DashboardContent title="Głosowanie na pomysły" icon={<MdOutlineRateReview size={28} />}>
-      <FlexBox>
-        <Box flexGrow={1} width="1px">
-          <VotingList select={selectIdea} selectedIdeaId={selectedIdea} />
-        </Box>
-        <VotingConsole marginLeft="2rem">
-          <VotingOptions voteOption={voteOption} selected={votedOption} />
-          <Heading3>Wyjasnienie:</Heading3>
-          <Box margin=".7rem 0">
-            <TextInput onChange={changeDescription} value={description} />
-          </Box>
-          <FlexBox justifyContent="flex-end" margin=".7rem 0">
-            <Button text={'Zaglosuj'} onClick={vote} />
+      <FlexBox
+        alignItems={isLoadingSubjects || isSubjectsError ? 'center' : undefined}
+        flexDirection="column"
+        width="100%"
+        minHeight="30vh">
+        <AsyncContentContainer isLoading={isLoadingSubjects} isError={isSubjectsError}>
+          <Heading6 fontSize="0.85rem" fontWeight={600}>
+            Wybierz temat pomysłów do głosowania:
+          </Heading6>
+          <Box height="1rem" flexShrink={0} />
+          <FlexBox flexWrap="wrap" gap="1.5rem">
+            {filteredSubjects?.length ? (
+              filteredSubjects.map(subject => (
+                <Box key={subject.id}>
+                  <SubjectButton
+                    isSelected={subject.id === selectedSubject}
+                    onClick={() =>
+                      subject.id !== selectedSubject ? setSelectedSubject(subject.id) : setSelectedSubject(undefined)
+                    }>
+                    {subject.name}
+                  </SubjectButton>
+                </Box>
+              ))
+            ) : (
+              <Box marginY="25vh" textAlign="center" flexGrow={1}>
+                Brak tematów pomysłów do głosowania. Poproś administratora systemu o dostęp do danego tematu.
+              </Box>
+            )}
           </FlexBox>
-        </VotingConsole>
+          {!!filteredSubjects?.length && (
+            <Box marginTop="1.5rem">
+              {selectedSubject ? (
+                <AsyncContentContainer isLoading={isLoading || isLoadingVotes} isError={isError || isVotesError}>
+                  {filteredIdeas?.map(idea => (
+                    <Box>
+                      <IdeaCard idea={idea} votingMode />
+                    </Box>
+                  ))}
+                </AsyncContentContainer>
+              ) : (
+                <Box marginY="25vh" textAlign="center" flexGrow={1}>
+                  Wybierz temat pomysłów aby rozpocząć głosowanie.
+                </Box>
+              )}
+            </Box>
+          )}
+        </AsyncContentContainer>
       </FlexBox>
-    </DashboardContent >
+    </DashboardContent>
   );
 };
 
