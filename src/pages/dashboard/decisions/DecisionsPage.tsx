@@ -20,6 +20,7 @@ import { CenteredLoader } from '~/components/Loader';
 import { IdeaDetailsModal } from '~/pages/dashboard/decisions/components/IdeaDetailsModal';
 import ConfirmModal from '~/components/ConfirmModal';
 import { useDecisionsHandlers } from '~/pages/dashboard/decisions/hooks/useDecisionsHandlers';
+import { toast } from 'react-toastify';
 
 const getFilteredOptions = (fetchedOptions: SelectOption[], inputValue: string) => {
   return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
@@ -56,15 +57,31 @@ export const DecisionsPage = styled((props: { className?: string }) => {
   );
   const dispath = useDispatch();
   const fetchSubjects = React.useCallback(async (inputValue: string) => {
-    const fetchedSubjects: SubjectDto[] = (await apiClient.getAllSubjectsUsingGET()).data;
+    const response = await apiClient.getAllSubjectsUsingGET();
+    if (response.status === 200) {
+      const fetchedSubjects: SubjectDto[] = response.data;
 
-    const fetchedOptions = fetchedSubjects.map(subject => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      value: `${subject.id!}`,
-      label: subject.name ?? 'Nieznany',
-      details: subjectDTOAudienceToSelectText(subject.audience)
-    }));
-    return new Promise(resolve => resolve(getFilteredOptions(fetchedOptions, inputValue)));
+      const fetchedOptions = fetchedSubjects
+        .filter(subject => subject.done)
+        .map(subject => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          value: `${subject.id!}`,
+          label: subject.name ?? 'Nieznany',
+          details: subjectDTOAudienceToSelectText(subject.audience)
+        }));
+      return getFilteredOptions(fetchedOptions, inputValue);
+    } else {
+      toast.error('Wystąpił problem podczas pobierania tematów.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+      return new Promise(resolve => resolve(null));
+    }
   }, []);
 
   const onSelectSubject = React.useCallback(
@@ -147,15 +164,15 @@ export const DecisionsPage = styled((props: { className?: string }) => {
           />
         }
         <FlexBox className="select-category">
-          <span>Wybierz kategorię pomysłów: </span>
+          <span>Wybierz temat: </span>
           <Box width={'300px'}>
             <AsyncSelect
               loadOptions={fetchSubjects}
               cacheOptions
               defaultOptions
               styles={customSelectStyles(false)}
-              noOptionsMessage={() => 'Brak kategorii'}
-              loadingMessage={() => 'Ładowanie kategorii...'}
+              noOptionsMessage={() => 'Brak tematów'}
+              loadingMessage={() => 'Ładowanie tematów...'}
               components={{ Option: CustomSubjectSelectOption }}
               onChange={onSelectSubject}
               placeholder={'Wybierz...'}
@@ -163,7 +180,7 @@ export const DecisionsPage = styled((props: { className?: string }) => {
           </Box>
         </FlexBox>
         <Box paddingBottom={'1rem'} />
-        {selectedSubject && <Paragraph fontWeight={500}>{`Pomysły w kategorii "${selectedSubject.label}":`}</Paragraph>}
+        {selectedSubject && <Paragraph fontWeight={500}>{`Pomysły w temacie "${selectedSubject.label}":`}</Paragraph>}
         {ideas && maxVotes && committeeMembers ? (
           <Card>
             {(isWideTab && !isTab) || isAdditionalBreakpointForDecisionsGrid ? (

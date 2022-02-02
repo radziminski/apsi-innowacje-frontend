@@ -26,11 +26,11 @@ const initialState: IdeasState = {
   decisionOnIdeaPendingToastIds: []
 };
 
-const AcceptIdeaPendingMsg = () => {
+const DecisionPendingMsg = () => {
   return (
     <FlexBox>
       <span>
-        Trwa akceptowanie... <Loader size={20} borderSize={2} />
+        Trwa przetwarzanie... <Loader size={20} borderSize={2} />
       </span>
     </FlexBox>
   );
@@ -214,7 +214,7 @@ const createMakeDecisionOnIdeaReducers = (builder: ActionReducerMapBuilder<Ideas
   });
   builder.addCase(makeDecisionOnIdea.pending, state => {
     state.decisionOnIdeaPendingToastIds.push(
-      toast.info(<AcceptIdeaPendingMsg />, {
+      toast.info(<DecisionPendingMsg />, {
         position: 'top-right',
         autoClose: false,
         hideProgressBar: false,

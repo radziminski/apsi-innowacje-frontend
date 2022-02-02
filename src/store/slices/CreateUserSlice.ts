@@ -6,17 +6,25 @@ import apiClient from '~/api-client';
 export interface UserState {
   isAuthenticated: boolean | null;
   currentUser: UserDto | null;
+  allUsers: UserDto[];
   isLoading: boolean;
   isError: boolean;
   error: SerializedError | null;
+  isLoadingAllUsers: boolean;
+  isErrorAllUsers: boolean;
+  errorAllUsers: SerializedError | null;
 }
 
 const initialState: UserState = {
   isAuthenticated: null,
+  allUsers: [],
   currentUser: null,
   isLoading: false,
   isError: false,
-  error: null
+  error: null,
+  isLoadingAllUsers: false,
+  isErrorAllUsers: false,
+  errorAllUsers: null
 };
 
 export const login = createAsyncThunk<LoggedUserDto, { username: string; password: string }>(
@@ -76,6 +84,32 @@ const createGetMeReducers = (builder: ActionReducerMapBuilder<UserState>) => {
   });
 };
 
+export const getAllUsers = createAsyncThunk<UserDto[] | null, void>('user/getAll', async () => {
+  const response = await apiClient.usersUsersGet('', 0, 10000);
+  return response.status === 200 ? response.data : null;
+});
+
+const createGetAllReducers = (builder: ActionReducerMapBuilder<UserState>) => {
+  builder.addCase(getAllUsers.fulfilled, (state, action) => {
+    if (action.payload !== null) {
+      state.allUsers = action.payload;
+    }
+    state.isLoadingAllUsers = false;
+    state.isErrorAllUsers = false;
+    state.errorAllUsers = null;
+  });
+  builder.addCase(getAllUsers.pending, state => {
+    state.isErrorAllUsers = false;
+    state.errorAllUsers = null;
+    state.isLoadingAllUsers = true;
+  });
+  builder.addCase(getAllUsers.rejected, (state, action) => {
+    state.isLoadingAllUsers = false;
+    state.isErrorAllUsers = true;
+    state.errorAllUsers = action.error;
+  });
+};
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -88,6 +122,7 @@ export const userSlice = createSlice({
   extraReducers: builder => {
     createLoginReducers(builder);
     createGetMeReducers(builder);
+    createGetAllReducers(builder);
   }
 });
 

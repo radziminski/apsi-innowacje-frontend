@@ -6,6 +6,7 @@ import {
   getDecisionsPath,
   getIdeasPath,
   getInspirationsPagePath,
+  getSubjectsOverviewPagePath,
   getVotingPath
 } from '~/constants/paths';
 import DashboardLayout from './layout';
@@ -23,6 +24,7 @@ import { UserRole } from '~/api-client';
 import { DecisionsPage } from '~/pages/dashboard/decisions/DecisionsPage';
 import { getMe } from '~/store/slices/CreateUserSlice';
 import { useDispatch } from 'react-redux';
+import { SubjectsOverviewPage } from '~/pages/dashboard/new-subject-page/SubjectsOverviewPage';
 
 export const DashboardRoutes: React.FC = (props: React.PropsWithChildren<{ className?: string }>) => {
   const dispatch = useDispatch();
@@ -51,6 +53,13 @@ export const DashboardRoutes: React.FC = (props: React.PropsWithChildren<{ class
             isLoading={isLoading}
           />
           <Route path={getInspirationsPagePath()} component={InspirationsPage} />
+          <ProtectedRoute
+            path={getSubjectsOverviewPagePath()}
+            component={SubjectsOverviewPage}
+            condition={isAdmin()}
+            fallbackPath={getIdeasPath()}
+            isLoading={isLoading}
+          />
           <Route path={getAccountDetailsPath()} component={AccountDetailsPage} />
           <Route>
             <Redirect to={getIdeasPath()} />
