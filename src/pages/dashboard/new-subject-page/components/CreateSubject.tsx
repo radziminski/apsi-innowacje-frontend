@@ -15,8 +15,8 @@ export const CreateSubject = styled((props: { className?: string }) => {
           <TextInput
             id={'create-subject__input'}
             type={'text'}
-            placeholder={'Prześlij pomysł'}
-            customClassName={'create-inspiration__text-input'}
+            placeholder={'Dodaj temat'}
+            customClassName={'create-subject__text-input'}
             disabled
           />
         </Card>
@@ -36,7 +36,7 @@ export const CreateSubject = styled((props: { className?: string }) => {
   .profile-picture {
     margin-right: ${({ theme }) => theme.spacing.s};
   }
-  .create-inspiration__text-input {
+  .create-subject__text-input {
     background-color: ${({ theme }) => theme.colors.lightGray};
     ::placeholder {
       color: black;
