@@ -72,18 +72,6 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     };
   }, []);
 
-  const toastError = (message: string) => {
-    toast.error(message, {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined
-    });
-  };
-
   const onSubmit = React.useCallback(
     async (data: CreateIdeaFormSchema) => {
       if (currentUser && currentUser.id) {
@@ -113,20 +101,20 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                   dispatch(getIdeas());
                 } else {
                   setRequestStatus('error');
-                  toastError('Niestety nie udało się zapisać załączników.');
+                  toast.error('Niestety nie udało się zapisać załączników.');
                 }
               })
               .catch(() => {
                 setRequestStatus('error');
-                toastError('Niestety nie udało się zapisać załączników.');
+                toast.error('Niestety nie udało się zapisać załączników.');
               });
           } else {
             setRequestStatus('error');
-            toastError('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
+            toast.error('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
           }
         } catch (e) {
           setRequestStatus('error');
-          toastError('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
+          toast.error('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
         }
         return;
       }
@@ -135,14 +123,22 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   );
 
   const fetchSubjects = React.useCallback(async (): Promise<SelectOption[]> => {
-    const fetchedSubjects: SubjectDto[] = (await apiClient.getAllSubjectsUsingGET()).data;
+    const response = await apiClient.getAllSubjectsUsingGET();
+    if (response.status === 200) {
+      const fetchedSubjects: SubjectDto[] = response.data;
 
-    return fetchedSubjects.map(subject => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      value: `${subject.id!}`,
-      label: subject.name ?? 'Nieznany',
-      details: subjectDTOAudienceToSelectText(subject.audience)
-    }));
+      return fetchedSubjects
+        .filter(subject => !subject.done)
+        .map(subject => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          value: `${subject.id!}`,
+          label: subject.name ?? 'Nieznany',
+          details: subjectDTOAudienceToSelectText(subject.audience)
+        }));
+    } else {
+      toast.error('Wystąpił problem podczas pobierania tematów.');
+      return [];
+    }
   }, []);
 
   return (
