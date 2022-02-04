@@ -148,6 +148,7 @@ export const CreateSubjectModal = styled((props: CreateSubjectModalProps) => {
                       formId={'name'}
                       inputWidth={'80%'}
                       labelWidth={'20%'}
+                      placeholder={'Wpisz tytuł'}
                       maxLength="100"
                       required
                     />
