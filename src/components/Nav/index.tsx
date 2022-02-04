@@ -15,7 +15,8 @@ import {
   getInspirationsPagePath,
   getVotingPath,
   getAccountDetailsPath,
-  getDecisionsPath
+  getDecisionsPath,
+  getSubjectsOverviewPagePath
 } from '~/constants/paths';
 import { COLORS } from '~/styles/variables';
 import Box, { FlexBox } from '../Box';
@@ -27,6 +28,7 @@ import useDevice from '~/hooks/useDevice';
 import { UserRole } from '~/api-client';
 import { useSelector } from '~/store/hooks';
 import { clearIdeasState } from '~/store/slices/CreateIdeasSlice';
+import { IoDocumentsOutline } from 'react-icons/io5';
 
 const ICON_SIZE = 22;
 
@@ -40,6 +42,11 @@ const NAV_LINKS = [
     icon: <MdOutlineDashboardCustomize size={ICON_SIZE} />,
     to: getCreateIdeaPath(),
     label: 'Nowy pomysł'
+  },
+  {
+    icon: <IoDocumentsOutline size={ICON_SIZE} />,
+    to: getSubjectsOverviewPagePath(),
+    label: 'Przegląd tematów'
   },
   {
     icon: <MdOutlineRateReview size={ICON_SIZE} />,

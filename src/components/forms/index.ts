@@ -1,4 +1,4 @@
-import { COLORS } from '~/styles/variables';
+import { COLORS, Z_INDEX } from '~/styles/variables';
 
 export interface FormComponentPropsBase {
   id: string;
@@ -39,5 +39,9 @@ export const customSelectStyles = (isError: boolean) => ({
   placeholder: styles => ({
     ...styles,
     color: COLORS.lightGray
+  }),
+  menu: styles => ({
+    ...styles,
+    zIndex: Z_INDEX.modalFront
   })
 });

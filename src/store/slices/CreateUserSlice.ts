@@ -6,17 +6,27 @@ import apiClient from '~/api-client';
 export interface UserState {
   isAuthenticated: boolean | null;
   currentUser: UserDto | null;
+  allUsers: UserDto[];
   isLoading: boolean;
   isError: boolean;
+  isUserAuthenticating: boolean;
   error: SerializedError | null;
+  isLoadingAllUsers: boolean;
+  isErrorAllUsers: boolean;
+  errorAllUsers: SerializedError | null;
 }
 
 const initialState: UserState = {
   isAuthenticated: null,
+  allUsers: [],
   currentUser: null,
-  isLoading: false,
+  isLoading: true,
   isError: false,
-  error: null
+  isUserAuthenticating: false,
+  error: null,
+  isLoadingAllUsers: false,
+  isErrorAllUsers: false,
+  errorAllUsers: null
 };
 
 export const login = createAsyncThunk<LoggedUserDto, { username: string; password: string }>(
@@ -68,11 +78,35 @@ const createGetMeReducers = (builder: ActionReducerMapBuilder<UserState>) => {
     state.error = null;
     state.isLoading = true;
   });
-  builder.addCase(getMe.rejected, (state, action) => {
+  builder.addCase(getMe.rejected, state => {
     state.isLoading = false;
     state.isAuthenticated = false;
-    state.isError = true;
-    state.error = action.error;
+  });
+};
+
+export const getAllUsers = createAsyncThunk<UserDto[] | null, void>('user/getAll', async () => {
+  const response = await apiClient.usersUsersGet('', 0, 10000);
+  return response.status === 200 ? response.data : null;
+});
+
+const createGetAllReducers = (builder: ActionReducerMapBuilder<UserState>) => {
+  builder.addCase(getAllUsers.fulfilled, (state, action) => {
+    if (action.payload !== null) {
+      state.allUsers = action.payload;
+    }
+    state.isLoadingAllUsers = false;
+    state.isErrorAllUsers = false;
+    state.errorAllUsers = null;
+  });
+  builder.addCase(getAllUsers.pending, state => {
+    state.isErrorAllUsers = false;
+    state.errorAllUsers = null;
+    state.isLoadingAllUsers = true;
+  });
+  builder.addCase(getAllUsers.rejected, (state, action) => {
+    state.isLoadingAllUsers = false;
+    state.isErrorAllUsers = true;
+    state.errorAllUsers = action.error;
   });
 };
 
@@ -82,15 +116,20 @@ export const userSlice = createSlice({
   reducers: {
     logout: state => {
       clearAuthTokensInStorage();
+      state.currentUser = null;
       state.isAuthenticated = false;
+    },
+    setUserAuthenticating: (state, action) => {
+      state.isUserAuthenticating = action.payload;
     }
   },
   extraReducers: builder => {
     createLoginReducers(builder);
     createGetMeReducers(builder);
+    createGetAllReducers(builder);
   }
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, setUserAuthenticating } = userSlice.actions;
 
 export default userSlice.reducer;

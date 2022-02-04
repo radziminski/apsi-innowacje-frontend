@@ -17,17 +17,17 @@ export const ProtectedRoute: React.FC<RouteProps & { condition: boolean; fallbac
       history.push(getLoginPath());
     }, [history]);
 
+    useAuthorizationInterceptor(onLogout);
+
     useEffect(() => {
       if (!isLoading && !condition) history.push(fallbackPath);
     }, [condition, isLoading]);
-
-    useAuthorizationInterceptor(onLogout);
 
     if (isLoading) {
       return <LoadingOverlay />;
     }
 
-    return <Route {...rest} />;
+    return condition ? <Route {...rest} /> : null;
   };
 
 export default ProtectedRoute;

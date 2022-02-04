@@ -1,6 +1,7 @@
 import { ReviewDto } from './../../api-client/java/api';
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import apiClient, { IdeaDto } from '~/api-client';
+import { toast } from 'react-toastify';
 
 export interface IdeasState {
   ideas: IdeaDto[] | null;
@@ -40,17 +41,23 @@ const initialState: IdeasState = {
   blockedIdeas: []
 };
 
-export const getIdeas = createAsyncThunk<IdeaDto[], void>('ideas/getAll', async () => {
+export const getIdeas = createAsyncThunk<IdeaDto[] | null, void>('ideas/getAll', async () => {
   const response = await apiClient.getAllIdeasUsingGET();
-  return response.data;
+  return response.status === 200 ? response.data : null;
 });
 
 const createGetIdeasReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(getIdeas.fulfilled, (state, action) => {
-    state.ideas = [...action.payload];
+    if (action.payload === null) {
+      state.isError = true;
+      state.error = null;
+      toast.error('Wystąpił problem podczas pobierania pomysłów.');
+    } else {
+      state.ideas = [...action.payload];
+      state.isError = false;
+      state.error = null;
+    }
     state.isLoading = false;
-    state.isError = false;
-    state.error = null;
   });
   builder.addCase(getIdeas.pending, state => {
     state.isError = false;
@@ -58,6 +65,7 @@ const createGetIdeasReducers = (builder: ActionReducerMapBuilder<IdeasState>) =>
     state.isLoading = true;
   });
   builder.addCase(getIdeas.rejected, (state, action) => {
+    toast.error('Wystąpił problem podczas pobierania pomysłów.');
     state.isLoading = false;
     state.isError = true;
     state.error = action.error;

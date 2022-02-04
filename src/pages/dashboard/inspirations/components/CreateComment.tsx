@@ -37,8 +37,6 @@ export const CreateComment = styled((props: CreateCommentProps) => {
 
   const handleUserKeyPress = React.useCallback((event: KeyboardEvent) => {
     if (event.code === 'Enter' && event.ctrlKey) {
-      // eslint-disable-next-line no-console
-      console.log('Enter');
       methods.handleSubmit(onSubmit)();
     }
   }, []);
