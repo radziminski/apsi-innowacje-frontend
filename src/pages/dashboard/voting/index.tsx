@@ -4,15 +4,21 @@ import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import 'suneditor/dist/css/suneditor.min.css';
 import Box, { FlexBox } from '~/components/Box';
 import { useSelector } from '~/store/hooks';
-import { getIdeas, getSubjects, getVotesForSubject } from '~/store/slices/CreateIdeasSlice';
+import {
+  getIdeas,
+  getSubjects,
+  getVotesForSubject,
+  voteForSubjectIdeas,
+  voteForUncategorizedIdea
+} from '~/store/slices/CreateIdeasSlice';
 import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useDispatch } from 'react-redux';
-import { SubjectButton, RatingButton, SendButton } from './parts';
+import { SubjectButton, RatingButton, SendButton, VoteButton } from './parts';
 import Text, { Heading4, Heading6 } from '~/components/Text';
 import IdeaCard from '~/components/IdeaCard';
 
 export const VotingPage: React.FC = () => {
-  const [selectedSubject, setSelectedSubject] = useState<number>();
+  const [selectedSubject, setSelectedSubject] = useState<number | null>();
   const [selectedVotes, setSelectedVotes] = useState<Record<number, number>>({});
 
   const {
@@ -67,6 +73,24 @@ export const VotingPage: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    setSelectedVotes({});
+  }, [selectedSubject]);
+
+  const sendVotes = () => {
+    const votes = {};
+    Object.keys(selectedVotes).map(key => {
+      const newKey = selectedVotes[key].toString();
+      votes[newKey] = parseInt(key);
+    });
+    if (selectedSubject) dispatch(voteForSubjectIdeas({ subjectId: selectedSubject, votes }));
+  };
+
+  const voteUncategorized = (ideaId: number | undefined, accept: boolean) => {
+    if (ideaId) dispatch(voteForUncategorizedIdea({ ideaId, accept }));
+    if (!ideas) dispatch(getIdeas());
+  };
+
   return (
     <DashboardContent title="Głosowanie na pomysły" icon={<MdOutlineRateReview size={28} />}>
       <FlexBox
@@ -98,6 +122,11 @@ export const VotingPage: React.FC = () => {
                 Brak tematów pomysłów do głosowania. Poproś administratora systemu o dostęp do danego tematu.
               </Box>
             )}
+            {
+              <SubjectButton isSelected={selectedSubject === null} onClick={() => setSelectedSubject(null)}>
+                Inne
+              </SubjectButton>
+            }
           </FlexBox>
           {!!currVotes && Object.keys(selectedVotes).length < currVotes && (
             <Box marginTop="2rem">
@@ -116,30 +145,47 @@ export const VotingPage: React.FC = () => {
 
           {!!filteredSubjects?.length && (
             <Box marginTop="1.5rem">
-              {selectedSubject ? (
+              {selectedSubject !== undefined ? (
                 <AsyncContentContainer isLoading={isLoading || isLoadingVotes} isError={isError || isVotesError}>
                   {filteredIdeas?.map(idea => (
                     <Box key={idea.id}>
                       <IdeaCard idea={idea} votingMode />
-                      <Box paddingLeft="1.5rem" marginBottom="3rem">
-                        <Heading4>Oceń pomysł: </Heading4>
-                        <FlexBox gap="1rem" marginTop="0.5rem">
-                          {Array.from(Array(currVotes).keys()).map(key => (
-                            <RatingButton
-                              key={key}
-                              onClick={() => idea.id && setVote(idea.id, key + 1)}
-                              isSelected={selectedVotes[key + 1] === idea.id}>
-                              <Text fontSize="1.15rem">{key + 1}</Text>
-                            </RatingButton>
-                          ))}
+                      {selectedSubject !== null ? (
+                        <Box paddingLeft="1.5rem" marginBottom="3rem">
+                          <Heading4>Oddaj Głos: </Heading4>
+                          <FlexBox gap="1rem" marginTop="0.5rem">
+                            {Array.from(Array(currVotes).keys()).map(key => (
+                              <RatingButton
+                                key={key}
+                                onClick={() => idea.id && setVote(idea.id, key + 1)}
+                                isSelected={selectedVotes[key + 1] === idea.id}>
+                                <Text fontSize="1.15rem">{key + 1}</Text>
+                              </RatingButton>
+                            ))}
+                          </FlexBox>
+                        </Box>
+                      ) : (
+                        <FlexBox justifyContent="space-evenly">
+                          <VoteButton
+                            onClick={() => {
+                              voteUncategorized(idea.id, true);
+                            }}>
+                            <Text fontSize="1.3rem">Yes</Text>
+                          </VoteButton>
+                          <VoteButton
+                            onClick={() => {
+                              voteUncategorized(idea.id, false);
+                            }}>
+                            <Text fontSize="1.3rem">No</Text>
+                          </VoteButton>
                         </FlexBox>
-                      </Box>
+                      )}
                     </Box>
                   ))}
 
                   {
-                    <Box opacity={Object.keys(selectedVotes).length ? 1 : 0} transition="all 0.2s">
-                      <SendButton>Wyślij oceny</SendButton>
+                    <Box opacity={Object.keys(selectedVotes).length === currVotes ? 1 : 0} transition="all 0.2s">
+                      <SendButton onClick={sendVotes}>Wyślij oceny</SendButton>
                     </Box>
                   }
                 </AsyncContentContainer>

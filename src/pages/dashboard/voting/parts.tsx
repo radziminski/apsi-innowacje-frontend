@@ -38,6 +38,28 @@ export const RatingButton = styled.button<{ isSelected?: boolean }>`
   }
 `;
 
+export const VoteButton = styled.button`
+  width: 10rem;
+  height: 2.5rem;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: 1rem;
+  border-radius: ${({ theme }) => theme.borderRadiuses.small};
+  background: ${({ theme }) => theme.colors.primary};
+  transition: all 0.2s;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryHover};
+    border: 2px solid ${({ theme }) => theme.colors.primaryHover};
+    color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
 export const SendButton = styled.button<{ disabled?: boolean }>`
   padding: 1rem 2rem;
   font-size: 1.15rem;

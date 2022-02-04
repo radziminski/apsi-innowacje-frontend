@@ -226,6 +226,54 @@ const getVotesForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasState>
   });
 };
 
+export const voteForSubjectIdeas = createAsyncThunk<void, { subjectId: number; votes: Record<string, number> }>(
+  'votes/{subjectId}', async args => {
+    const { subjectId, votes } = args;
+    await apiClient.voteBySubjectIdUsingPOST(subjectId, votes);
+  }
+);
+
+const createVoteForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(voteForSubjectIdeas.fulfilled, state => {
+    state.isLoadingSubjects = false;
+    state.isSubjectsError = false;
+  });
+  builder.addCase(voteForSubjectIdeas.pending, state => {
+    state.isLoadingSubjects = true;
+    state.isSubjectsError = false;
+    state.error = null;
+  });
+  builder.addCase(voteForSubjectIdeas.rejected, (state, action) => {
+    state.isLoadingSubjects = false;
+    state.isSubjectsError = true;
+    state.error = action.error;
+  });
+};
+
+export const voteForUncategorizedIdea = createAsyncThunk<void, { ideaId: number; accept: boolean }>(
+  'votes/ideas/uncategorized/{id}', async args => {
+    const {accept, ideaId} = args;
+    await apiClient.voteForUncategorizedIdeaUsingPOST(accept, ideaId);
+  }
+);
+
+const createVoteForUncategorizedIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(voteForUncategorizedIdea.fulfilled, state => {
+    state.isLoadingSubjects = false;
+    state.isSubjectsError = false;
+  });
+  builder.addCase(voteForUncategorizedIdea.pending, state => {
+    state.isLoadingSubjects = true;
+    state.isSubjectsError = false;
+    state.error = null;
+  });
+  builder.addCase(voteForUncategorizedIdea.rejected, (state, action) => {
+    state.isLoadingSubjects = false;
+    state.isSubjectsError = true;
+    state.error = action.error;
+  });
+};
+
 export const ideasSlice = createSlice({
   name: 'ideas',
   initialState,
@@ -264,6 +312,8 @@ export const ideasSlice = createSlice({
   extraReducers: builder => {
     createGetIdeasReducers(builder);
     createReviewIdeaReducers(builder);
+    createVoteForSubjectReducers(builder);
+    createVoteForUncategorizedIdeaReducers(builder);
     getIdeaReviewsReducers(builder);
     deleteIdeaReducers(builder);
     blockIdeaReducers(builder);
