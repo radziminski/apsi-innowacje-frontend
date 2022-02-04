@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getDashboardPath } from '~/constants/paths';
 import { useSelector } from '~/store/hooks';
-import { login } from '~/store/slices/CreateUserSlice';
+import { login, setUserAuthenticating } from '~/store/slices/CreateUserSlice';
 import { LoginLayout } from './layout';
 import { LoginForm, LoginFormData } from './components/LoginForm';
 import { Center } from '~/components/Box';
@@ -20,7 +20,14 @@ export const LoginPage: React.FC = () => {
     if (isAuthenticated) history.push(getDashboardPath());
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setUserAuthenticating(false));
+    };
+  }, []);
+
   const onSubmit = useCallback((data: LoginFormData) => {
+    dispatch(setUserAuthenticating(true));
     dispatch(login(data));
   }, []);
 

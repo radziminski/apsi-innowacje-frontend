@@ -10,7 +10,6 @@ import { InspirationCard } from '~/pages/dashboard/inspirations/components/Inspi
 import useDevice from '~/hooks/useDevice';
 import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import { CenteredLoader } from '~/components/Loader';
-import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useSelector } from '~/store/hooks';
 import { RootState } from '~/store/store';
 import {
@@ -43,6 +42,9 @@ export const DeleteIconComponent = styled((props: { onDeleteClick: (e) => void; 
 ))`
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
+  }
+  svg {
+    transform: translateY(3px);
   }
   transition: all 0.3s;
 `;
@@ -136,76 +138,71 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
 
   return (
     <DashboardContent title="Portal Inspiracji" icon={<BiMessageDetail size={28} />}>
-      <AsyncContentContainer
-        isLoading={inspirations === null && isLoading}
-        isError={inspirations === null && isError}
-        errorMessage="Wystąpił błąd z odświeżaniem pomysłów.">
-        {inspirations && (
-          <FlexBox className={props.className}>
-            <ConfirmModal
-              title={'Czy na pewno chcesz usunąć tę inspirację?'}
-              onConfirm={onDeleteInspirationModalConfirm}
-              onClose={onCloseDeleteInspirationModal}
-              isVisible={deleteInspirationModalVisible}
-            />
-            <ConfirmModal
-              title={'Czy na pewno chcesz usunąć ten komentarz?'}
-              onConfirm={onDeleteCommentModalConfirm}
-              onClose={onCloseDeleteCommentModal}
-              isVisible={deleteCommentModalVisible}
-            />
-            <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
-              <CreateInspiration />
-              <Box>
-                {inspirations.map((inspiration, index) =>
-                  inspiration.id ? (
-                    <CSSTransition
-                      in={chosenInspirationId === inspiration.id}
-                      key={inspiration.id}
-                      timeout={500}
-                      classNames="inspiration-list-item">
-                      <InspirationCard
-                        inspiration={inspiration}
-                        onClick={() => {
-                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                          onInspirationClick(inspiration.id!);
-                        }}
-                        deleteComponent={
-                          <DeleteIconComponent onDeleteClick={e => onDeleteInspirationClick(e, inspiration.id)} />
+      {inspirations && (
+        <FlexBox className={props.className}>
+          <ConfirmModal
+            title={'Czy na pewno chcesz usunąć tę inspirację?'}
+            onConfirm={onDeleteInspirationModalConfirm}
+            onClose={onCloseDeleteInspirationModal}
+            isVisible={deleteInspirationModalVisible}
+          />
+          <ConfirmModal
+            title={'Czy na pewno chcesz usunąć ten komentarz?'}
+            onConfirm={onDeleteCommentModalConfirm}
+            onClose={onCloseDeleteCommentModal}
+            isVisible={deleteCommentModalVisible}
+          />
+          <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
+            <CreateInspiration />
+            <Box>
+              {inspirations.map((inspiration, index) =>
+                inspiration.id ? (
+                  <CSSTransition
+                    in={chosenInspirationId === inspiration.id}
+                    key={inspiration.id}
+                    timeout={500}
+                    classNames="inspiration-list-item">
+                    <InspirationCard
+                      inspiration={inspiration}
+                      onClick={() => {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        onInspirationClick(inspiration.id!);
+                      }}
+                      deleteComponent={
+                        <DeleteIconComponent onDeleteClick={e => onDeleteInspirationClick(e, inspiration.id)} />
+                      }
+                      ref={ref => {
+                        if (inspirations.length === index + 1) {
+                          lastElementRef(ref);
                         }
-                        ref={ref => {
-                          if (inspirations.length === index + 1) {
-                            lastElementRef(ref);
-                          }
-                        }}
-                        customClassName={'inspiration-list-item'}
-                      />
-                    </CSSTransition>
-                  ) : null
-                )}
-              </Box>
-              {isLoading && loader}
-              {!isLoading && isError && errorComponent}
-              {hasMore || isLoading || noMoreComponent}
-            </div>
-            <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
-              {chosenInspirationId && (
-                <FlexBox>
-                  <InspirationDetails
-                    inspirationId={chosenInspirationId}
-                    onClose={closeInspirationDetails}
-                    isOpened={isDetailsOpened}
-                    deleteComponent={
-                      <DeleteIconComponent onDeleteClick={e => onDeleteInspirationClick(e, chosenInspirationId)} />
-                    }
-                    onDeleteComment={onDeleteComment}
-                  />
-                </FlexBox>
+                      }}
+                      customClassName={'inspiration-list-item'}
+                    />
+                  </CSSTransition>
+                ) : null
               )}
-            </div>
-          </FlexBox>
-        )}
-      </AsyncContentContainer>
+            </Box>
+            {isLoading && loader}
+            {!isLoading && isError && errorComponent}
+            {hasMore || isLoading || noMoreComponent}
+          </div>
+          <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
+            {chosenInspirationId && (
+              <FlexBox>
+                <InspirationDetails
+                  inspirationId={chosenInspirationId}
+                  onClose={closeInspirationDetails}
+                  isOpened={isDetailsOpened}
+                  deleteComponent={
+                    <DeleteIconComponent onDeleteClick={e => onDeleteInspirationClick(e, chosenInspirationId)} />
+                  }
+                  onDeleteComment={onDeleteComment}
+                />
+              </FlexBox>
+            )}
+          </div>
+        </FlexBox>
+      )}
     </DashboardContent>
   );
 };

@@ -68,6 +68,16 @@ const DecisionContextMenu = styled(
   transform: translate(-90%, 1.5rem);
   // right: 4.5rem;
 
+  animation: appear 0.3s;
+  @keyframes appear {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
   button[class*='button'] {
     height: 1.2rem;
     width: 130px;

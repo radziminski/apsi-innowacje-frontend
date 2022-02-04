@@ -138,15 +138,7 @@ const createGetSingleIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState
         [] as IdeaDto[]
       );
     } else {
-      toast.error('Wystąpił problem z pobraniem pomysłu.', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
+      toast.error('Wystąpił problem z pobraniem pomysłu.');
     }
   });
   builder.addCase(getSingleIdea.pending, state => {
@@ -154,15 +146,7 @@ const createGetSingleIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState
   });
   builder.addCase(getSingleIdea.rejected, state => {
     state.isSingleIdeaLoading = false;
-    toast.error('Wystąpił problem z pobraniem pomysłu.', {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined
-    });
+    toast.error('Wystąpił problem z pobraniem pomysłu.');
   });
 };
 
@@ -172,15 +156,7 @@ const createMakeDecisionOnIdeaReducers = (builder: ActionReducerMapBuilder<Ideas
       toast.dismiss(state.decisionOnIdeaPendingToastIds.pop());
     }
     if (!action.payload.success) {
-      toast.error('Wystąpił problem podczas przetwarzania decyzji.', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
+      toast.error('Wystąpił problem podczas przetwarzania decyzji.');
     } else {
       let textSuffix;
       switch (action.payload.decision.ideaStatus) {
@@ -200,15 +176,7 @@ const createMakeDecisionOnIdeaReducers = (builder: ActionReducerMapBuilder<Ideas
           'przetworzony';
       }
 
-      toast.success(`Pomysł został ${textSuffix}.`, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
+      toast.success(`Pomysł został ${textSuffix}.`);
     }
     state.isDecisionOnIdeaLoading = false;
   });

@@ -9,6 +9,7 @@ export interface UserState {
   allUsers: UserDto[];
   isLoading: boolean;
   isError: boolean;
+  isUserAuthenticating: boolean;
   error: SerializedError | null;
   isLoadingAllUsers: boolean;
   isErrorAllUsers: boolean;
@@ -19,8 +20,9 @@ const initialState: UserState = {
   isAuthenticated: null,
   allUsers: [],
   currentUser: null,
-  isLoading: false,
+  isLoading: true,
   isError: false,
+  isUserAuthenticating: false,
   error: null,
   isLoadingAllUsers: false,
   isErrorAllUsers: false,
@@ -76,11 +78,9 @@ const createGetMeReducers = (builder: ActionReducerMapBuilder<UserState>) => {
     state.error = null;
     state.isLoading = true;
   });
-  builder.addCase(getMe.rejected, (state, action) => {
+  builder.addCase(getMe.rejected, state => {
     state.isLoading = false;
     state.isAuthenticated = false;
-    state.isError = true;
-    state.error = action.error;
   });
 };
 
@@ -116,7 +116,11 @@ export const userSlice = createSlice({
   reducers: {
     logout: state => {
       clearAuthTokensInStorage();
+      state.currentUser = null;
       state.isAuthenticated = false;
+    },
+    setUserAuthenticating: (state, action) => {
+      state.isUserAuthenticating = action.payload;
     }
   },
   extraReducers: builder => {
@@ -126,6 +130,6 @@ export const userSlice = createSlice({
   }
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, setUserAuthenticating } = userSlice.actions;
 
 export default userSlice.reducer;

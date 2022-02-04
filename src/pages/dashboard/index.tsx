@@ -22,25 +22,29 @@ import ProtectedRoute from '~/components/ProtectedRoute';
 import { useSelector } from '~/store/hooks';
 import { UserRole } from '~/api-client';
 import { DecisionsPage } from '~/pages/dashboard/decisions/DecisionsPage';
-import { getMe } from '~/store/slices/CreateUserSlice';
-import { useDispatch } from 'react-redux';
 import { SubjectsOverviewPage } from '~/pages/dashboard/new-subject-page/SubjectsOverviewPage';
 
 export const DashboardRoutes: React.FC = (props: React.PropsWithChildren<{ className?: string }>) => {
-  const dispatch = useDispatch();
   const { currentUser, isLoading } = useSelector(state => state.user);
   const isAdmin = React.useCallback(() => {
-    if (currentUser === null) {
-      dispatch(getMe());
-      return false;
-    }
-    return currentUser?.userRole === UserRole.Admin;
+    return !!currentUser && currentUser?.userRole === UserRole.Admin;
   }, [currentUser]);
 
   return (
     <DashboardLayout>
       <div className={props.className}>
-        <ToastContainer newestOnTop />
+        <ToastContainer
+          {...{
+            newestOnTop: true,
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined
+          }}
+        />
         <Switch>
           <Route path={getIdeasPath()} component={IdeasPage} />
           <Route path={getCreateIdeaPath()} component={CreateIdeaPage} />
@@ -53,13 +57,7 @@ export const DashboardRoutes: React.FC = (props: React.PropsWithChildren<{ class
             isLoading={isLoading}
           />
           <Route path={getInspirationsPagePath()} component={InspirationsPage} />
-          <ProtectedRoute
-            path={getSubjectsOverviewPagePath()}
-            component={SubjectsOverviewPage}
-            condition={isAdmin()}
-            fallbackPath={getIdeasPath()}
-            isLoading={isLoading}
-          />
+          <Route path={getSubjectsOverviewPagePath()} component={SubjectsOverviewPage} />
           <Route path={getAccountDetailsPath()} component={AccountDetailsPage} />
           <Route>
             <Redirect to={getIdeasPath()} />

@@ -5,7 +5,7 @@ import { TextInput } from '~/components/forms/FormTextInput/TextInput';
 import { ProfilePicture } from '~/pages/dashboard/inspirations/components/ProfilePicture';
 import { CreateInspirationModal } from './components/CreateInspirationModal';
 
-const CreateInspirationBase = (props: { className?: string }) => {
+export const CreateInspiration = styled((props: { className?: string }) => {
   const [modalOpened, setModalOpened] = React.useState<boolean>(false);
 
   return (
@@ -25,9 +25,7 @@ const CreateInspirationBase = (props: { className?: string }) => {
       </label>
     </>
   );
-};
-
-export const CreateInspiration = styled(CreateInspirationBase)`
+})`
   align-items: center;
   cursor: pointer;
   border: 1px solid ${({ theme }) => theme.colors.primary}8A;

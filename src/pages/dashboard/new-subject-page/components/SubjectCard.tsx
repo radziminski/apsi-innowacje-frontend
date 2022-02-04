@@ -4,11 +4,10 @@ import Box, { Card, FlexBox } from '~/components/Box';
 import { Heading4, Heading5 } from '~/components/Text';
 import { IdeaDto, SubjectDto, SubjectDtoAudienceEnum, UserDto } from '~/api-client';
 import { useSelector } from '~/store/hooks';
-import { getIdeasBySubject } from '~/store/slices/CreateDecisionsIdeasSlice';
-import { useDispatch } from 'react-redux';
 
 interface SubjectCardProps {
   subject: SubjectDto;
+  ideas: IdeaDto[] | null;
   className?: string;
 }
 
@@ -23,25 +22,8 @@ const InfoRow = (props: { title: string; content: React.ReactNode }) => {
 
 export const SubjectCard = styled((props: SubjectCardProps) => {
   const { subject } = props;
-  const [ideasInSubject, setIdeasInSubject] = React.useState<IdeaDto[] | null>(null);
   const [committeeInSubject, setCommitteeInSubject] = React.useState<UserDto[]>([]);
-  const { ideasBySubject, isLoading } = useSelector(state => state.decisionsIdeas);
   const { allUsers, isLoadingAllUsers, isErrorAllUsers } = useSelector(state => state.user);
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    if (!subject.id || !ideasBySubject[subject.id] || ideasBySubject[subject.id].length === 0) {
-      if (subject.id && !isLoading) {
-        dispatch(getIdeasBySubject(subject.id));
-      }
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (subject.id && ideasBySubject[subject.id] && ideasBySubject[subject.id].length > 0) {
-      setIdeasInSubject(ideasBySubject[subject.id]);
-    }
-  }, [ideasBySubject]);
 
   React.useEffect(() => {
     if (allUsers.length > 0) {
@@ -81,7 +63,7 @@ export const SubjectCard = styled((props: SubjectCardProps) => {
       <InfoRow title={'Głosowanie'} content={subject.done ? 'Zakończone' : 'W trakcie'} />
       <InfoRow
         title={'Liczba zgłoszonych pomysłów'}
-        content={ideasInSubject ? `${ideasInSubject.length}` : 'Pobieranie...'}
+        content={props.ideas ? `${props.ideas.length}` : 'Pobieranie...'}
       />
       <InfoRow
         title={'Komisja'}

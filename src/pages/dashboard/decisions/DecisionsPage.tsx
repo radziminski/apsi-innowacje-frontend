@@ -57,31 +57,36 @@ export const DecisionsPage = styled((props: { className?: string }) => {
   );
   const dispath = useDispatch();
   const fetchSubjects = React.useCallback(async (inputValue: string) => {
-    const response = await apiClient.getAllSubjectsUsingGET();
-    if (response.status === 200) {
-      const fetchedSubjects: SubjectDto[] = response.data;
+    try {
+      const response = await apiClient.getAllSubjectsUsingGET();
+      if (response.status === 200) {
+        const fetchedSubjects: SubjectDto[] = response.data;
 
-      const fetchedOptions = fetchedSubjects
-        .filter(subject => subject.done)
-        .map(subject => ({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          value: `${subject.id!}`,
-          label: subject.name ?? 'Nieznany',
-          details: subjectDTOAudienceToSelectText(subject.audience)
-        }));
-      return getFilteredOptions(fetchedOptions, inputValue);
-    } else {
-      toast.error('Wystąpił problem podczas pobierania tematów.', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
-      return new Promise(resolve => resolve(null));
+        const fetchedOptions = fetchedSubjects
+          .filter(subject => subject.done)
+          .map(subject => ({
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            value: `${subject.id!}`,
+            label: subject.name ?? 'Nieznany',
+            details: subjectDTOAudienceToSelectText(subject.audience)
+          }));
+        return getFilteredOptions(fetchedOptions, inputValue);
+      } else {
+        toast.error('Wystąpił problem podczas pobierania tematów.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
+        return new Promise(resolve => resolve(null));
+      }
+    } catch (e) {
+      toast.error('Wystąpił problem podczas pobierania tematów.');
     }
+    return new Promise(resolve => resolve(null));
   }, []);
 
   const onSelectSubject = React.useCallback(
@@ -99,7 +104,13 @@ export const DecisionsPage = styled((props: { className?: string }) => {
       const currentMaxVotes = maxVotesBySubject[parseInt(selectedSubject.value)];
       const currentCommitteeMembers = committeeMembersBySubject[parseInt(selectedSubject.value)];
       if (currentSubjectIdeas && currentMaxVotes && currentCommitteeMembers) {
-        setIdeas(currentSubjectIdeas);
+        setIdeas(
+          [...currentSubjectIdeas]
+            .filter(idea => !idea.blocked)
+            .sort((left, right) =>
+              right.votesSum === undefined ? -1 : left.votesSum === undefined ? 1 : right.votesSum - left.votesSum
+            )
+        );
         setMaxVotes(currentMaxVotes);
         setCommitteeMembers(currentCommitteeMembers);
       } else {
