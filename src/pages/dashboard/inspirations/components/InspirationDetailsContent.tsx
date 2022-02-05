@@ -10,13 +10,15 @@ import useDevice from '~/hooks/useDevice';
 import { InspirationHeader } from '~/pages/dashboard/inspirations/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 import { useSelector } from '~/store/hooks';
+import { UserRole } from '~/api-client';
 
 const InspirationDetailsContentBase = (props: Omit<InspirationDetailsProps, 'isOpened'>) => {
   const { isTab } = useDevice();
   const { inspirationId, onClose, className } = props;
   const inspiration = useSelector(state => state.inspirations.inspirations.find(ins => ins.id === inspirationId));
   const { currentUser } = useSelector(state => state.user);
-  const canBeDeleted = inspiration?.author?.id == currentUser?.id;
+  const canBeDeleted =
+    inspiration?.author?.id == currentUser?.id || ((currentUser && currentUser.userRole === UserRole.Admin) as boolean);
 
   return (
     <Card className={className}>

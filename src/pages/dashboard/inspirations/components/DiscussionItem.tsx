@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexBox } from '~/components/Box';
-import { PostAnswerDto } from '~/api-client';
+import { PostAnswerDto, UserRole } from '~/api-client';
 import { CommentHeader } from '~/pages/dashboard/inspirations/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 import { useSelector } from '~/store/hooks';
@@ -14,7 +14,9 @@ interface DiscussionItemProps {
 
 const DiscussionItemBase = (props: DiscussionItemProps) => {
   const { currentUser } = useSelector(state => state.user);
-  const canBeDeleted = props.comment.author?.id == currentUser?.id;
+  const canBeDeleted =
+    props.comment.author?.id == currentUser?.id ||
+    ((currentUser && currentUser.userRole === UserRole.Admin) as boolean);
   return (
     <FlexBox className={props.className}>
       <CommentHeader

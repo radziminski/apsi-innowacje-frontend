@@ -7,7 +7,7 @@ import { InspirationFooter } from '~/pages/dashboard/inspirations/components/Ins
 import { InspirationHeader } from '~/pages/dashboard/inspirations/components/InspirationHeader';
 import parseISO from 'date-fns/parseISO';
 import classNames from 'classnames';
-import { PostDto } from '~/api-client';
+import { PostDto, UserRole } from '~/api-client';
 import { useSelector } from '~/store/hooks';
 
 interface InspirationProps {
@@ -20,7 +20,9 @@ interface InspirationProps {
 
 const InspirationBase = React.forwardRef((props: InspirationProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { currentUser } = useSelector(state => state.user);
-  const canBeDeleted = props.inspiration.author?.id == currentUser?.id;
+  const canBeDeleted =
+    props.inspiration.author?.id == currentUser?.id ||
+    ((currentUser && currentUser.userRole === UserRole.Admin) as boolean);
 
   return (
     <Card className={classNames(props.className, props.customClassName)} ref={ref} onClick={props.onClick}>

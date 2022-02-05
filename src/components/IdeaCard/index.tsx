@@ -68,7 +68,8 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
     if (blockModalOpened && idea.id && blockedIdeas.includes(idea.id)) setBlockModalOpened(false);
   }, [idea, deleteModalOpened, deletedIdeas]);
 
-  const canBeDeleted = idea.authorId == currentUser?.id;
+  const canBeDeleted =
+    idea.authorId == currentUser?.id || ((currentUser && currentUser.userRole === UserRole.Admin) as boolean);
   const canBeBlocked = currentUser?.userRole && [UserRole.Admin, UserRole.Committee].includes(currentUser?.userRole);
   const isAdmin = currentUser?.userRole && UserRole.Admin === currentUser?.userRole;
 
