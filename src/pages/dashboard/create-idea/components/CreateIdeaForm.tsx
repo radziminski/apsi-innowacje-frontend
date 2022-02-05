@@ -210,6 +210,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
 export default styled(CreateIdeaForm)`
   .create-idea-form {
+    max-width: 1000px;
     margin: ${({ theme }) => theme.spacing.s};
 
     @media ${({ theme }) => theme.mediaQueries.mobile} {
