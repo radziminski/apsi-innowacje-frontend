@@ -153,7 +153,7 @@ export const DecisionsPage = styled((props: { className?: string }) => {
     <DashboardContent
       title="Podejmowanie decyzji"
       icon={<MdOutlineRateReview size={28} />}
-      subTitle={'W tym panelu możesz akceptować bądź odrzucać pomysły ocenione przez komisję.'}>
+      subTitle={'W tym panelu możesz podejmować decyzje dotyczące pomysłów ocenionych przez komisję.'}>
       <div className={props.className}>
         {<IdeaDetailsModal isVisible={ideaDetailsModalVisible} idea={ideaDetails} onClose={onIdeaDetailsModalClose} />}
         {

@@ -23,12 +23,13 @@ export const MobileDecisionsGrid = styled((props: DecisionsGridCommonProps) => {
             <div>
               <Heading5 style={{ display: 'inline' }}>Tytuł: </Heading5>
               <span onClick={() => onRowClick(idea)} className={'decisions-grid__item-title'}>
-                {idea.title || 'Tytuł nieznany'}
+                {idea.title === undefined ? 'Tytuł nieznany' : idea.title}
               </span>
             </div>
             <div>
-              <Heading5 style={{ display: 'inline' }}>Ocena komisji:</Heading5> {idea.votesSum || '-'}/
-              {props.maxCommitteeScore || '-'}
+              <Heading5 style={{ display: 'inline' }}>Ocena komisji:</Heading5>{' '}
+              {idea.votesSum === undefined ? '-' : idea.votesSum}/
+              {props.maxCommitteeScore === undefined ? '-' : props.maxCommitteeScore}
             </div>
             <div>
               <Heading5 style={{ display: 'inline' }}>Ocena użytkowników:</Heading5> {idea.rating || '-'}/5

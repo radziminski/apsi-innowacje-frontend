@@ -45,7 +45,8 @@ export const DesktopDecisionsGrid = styled((props: DecisionsGridCommonProps) => 
               </td>
               <td>
                 <div>
-                  {idea.votesSum || '-'}/{props.maxCommitteeScore}
+                  {idea.votesSum === undefined ? '-' : idea.votesSum}/
+                  {props.maxCommitteeScore === undefined ? '-' : props.maxCommitteeScore}
                 </div>
               </td>
 
