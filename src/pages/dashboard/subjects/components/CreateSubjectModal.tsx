@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Button } from '~/components/Button';
 import { FlexBox } from '~/components/Box';
 import { Modal } from '~/components/Modal';
-import { SubjectRequestPendingModal } from '~/pages/dashboard/new-subject-page/components/SubjectRequestPendingModal';
+import { SubjectRequestPendingModal } from '~/pages/dashboard/subjects/components/SubjectRequestPendingModal';
 import { RequestStatus } from '~/constants/constants';
 import { Heading3 } from '~/components/Text';
 import { FormRow } from '~/components/forms/FormRow';
