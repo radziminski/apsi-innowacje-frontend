@@ -5,6 +5,7 @@ import 'suneditor/dist/css/suneditor.min.css';
 import Box, { FlexBox } from '~/components/Box';
 import { useSelector } from '~/store/hooks';
 import {
+  clearSubjectVotes,
   getIdeas,
   getSubjects,
   getVotesForSubject,
@@ -13,7 +14,7 @@ import {
 } from '~/store/slices/CreateIdeasSlice';
 import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useDispatch } from 'react-redux';
-import { SubjectButton, RatingButton, SendButton, VoteButton } from './parts';
+import { SubjectButton, RatingButton, SendButton, VoteButton, VotesBox } from './parts';
 import Text, { Heading4, Heading6 } from '~/components/Text';
 import IdeaCard from '~/components/IdeaCard';
 
@@ -39,9 +40,19 @@ export const VotingPage: React.FC = () => {
     subject =>
       currentUser?.id &&
       subject.committeeMembers?.includes(currentUser?.id) &&
-      ideas?.filter(idea => idea.subjectId === subject.id).every(idea => !idea.alreadyVoted)
+      ideas?.filter(idea => idea.subjectId === subject.id).every(idea => !idea.alreadyVoted) &&
+      !subject.done &&
+      subject.id &&
+      !(subjectVotes[subject.id] === 0)
   );
   const filteredIdeas = ideas?.filter(idea => idea.subjectId === selectedSubject);
+
+  // On component init in case of subjects / ideas change
+  useEffect(() => {
+    dispatch(clearSubjectVotes());
+    dispatch(getSubjects());
+    dispatch(getIdeas());
+  }, []);
 
   useEffect(() => {
     if (!subjects) dispatch(getSubjects());
@@ -54,10 +65,10 @@ export const VotingPage: React.FC = () => {
   useEffect(() => {
     if (filteredSubjects) {
       filteredSubjects.forEach(subject => {
-        if (subject.id && !subjectVotes[subject.id]) dispatch(getVotesForSubject(subject.id));
+        if (subject.id && subjectVotes[subject.id] === undefined) dispatch(getVotesForSubject(subject.id));
       });
     }
-  }, [filteredSubjects]);
+  }, [filteredSubjects, subjectVotes]);
 
   const currVotes = selectedSubject && subjectVotes[selectedSubject];
 
@@ -86,12 +97,11 @@ export const VotingPage: React.FC = () => {
       const newKey = selectedVotes[key].toString();
       votes[newKey] = parseInt(key);
     });
-    if (selectedSubject) await dispatch(voteForSubjectIdeas({ subjectId: selectedSubject, votes }));
+    if (selectedSubject) dispatch(voteForSubjectIdeas({ subjectId: selectedSubject, votes }));
   };
 
   const voteUncategorized = async (ideaId: number | undefined, accept: boolean) => {
-    if (ideaId) await dispatch(voteForUncategorizedIdea({ ideaId, accept }));
-    dispatch(getIdeas());
+    if (ideaId) dispatch(voteForUncategorizedIdea({ ideaId, accept }));
   };
 
   return (
@@ -106,7 +116,7 @@ export const VotingPage: React.FC = () => {
             Wybierz temat pomysłów do głosowania:
           </Heading6>
           <Box height="1rem" flexShrink={0} />
-          <FlexBox flexWrap="wrap" gap="1.5rem" flexDirection="column">
+          <FlexBox flexWrap="wrap" gap="1.5rem">
             {filteredSubjects?.map(subject => (
               <Box key={subject.id}>
                 <SubjectButton
@@ -118,7 +128,7 @@ export const VotingPage: React.FC = () => {
                 </SubjectButton>
               </Box>
             ))}
-            {ideas?.filter(idea => idea.subjectId === null).every(idea => !idea.alreadyVoted) && (
+            {ideas?.filter(idea => idea.subjectId === null).some(idea => !idea.alreadyVoted) && (
               <Box>
                 <SubjectButton isSelected={selectedSubject === null} onClick={() => setSelectedSubject(null)}>
                   Inne
@@ -139,9 +149,9 @@ export const VotingPage: React.FC = () => {
                 {Array.from(Array(currVotes).keys())
                   .filter(key => !Object.keys(selectedVotes).includes('' + (key + 1)))
                   .map(key => (
-                    <RatingButton key={key + 1}>
+                    <VotesBox key={key + 1}>
                       <Text fontSize="1.15rem">{key + 1}</Text>
-                    </RatingButton>
+                    </VotesBox>
                   ))}
               </FlexBox>
             </Box>
@@ -157,7 +167,7 @@ export const VotingPage: React.FC = () => {
                         <Box key={idea.id}>
                           <IdeaCard idea={idea} votingMode />
                           {selectedSubject !== null ? (
-                            <Box paddingLeft="1.5rem" marginBottom="3rem">
+                            <Box paddingLeft="1.4rem" marginBottom="3rem">
                               <Heading4>Oddaj Głos: </Heading4>
                               <FlexBox gap="1rem" marginTop="0.5rem">
                                 {Array.from(Array(currVotes).keys()).map(key => (
@@ -171,18 +181,18 @@ export const VotingPage: React.FC = () => {
                               </FlexBox>
                             </Box>
                           ) : (
-                            <FlexBox justifyContent="space-evenly">
+                            <FlexBox gap="1rem" marginBottom="3rem" paddingLeft="1.4rem">
                               <VoteButton
                                 onClick={() => {
                                   voteUncategorized(idea.id, true);
                                 }}>
-                                <Text fontSize="1.3rem">Yes</Text>
+                                <Text fontSize="1rem">Głosuj na TAK</Text>
                               </VoteButton>
                               <VoteButton
                                 onClick={() => {
                                   voteUncategorized(idea.id, false);
                                 }}>
-                                <Text fontSize="1.3rem">No</Text>
+                                <Text fontSize="1rem">Głosuj na NIE</Text>
                               </VoteButton>
                             </FlexBox>
                           )}

@@ -127,7 +127,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     if (response.status === 200) {
       const fetchedSubjects: SubjectDto[] = response.data;
 
-      return fetchedSubjects
+      const mappedSubjects = fetchedSubjects
         .filter(subject => !subject.done)
         .map(subject => ({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -135,6 +135,15 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
           label: subject.name ?? 'Nieznany',
           details: subjectDTOAudienceToSelectText(subject.audience)
         }));
+
+      const otherSubject = {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        value: null as any,
+        label: 'Inne',
+        details: ''
+      };
+
+      return [...mappedSubjects, otherSubject];
     } else {
       toast.error('Wystąpił problem podczas pobierania tematów.');
       return [];

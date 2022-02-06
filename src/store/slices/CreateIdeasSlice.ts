@@ -227,16 +227,25 @@ const getVotesForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasState>
 };
 
 export const voteForSubjectIdeas = createAsyncThunk<void, { subjectId: number; votes: Record<string, number> }>(
-  'votes/{subjectId}', async args => {
+  'votes/{subjectId}',
+  async args => {
     const { subjectId, votes } = args;
     await apiClient.voteBySubjectIdUsingPOST(subjectId, votes);
   }
 );
 
 const createVoteForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
-  builder.addCase(voteForSubjectIdeas.fulfilled, state => {
+  builder.addCase(voteForSubjectIdeas.fulfilled, (state, payload) => {
     state.isLoadingSubjects = false;
     state.isSubjectsError = false;
+    state.subjects =
+      state.subjects?.map(subject => {
+        if (subject.id !== payload.meta.arg.subjectId) return subject;
+        return {
+          ...subject,
+          done: true
+        };
+      }) ?? null;
   });
   builder.addCase(voteForSubjectIdeas.pending, state => {
     state.isLoadingSubjects = true;
@@ -251,9 +260,11 @@ const createVoteForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasStat
 };
 
 export const voteForUncategorizedIdea = createAsyncThunk<void, { ideaId: number; accept: boolean }>(
-  'votes/ideas/uncategorized/{id}', async args => {
-    const {accept, ideaId} = args;
+  'votes/ideas/uncategorized/{id}',
+  async (args, { dispatch }) => {
+    const { accept, ideaId } = args;
     await apiClient.voteForUncategorizedIdeaUsingPOST(accept, ideaId);
+    dispatch(getIdeas());
   }
 );
 
@@ -293,6 +304,9 @@ export const ideasSlice = createSlice({
     clearSubjectsError: state => {
       state.isSubjectsError = false;
     },
+    clearSubjectVotes: state => {
+      state.subjectVotes = {};
+    },
     clearIdeasState: state => {
       state.ideas = null;
       state.isLoading = false;
@@ -322,7 +336,13 @@ export const ideasSlice = createSlice({
   }
 });
 
-export const { clearReviewError, clearBlockError, clearDeleteError, clearReviewsError, clearIdeasState } =
-  ideasSlice.actions;
+export const {
+  clearReviewError,
+  clearBlockError,
+  clearDeleteError,
+  clearReviewsError,
+  clearIdeasState,
+  clearSubjectVotes
+} = ideasSlice.actions;
 
 export default ideasSlice.reducer;

@@ -60,6 +60,22 @@ export const VoteButton = styled.button`
   }
 `;
 
+export const VotesBox = styled.div`
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: 1rem;
+  border-radius: ${({ theme }) => theme.borderRadiuses.small};
+  background: ${({ theme }) => theme.colors.primary};
+  transition: all 0.2s;
+`;
+
 export const SendButton = styled.button<{ disabled?: boolean }>`
   padding: 1rem 2rem;
   font-size: 1.15rem;
