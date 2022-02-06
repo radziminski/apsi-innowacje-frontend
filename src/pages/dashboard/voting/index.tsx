@@ -80,17 +80,17 @@ export const VotingPage: React.FC = () => {
     setSelectedVotes({});
   }, [selectedSubject]);
 
-  const sendVotes = () => {
+  const sendVotes = async () => {
     const votes = {};
     Object.keys(selectedVotes).map(key => {
       const newKey = selectedVotes[key].toString();
       votes[newKey] = parseInt(key);
     });
-    if (selectedSubject) dispatch(voteForSubjectIdeas({ subjectId: selectedSubject, votes }));
+    if (selectedSubject) await dispatch(voteForSubjectIdeas({ subjectId: selectedSubject, votes }));
   };
 
-  const voteUncategorized = (ideaId: number | undefined, accept: boolean) => {
-    if (ideaId) dispatch(voteForUncategorizedIdea({ ideaId, accept }));
+  const voteUncategorized = async (ideaId: number | undefined, accept: boolean) => {
+    if (ideaId) await dispatch(voteForUncategorizedIdea({ ideaId, accept }));
     dispatch(getIdeas());
   };
 
@@ -106,8 +106,12 @@ export const VotingPage: React.FC = () => {
             Wybierz temat pomysłów do głosowania:
           </Heading6>
           <Box height="1rem" flexShrink={0} />
-
           <FlexBox flexWrap="wrap" gap="1.5rem">
+            {
+              <SubjectButton isSelected={selectedSubject === null} onClick={() => setSelectedSubject(null)}>
+                Inne
+              </SubjectButton>
+            }
             {filteredSubjects?.length ? (
               filteredSubjects.map(subject => (
                 <Box key={subject.id}>
@@ -125,11 +129,6 @@ export const VotingPage: React.FC = () => {
                 Brak tematów pomysłów do głosowania. Poproś administratora systemu o dostęp do danego tematu.
               </Box>
             )}
-            {
-              <SubjectButton isSelected={selectedSubject === null} onClick={() => setSelectedSubject(null)}>
-                Inne
-              </SubjectButton>
-            }
           </FlexBox>
           {!!currVotes && Object.keys(selectedVotes).length < currVotes && (
             <Box marginTop="2rem">
