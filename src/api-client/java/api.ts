@@ -394,6 +394,12 @@ export interface ReviewDto {
 export interface SubjectDto {
     /**
      * 
+     * @type {boolean}
+     * @memberof SubjectDto
+     */
+    'alreadyVoted'?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof SubjectDto
      */

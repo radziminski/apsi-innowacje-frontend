@@ -18,7 +18,7 @@ export const MobileNavBar: React.FC = () => {
       zIndex={Z_INDEX.stickedBack}
       alignItems="center"
       id="mobile-nav-bar">
-      Przyszły tytuł
+      Innowacje
     </FlexBox>
   );
 };

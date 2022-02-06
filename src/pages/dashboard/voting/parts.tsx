@@ -76,7 +76,7 @@ export const VotesBox = styled.div`
   transition: all 0.2s;
 `;
 
-export const SendButton = styled.button<{ disabled?: boolean }>`
+export const SendButton = styled.button`
   padding: 1rem 2rem;
   font-size: 1.15rem;
   display: flex;
@@ -98,5 +98,11 @@ export const SendButton = styled.button<{ disabled?: boolean }>`
   &:hover {
     background: ${({ theme }) => theme.colors.primaryHover};
     color: ${({ theme }) => theme.colors.white};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: disabled;
   }
 `;

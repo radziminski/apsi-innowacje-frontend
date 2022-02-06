@@ -87,7 +87,7 @@ export const getSingleInspiration = createAsyncThunk<PostDto, number>('inspirati
 export const getInspirations = createAsyncThunk<PostDto[], PageableApiArgs>(
   'inspirations/getAll',
   async (args: PageableApiArgs) => {
-    const response = await apiClient.postGetAllGet(args.page, args.count, true, true);
+    const response = await apiClient.postGetAllGet(true, true, args.page, args.count);
     return response.data;
   }
 );

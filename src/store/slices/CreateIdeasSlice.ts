@@ -26,6 +26,8 @@ export interface IdeasState {
   isLoadingVotes: boolean;
   isVotesError: boolean;
   subjectVotes: Record<number, number>;
+  votingSubmitted: boolean;
+  isVotingSubmissionError: boolean;
 }
 
 const initialState: IdeasState = {
@@ -50,7 +52,9 @@ const initialState: IdeasState = {
   subjects: null,
   isLoadingVotes: false,
   isVotesError: false,
-  subjectVotes: {}
+  subjectVotes: {},
+  votingSubmitted: false,
+  isVotingSubmissionError: false
 };
 
 export const getIdeas = createAsyncThunk<IdeaDto[] | null, void>('ideas/getAll', async () => {
@@ -236,26 +240,24 @@ export const voteForSubjectIdeas = createAsyncThunk<void, { subjectId: number; v
 
 const createVoteForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(voteForSubjectIdeas.fulfilled, (state, payload) => {
-    state.isLoadingSubjects = false;
-    state.isSubjectsError = false;
+    // Not setting loading for better UX - error handled by toasts
+    state.isVotingSubmissionError = false;
+    state.votingSubmitted = true;
     state.subjects =
       state.subjects?.map(subject => {
         if (subject.id !== payload.meta.arg.subjectId) return subject;
         return {
           ...subject,
-          done: true
+          alreadyVoted: true
         };
       }) ?? null;
   });
   builder.addCase(voteForSubjectIdeas.pending, state => {
-    state.isLoadingSubjects = true;
-    state.isSubjectsError = false;
+    state.isVotingSubmissionError = false;
     state.error = null;
   });
-  builder.addCase(voteForSubjectIdeas.rejected, (state, action) => {
-    state.isLoadingSubjects = false;
-    state.isSubjectsError = true;
-    state.error = action.error;
+  builder.addCase(voteForSubjectIdeas.rejected, state => {
+    state.isVotingSubmissionError = true;
   });
 };
 
@@ -269,18 +271,25 @@ export const voteForUncategorizedIdea = createAsyncThunk<void, { ideaId: number;
 );
 
 const createVoteForUncategorizedIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
-  builder.addCase(voteForUncategorizedIdea.fulfilled, state => {
-    state.isLoadingSubjects = false;
-    state.isSubjectsError = false;
+  builder.addCase(voteForUncategorizedIdea.fulfilled, (state, arg) => {
+    // Not setting loading for better UX - error handled by toasts
+    state.isVotingSubmissionError = false;
+    state.votingSubmitted = true;
+    state.ideas =
+      state.ideas?.map(idea => {
+        if (idea.id !== arg.meta.arg.ideaId) return idea;
+        return {
+          ...idea,
+          alreadyVoted: true
+        };
+      }) ?? null;
   });
   builder.addCase(voteForUncategorizedIdea.pending, state => {
-    state.isLoadingSubjects = true;
-    state.isSubjectsError = false;
+    state.isVotingSubmissionError = false;
     state.error = null;
   });
   builder.addCase(voteForUncategorizedIdea.rejected, (state, action) => {
-    state.isLoadingSubjects = false;
-    state.isSubjectsError = true;
+    state.isVotingSubmissionError = true;
     state.error = action.error;
   });
 };
@@ -306,6 +315,12 @@ export const ideasSlice = createSlice({
     },
     clearSubjectVotes: state => {
       state.subjectVotes = {};
+    },
+    clearVotingSubmitted: state => {
+      state.votingSubmitted = false;
+    },
+    clearVotingSubmissionError: state => {
+      state.isVotingSubmissionError = false;
     },
     clearIdeasState: state => {
       state.ideas = null;
@@ -342,7 +357,9 @@ export const {
   clearDeleteError,
   clearReviewsError,
   clearIdeasState,
-  clearSubjectVotes
+  clearSubjectVotes,
+  clearVotingSubmitted,
+  clearVotingSubmissionError
 } = ideasSlice.actions;
 
 export default ideasSlice.reducer;
