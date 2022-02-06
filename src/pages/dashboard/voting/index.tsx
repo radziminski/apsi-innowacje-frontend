@@ -106,29 +106,31 @@ export const VotingPage: React.FC = () => {
             Wybierz temat pomysłów do głosowania:
           </Heading6>
           <Box height="1rem" flexShrink={0} />
-          <FlexBox flexWrap="wrap" gap="1.5rem">
-            {
-              <SubjectButton isSelected={selectedSubject === null} onClick={() => setSelectedSubject(null)}>
-                Inne
-              </SubjectButton>
-            }
-            {filteredSubjects?.length ? (
-              filteredSubjects.map(subject => (
-                <Box key={subject.id}>
-                  <SubjectButton
-                    isSelected={subject.id === selectedSubject}
-                    onClick={() =>
-                      subject.id !== selectedSubject ? setSelectedSubject(subject.id) : setSelectedSubject(undefined)
-                    }>
-                    {subject.name}
-                  </SubjectButton>
-                </Box>
-              ))
-            ) : (
-              <Box marginY="25vh" textAlign="center" flexGrow={1}>
-                Brak tematów pomysłów do głosowania. Poproś administratora systemu o dostęp do danego tematu.
+          <FlexBox flexWrap="wrap" gap="1.5rem" flexDirection="column">
+            {filteredSubjects?.map(subject => (
+              <Box key={subject.id}>
+                <SubjectButton
+                  isSelected={subject.id === selectedSubject}
+                  onClick={() =>
+                    subject.id !== selectedSubject ? setSelectedSubject(subject.id) : setSelectedSubject(undefined)
+                  }>
+                  {subject.name}
+                </SubjectButton>
+              </Box>
+            ))}
+            {ideas?.filter(idea => idea.subjectId === null).every(idea => !idea.alreadyVoted) && (
+              <Box>
+                <SubjectButton isSelected={selectedSubject === null} onClick={() => setSelectedSubject(null)}>
+                  Inne
+                </SubjectButton>
               </Box>
             )}
+            {!filteredSubjects?.length &&
+              !ideas?.filter(idea => idea.subjectId === null).every(idea => !idea.alreadyVoted) && (
+                <Box marginY="25vh" textAlign="center" flexGrow={1}>
+                  Brak tematów pomysłów do głosowania. Poproś administratora systemu o dostęp do danego tematu.
+                </Box>
+              )}
           </FlexBox>
           {!!currVotes && Object.keys(selectedVotes).length < currVotes && (
             <Box marginTop="2rem">
