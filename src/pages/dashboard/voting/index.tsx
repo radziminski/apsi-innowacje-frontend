@@ -87,7 +87,7 @@ export const VotingPage: React.FC = () => {
       });
       dispatch(clearVotingSubmissionError());
     }
-  }, [votingSubmitted]);
+  }, [isVotingSubmissionError]);
 
   useEffect(() => {
     if (!subjects) dispatch(getSubjects());

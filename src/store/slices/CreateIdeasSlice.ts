@@ -234,7 +234,7 @@ export const voteForSubjectIdeas = createAsyncThunk<void, { subjectId: number; v
   'votes/{subjectId}',
   async args => {
     const { subjectId, votes } = args;
-    await apiClient.voteBySubjectIdUsingPOST(subjectId, votes);
+    return (await apiClient.voteBySubjectIdUsingPOST(subjectId, votes)).data;
   }
 );
 
@@ -263,10 +263,9 @@ const createVoteForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasStat
 
 export const voteForUncategorizedIdea = createAsyncThunk<void, { ideaId: number; accept: boolean }>(
   'votes/ideas/uncategorized/{id}',
-  async (args, { dispatch }) => {
+  async args => {
     const { accept, ideaId } = args;
-    await apiClient.voteForUncategorizedIdeaUsingPOST(accept, ideaId);
-    dispatch(getIdeas());
+    return (await apiClient.voteForUncategorizedIdeaUsingPOST(accept, ideaId)).data;
   }
 );
 
