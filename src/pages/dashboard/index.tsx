@@ -22,7 +22,7 @@ import ProtectedRoute from '~/components/ProtectedRoute';
 import { useSelector } from '~/store/hooks';
 import { UserRole } from '~/api-client';
 import { DecisionsPage } from '~/pages/dashboard/decisions/DecisionsPage';
-import { SubjectsOverviewPage } from '~/pages/dashboard/new-subject-page/SubjectsOverviewPage';
+import { SubjectsOverviewPage } from '~/pages/dashboard/subjects/SubjectsOverviewPage';
 
 export const DashboardRoutes: React.FC = (props: React.PropsWithChildren<{ className?: string }>) => {
   const { currentUser, isLoading } = useSelector(state => state.user);

@@ -5,12 +5,12 @@ import { FlexBox } from '~/components/Box';
 import styled from 'styled-components';
 import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useSelector } from '~/store/hooks';
-import { SubjectCard } from '~/pages/dashboard/new-subject-page/components/SubjectCard';
+import { SubjectCard } from '~/pages/dashboard/subjects/components/SubjectCard';
 import { useDispatch } from 'react-redux';
 import { getAllSubjects } from '~/store/slices/CreateSubjectsSlice';
 import { getAllUsers } from '~/store/slices/CreateUserSlice';
 import { getIdeas } from '~/store/slices/CreateIdeasSlice';
-import { CreateSubject } from '~/pages/dashboard/new-subject-page/components/CreateSubject';
+import { CreateSubject } from '~/pages/dashboard/subjects/components/CreateSubject';
 import { UserRole } from '~/api-client';
 
 export const SubjectsOverviewPage = styled((props: { className?: string }) => {

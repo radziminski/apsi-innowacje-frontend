@@ -7,7 +7,7 @@ import { DesktopDecisionsGrid } from '~/pages/dashboard/decisions/grids/DesktopD
 import { MobileDecisionsGrid } from '~/pages/dashboard/decisions/grids/MobileDecisionsGrid';
 import { customSelectStyles, SelectOption } from '~/components/forms';
 import AsyncSelect from 'react-select/async';
-import apiClient, { DecisionDtoIdeaStatusEnum, SubjectDto } from '~/api-client';
+import apiClient, { DecisionDto, SubjectDto } from '~/api-client';
 import { subjectDTOAudienceToSelectText } from '~/utils/utils';
 import { CustomSubjectSelectOption } from '~/pages/dashboard/create-idea/components/CreateIdeaForm';
 import styled from 'styled-components';
@@ -18,22 +18,19 @@ import { useDispatch } from 'react-redux';
 import { getIdeasBySubject, makeDecisionOnIdeaAndGet } from '~/store/slices/CreateDecisionsIdeasSlice';
 import { CenteredLoader } from '~/components/Loader';
 import { IdeaDetailsModal } from '~/pages/dashboard/decisions/components/IdeaDetailsModal';
-import ConfirmModal from '~/components/ConfirmModal';
-import { useDecisionsHandlers } from '~/pages/dashboard/decisions/hooks/useDecisionsHandlers';
 import { toast } from 'react-toastify';
 
 const getFilteredOptions = (fetchedOptions: SelectOption[], inputValue: string) => {
   return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
 };
 
+export type IdeaRequiredId = Required<Pick<IdeaDto, 'id'>> & Omit<IdeaDto, 'id'>;
+
 export interface DecisionsGridCommonProps {
   ideas: IdeaDto[];
   maxCommitteeScore: number;
   onIdeaClick: (idea: IdeaDto) => void;
-  onAccept: (idea: IdeaDto) => void;
-  onDecline: (idea: IdeaDto) => void;
-  onPutAway: (idea: IdeaDto) => void;
-  onRequestForDetails: (idea: IdeaDto) => void;
+  onDecision: (idea: IdeaRequiredId, decision: DecisionDto) => void;
   className?: string;
 }
 
@@ -46,11 +43,6 @@ export const DecisionsPage = styled((props: { className?: string }) => {
 
   const [ideaDetails, setIdeaDetails] = React.useState<IdeaDto | null>(null);
   const [ideaDetailsModalVisible, setIdeaDetailsModalVisible] = React.useState<boolean>(false);
-
-  const {
-    handlers: [onAccept, onDecline, onPutAway, onRequestForDetails, closeIdeaActionModal],
-    states: [currentAction, actionIdea, confirmIdeaActionModalVisible]
-  } = useDecisionsHandlers();
 
   const { ideasBySubject, maxVotesBySubject, committeeMembersBySubject, isLoading } = useSelector(
     state => state.decisionsIdeas
@@ -72,15 +64,7 @@ export const DecisionsPage = styled((props: { className?: string }) => {
           }));
         return getFilteredOptions(fetchedOptions, inputValue);
       } else {
-        toast.error('Wystąpił problem podczas pobierania tematów.', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined
-        });
+        toast.error('Wystąpił problem podczas pobierania tematów.');
         return new Promise(resolve => resolve(null));
       }
     } catch (e) {
@@ -132,22 +116,20 @@ export const DecisionsPage = styled((props: { className?: string }) => {
     setTimeout(() => setIdeaDetails(null), 500);
   };
 
-  const onIdeaActionModalConfirm = React.useCallback(() => {
-    if (actionIdea && actionIdea.id && currentAction && selectedSubject) {
-      dispath(
-        makeDecisionOnIdeaAndGet({
-          ideaId: actionIdea.id,
-          subjectId: parseInt(selectedSubject.value),
-          decision: currentAction
-        })
-      );
-    }
-    closeIdeaActionModal();
-  }, [actionIdea, selectedSubject]);
-
-  const onIdeaActionModalClose = () => {
-    closeIdeaActionModal();
-  };
+  const onDecision = React.useCallback(
+    (idea: IdeaRequiredId, decision: DecisionDto) => {
+      if (selectedSubject) {
+        dispath(
+          makeDecisionOnIdeaAndGet({
+            ideaId: idea.id,
+            subjectId: parseInt(selectedSubject.value),
+            decision: decision
+          })
+        );
+      }
+    },
+    [selectedSubject]
+  );
 
   return (
     <DashboardContent
@@ -156,24 +138,6 @@ export const DecisionsPage = styled((props: { className?: string }) => {
       subTitle={'W tym panelu możesz podejmować decyzje dotyczące pomysłów ocenionych przez komisję.'}>
       <div className={props.className}>
         {<IdeaDetailsModal isVisible={ideaDetailsModalVisible} idea={ideaDetails} onClose={onIdeaDetailsModalClose} />}
-        {
-          <ConfirmModal
-            title={`Czy na pewno chcesz ${
-              currentAction
-                ? currentAction.ideaStatus === DecisionDtoIdeaStatusEnum.Accepted
-                  ? 'zaakceptować'
-                  : currentAction.ideaStatus === DecisionDtoIdeaStatusEnum.Rejected
-                  ? 'odrzucić'
-                  : currentAction.ideaStatus === DecisionDtoIdeaStatusEnum.PutAway
-                  ? 'odłożyć'
-                  : 'przekazać do uzupełnienia'
-                : 'przetworzyć' //just for TS, because he cares about currentAction being maybe null
-            } pomysł ${actionIdea?.title ? `„${actionIdea?.title}"` : ' o nieznanym tytule'}?`}
-            isVisible={confirmIdeaActionModalVisible}
-            onConfirm={onIdeaActionModalConfirm}
-            onClose={onIdeaActionModalClose}
-          />
-        }
         <FlexBox className="select-category">
           <span>Wybierz temat: </span>
           <Box width={'300px'}>
@@ -199,20 +163,14 @@ export const DecisionsPage = styled((props: { className?: string }) => {
                 ideas={ideas}
                 maxCommitteeScore={maxVotes * committeeMembers.length}
                 onIdeaClick={onIdeaClick}
-                onAccept={onAccept}
-                onDecline={onDecline}
-                onPutAway={onPutAway}
-                onRequestForDetails={onRequestForDetails}
+                onDecision={onDecision}
               />
             ) : (
               <DesktopDecisionsGrid
                 ideas={ideas}
                 maxCommitteeScore={maxVotes * committeeMembers.length}
                 onIdeaClick={onIdeaClick}
-                onAccept={onAccept}
-                onDecline={onDecline}
-                onPutAway={onPutAway}
-                onRequestForDetails={onRequestForDetails}
+                onDecision={onDecision}
               />
             )}
           </Card>
