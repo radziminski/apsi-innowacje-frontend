@@ -152,7 +152,19 @@ export interface IdeaDto {
      * @type {boolean}
      * @memberof IdeaDto
      */
+    'alreadyVoted'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IdeaDto
+     */
     'anonymous'?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof IdeaDto
+     */
+    'attachmentUrls'?: Array<string>;
     /**
      * 
      * @type {number}
@@ -207,6 +219,12 @@ export interface IdeaDto {
      * @memberof IdeaDto
      */
     'rating'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof IdeaDto
+     */
+    'rejectsSum'?: number;
     /**
      * 
      * @type {string}
@@ -374,6 +392,12 @@ export interface ReviewDto {
  * @interface SubjectDto
  */
 export interface SubjectDto {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SubjectDto
+     */
+    'alreadyVoted'?: boolean;
     /**
      * 
      * @type {string}
@@ -720,6 +744,39 @@ export const BackendApiApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
+         * @summary getCommitteeUsersCount
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCommitteeUsersCountUsingGET: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/votes/committee-count`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get idea with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
@@ -1021,6 +1078,39 @@ export const BackendApiApiAxiosParamCreator = function (configuration?: Configur
          */
         getSubjectIdsForCurrentUserUsingGET: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/subjects/current-user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get all ideas with no category
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUncategorizedIdeasUsingGET: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/ideas/uncategorized`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1422,6 +1512,50 @@ export const BackendApiApiAxiosParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary voteForUncategorizedIdea
+         * @param {boolean} accept accept
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        voteForUncategorizedIdeaUsingPOST: async (accept: boolean, id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accept' is not null or undefined
+            assertParamExists('voteForUncategorizedIdeaUsingPOST', 'accept', accept)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('voteForUncategorizedIdeaUsingPOST', 'id', id)
+            const localVarPath = `/votes/ideas/uncategorized/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (accept !== undefined) {
+                localVarQueryParameter['accept'] = accept;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1521,6 +1655,16 @@ export const BackendApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary getCommitteeUsersCount
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCommitteeUsersCountUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCommitteeUsersCountUsingGET(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get idea with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
@@ -1612,8 +1756,18 @@ export const BackendApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSubjectIdsForCurrentUserUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
+        async getSubjectIdsForCurrentUserUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SubjectDto>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSubjectIdsForCurrentUserUsingGET(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get all ideas with no category
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUncategorizedIdeasUsingGET(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<IdeaDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUncategorizedIdeasUsingGET(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1720,6 +1874,18 @@ export const BackendApiApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.voteBySubjectIdUsingPOST(subjectId, votes, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @summary voteForUncategorizedIdea
+         * @param {boolean} accept accept
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async voteForUncategorizedIdeaUsingPOST(accept: boolean, id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.voteForUncategorizedIdeaUsingPOST(accept, id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -1811,6 +1977,15 @@ export const BackendApiApiFactory = function (configuration?: Configuration, bas
         },
         /**
          * 
+         * @summary getCommitteeUsersCount
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCommitteeUsersCountUsingGET(options?: any): AxiosPromise<number> {
+            return localVarFp.getCommitteeUsersCountUsingGET(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get idea with given id
          * @param {number} id id
          * @param {*} [options] Override http request option.
@@ -1894,8 +2069,17 @@ export const BackendApiApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSubjectIdsForCurrentUserUsingGET(options?: any): AxiosPromise<Array<number>> {
+        getSubjectIdsForCurrentUserUsingGET(options?: any): AxiosPromise<Array<SubjectDto>> {
             return localVarFp.getSubjectIdsForCurrentUserUsingGET(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all ideas with no category
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUncategorizedIdeasUsingGET(options?: any): AxiosPromise<Array<IdeaDto>> {
+            return localVarFp.getUncategorizedIdeasUsingGET(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1991,6 +2175,17 @@ export const BackendApiApiFactory = function (configuration?: Configuration, bas
          */
         voteBySubjectIdUsingPOST(subjectId: number, votes: { [key: string]: number; }, options?: any): AxiosPromise<void> {
             return localVarFp.voteBySubjectIdUsingPOST(subjectId, votes, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary voteForUncategorizedIdea
+         * @param {boolean} accept accept
+         * @param {number} id id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        voteForUncategorizedIdeaUsingPOST(accept: boolean, id: number, options?: any): AxiosPromise<void> {
+            return localVarFp.voteForUncategorizedIdeaUsingPOST(accept, id, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2346,6 +2541,27 @@ export interface BackendApiApiVoteBySubjectIdUsingPOSTRequest {
 }
 
 /**
+ * Request parameters for voteForUncategorizedIdeaUsingPOST operation in BackendApiApi.
+ * @export
+ * @interface BackendApiApiVoteForUncategorizedIdeaUsingPOSTRequest
+ */
+export interface BackendApiApiVoteForUncategorizedIdeaUsingPOSTRequest {
+    /**
+     * accept
+     * @type {boolean}
+     * @memberof BackendApiApiVoteForUncategorizedIdeaUsingPOST
+     */
+    readonly accept: boolean
+
+    /**
+     * id
+     * @type {number}
+     * @memberof BackendApiApiVoteForUncategorizedIdeaUsingPOST
+     */
+    readonly id: number
+}
+
+/**
  * BackendApiApi - object-oriented interface
  * @export
  * @class BackendApiApi
@@ -2444,6 +2660,17 @@ export class BackendApiApi extends BaseAPI {
      */
     public getCommitteeIdsBySubjectIdUsingGET(requestParameters: BackendApiApiGetCommitteeIdsBySubjectIdUsingGETRequest, options?: AxiosRequestConfig) {
         return BackendApiApiFp(this.configuration).getCommitteeIdsBySubjectIdUsingGET(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary getCommitteeUsersCount
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public getCommitteeUsersCountUsingGET(options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getCommitteeUsersCountUsingGET(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2554,6 +2781,17 @@ export class BackendApiApi extends BaseAPI {
 
     /**
      * 
+     * @summary Get all ideas with no category
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public getUncategorizedIdeasUsingGET(options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).getUncategorizedIdeasUsingGET(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Save attachment for given ideaId
      * @param {BackendApiApiSaveAttachmentUsingPOSTRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -2658,6 +2896,18 @@ export class BackendApiApi extends BaseAPI {
      */
     public voteBySubjectIdUsingPOST(requestParameters: BackendApiApiVoteBySubjectIdUsingPOSTRequest, options?: AxiosRequestConfig) {
         return BackendApiApiFp(this.configuration).voteBySubjectIdUsingPOST(requestParameters.subjectId, requestParameters.votes, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary voteForUncategorizedIdea
+     * @param {BackendApiApiVoteForUncategorizedIdeaUsingPOSTRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BackendApiApi
+     */
+    public voteForUncategorizedIdeaUsingPOST(requestParameters: BackendApiApiVoteForUncategorizedIdeaUsingPOSTRequest, options?: AxiosRequestConfig) {
+        return BackendApiApiFp(this.configuration).voteForUncategorizedIdeaUsingPOST(requestParameters.accept, requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

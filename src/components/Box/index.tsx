@@ -32,7 +32,7 @@ type BoxProps = FlexboxProps &
   BoxShadowProps &
   TextAlignProps &
   ColorProps &
-  Pick<CSSProperties, 'cursor' | 'transform' | 'transition' | 'pointerEvents'>;
+  Pick<CSSProperties, 'cursor' | 'transform' | 'transition' | 'pointerEvents' | 'gap'>;
 
 export const boxStyledSystem = compose(
   border,
@@ -48,7 +48,8 @@ export const boxStyledSystem = compose(
     transition: true,
     cursor: true,
     pointerEvents: true,
-    transform: true
+    transform: true,
+    gap: true
   })
 );
 
