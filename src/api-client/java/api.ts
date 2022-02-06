@@ -152,6 +152,12 @@ export interface IdeaDto {
      * @type {boolean}
      * @memberof IdeaDto
      */
+    'alreadyVoted'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IdeaDto
+     */
     'anonymous'?: boolean;
     /**
      * 
