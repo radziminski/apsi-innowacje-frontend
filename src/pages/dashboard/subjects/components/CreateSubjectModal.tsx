@@ -77,7 +77,7 @@ export const CreateSubjectModal = styled((props: CreateSubjectModalProps) => {
 
   const fetchUsers = React.useCallback(async (): Promise<SelectOption[]> => {
     try {
-      const response = await apiClient.usersUsersGet();
+      const response = await apiClient.usersUsersGet('', 0, 10000);
       if (response.status === 200) {
         const fetchedUsers: UserDto[] = response.data;
         return fetchedUsers
