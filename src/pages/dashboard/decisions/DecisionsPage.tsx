@@ -5,9 +5,9 @@ import Box, { Card, FlexBox } from '~/components/Box';
 import useDevice from '~/hooks/useDevice';
 import { DesktopDecisionsGrid } from '~/pages/dashboard/decisions/grids/DesktopDecisionsGrid';
 import { MobileDecisionsGrid } from '~/pages/dashboard/decisions/grids/MobileDecisionsGrid';
-import { customSelectStyles, SelectOption } from '~/components/forms';
+import { customSelectStyles } from '~/components/forms';
 import AsyncSelect from 'react-select/async';
-import apiClient, { DecisionDto, SubjectDto } from '~/api-client';
+import apiClient, { DecisionDto, SubjectDto, UserDto, UserRole } from '~/api-client';
 import { subjectDTOAudienceToSelectText } from '~/utils/utils';
 import { CustomSubjectSelectOption } from '~/pages/dashboard/create-idea/components/CreateIdeaForm';
 import styled from 'styled-components';
@@ -19,6 +19,14 @@ import { getIdeasBySubject, makeDecisionOnIdeaAndGet } from '~/store/slices/Crea
 import { CenteredLoader } from '~/components/Loader';
 import { IdeaDetailsModal } from '~/pages/dashboard/decisions/components/IdeaDetailsModal';
 import { toast } from 'react-toastify';
+import { getIdeas } from '~/store/slices/CreateIdeasSlice';
+import { getAllUsers } from '~/store/slices/CreateUserSlice';
+
+export interface SelectOption {
+  label: string;
+  value: string | null;
+  details?: string;
+}
 
 const getFilteredOptions = (fetchedOptions: SelectOption[], inputValue: string) => {
   return fetchedOptions.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()));
@@ -28,7 +36,8 @@ export type IdeaRequiredId = Required<Pick<IdeaDto, 'id'>> & Omit<IdeaDto, 'id'>
 
 export interface DecisionsGridCommonProps {
   ideas: IdeaDto[];
-  maxCommitteeScore: number;
+  isOthersCategory: boolean;
+  maxCommitteeScore: number | undefined;
   onIdeaClick: (idea: IdeaDto) => void;
   onDecision: (idea: IdeaRequiredId, decision: DecisionDto) => void;
   className?: string;
@@ -37,17 +46,21 @@ export interface DecisionsGridCommonProps {
 export const DecisionsPage = styled((props: { className?: string }) => {
   const { isTab, isWideTab, isAdditionalBreakpointForDecisionsGrid } = useDevice();
   const [selectedSubject, setSelectedSubject] = React.useState<SelectOption | null>(null);
-  const [ideas, setIdeas] = React.useState<IdeaDto[] | null>(null);
+  const [ideasToDisplay, setIdeasToDisplay] = React.useState<IdeaDto[] | null>(null);
   const [maxVotes, setMaxVotes] = React.useState<number | null>(null);
-  const [committeeMembers, setCommitteeMembers] = React.useState<number[] | null>(null);
+  const [committeeMembers, setCommitteeMembers] = React.useState<UserDto[] | null>(null);
 
   const [ideaDetails, setIdeaDetails] = React.useState<IdeaDto | null>(null);
   const [ideaDetailsModalVisible, setIdeaDetailsModalVisible] = React.useState<boolean>(false);
 
+  const { ideas: allIdeas, isLoading: isLoadingIdeas } = useSelector(state => state.ideas);
   const { ideasBySubject, maxVotesBySubject, committeeMembersBySubject, isLoading } = useSelector(
     state => state.decisionsIdeas
   );
-  const dispath = useDispatch();
+  const { allUsers, isLoadingAllUsers } = useSelector(state => state.user);
+
+  const dispatch = useDispatch();
+
   const fetchSubjects = React.useCallback(async (inputValue: string) => {
     try {
       const response = await apiClient.getAllSubjectsUsingGET();
@@ -62,6 +75,12 @@ export const DecisionsPage = styled((props: { className?: string }) => {
             label: subject.name ?? 'Nieznany',
             details: subjectDTOAudienceToSelectText(subject.audience)
           }));
+        fetchedOptions.push({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          value: null as any,
+          label: 'Inne',
+          details: 'Wszyscy'
+        });
         return getFilteredOptions(fetchedOptions, inputValue);
       } else {
         toast.error('Wystąpił problem podczas pobierania tematów.');
@@ -81,30 +100,53 @@ export const DecisionsPage = styled((props: { className?: string }) => {
   );
 
   React.useEffect(() => {
+    if (!allIdeas && !isLoadingIdeas) {
+      dispatch(getIdeas());
+    }
+    if (!allUsers && !isLoadingAllUsers) {
+      dispatch(getAllUsers());
+    }
+  }, []);
+
+  React.useEffect(() => {
     if (selectedSubject === null) {
-      setIdeas(null);
-    } else {
-      const currentSubjectIdeas = ideasBySubject[parseInt(selectedSubject.value)];
-      const currentMaxVotes = maxVotesBySubject[parseInt(selectedSubject.value)];
-      const currentCommitteeMembers = committeeMembersBySubject[parseInt(selectedSubject.value)];
-      if (currentSubjectIdeas && currentMaxVotes && currentCommitteeMembers) {
-        setIdeas(
+      setIdeasToDisplay(null);
+    } else if (allIdeas !== null) {
+      const subjectKey = selectedSubject.value === null ? 'others' : parseInt(selectedSubject.value);
+      const currentSubjectIdeas = ideasBySubject[subjectKey];
+      const currentMaxVotes = maxVotesBySubject[subjectKey];
+      const currentCommitteeMembers = committeeMembersBySubject[subjectKey];
+      if (currentSubjectIdeas !== undefined) {
+        // (selectedSubject.value === null || (currentMaxVotes && currentCommitteeMembers)
+        setIdeasToDisplay(
           [...currentSubjectIdeas]
             .filter(idea => !idea.blocked)
             .sort((left, right) =>
               right.votesSum === undefined ? -1 : left.votesSum === undefined ? 1 : right.votesSum - left.votesSum
             )
         );
-        setMaxVotes(currentMaxVotes);
-        setCommitteeMembers(currentCommitteeMembers);
+        if (selectedSubject.value === null) {
+          setCommitteeMembers(allUsers ? allUsers.filter(user => user.userRole === UserRole.Committee) : null);
+          setMaxVotes(null);
+        } else {
+          setMaxVotes(currentMaxVotes);
+          setCommitteeMembers(currentCommitteeMembers);
+        }
       } else {
-        dispath(getIdeasBySubject(parseInt(selectedSubject.value)));
-        setIdeas(null);
+        dispatch(
+          getIdeasBySubject({
+            subjectId: selectedSubject.value === null ? selectedSubject.value : parseInt(selectedSubject.value),
+            ideas: allIdeas
+          })
+        );
+        setIdeasToDisplay(null);
         setMaxVotes(null);
         setCommitteeMembers(null);
       }
+    } else if (!isLoadingIdeas) {
+      dispatch(getIdeas());
     }
-  }, [ideasBySubject, selectedSubject]);
+  }, [allIdeas, allUsers, isLoadingIdeas, ideasBySubject, selectedSubject]);
 
   const onIdeaClick = React.useCallback((idea: IdeaDto) => {
     setIdeaDetails(idea);
@@ -119,10 +161,10 @@ export const DecisionsPage = styled((props: { className?: string }) => {
   const onDecision = React.useCallback(
     (idea: IdeaRequiredId, decision: DecisionDto) => {
       if (selectedSubject) {
-        dispath(
+        dispatch(
           makeDecisionOnIdeaAndGet({
             ideaId: idea.id,
-            subjectId: parseInt(selectedSubject.value),
+            subjectId: selectedSubject.value === null ? 'others' : parseInt(selectedSubject.value),
             decision: decision
           })
         );
@@ -156,19 +198,33 @@ export const DecisionsPage = styled((props: { className?: string }) => {
         </FlexBox>
         <Box paddingBottom={'1rem'} />
         {selectedSubject && <Paragraph fontWeight={500}>{`Pomysły w temacie "${selectedSubject.label}":`}</Paragraph>}
-        {ideas && maxVotes && committeeMembers ? (
+        {selectedSubject && ideasToDisplay ? (
           <Card>
             {(isWideTab && !isTab) || isAdditionalBreakpointForDecisionsGrid ? (
               <MobileDecisionsGrid
-                ideas={ideas}
-                maxCommitteeScore={maxVotes * committeeMembers.length}
+                ideas={ideasToDisplay}
+                isOthersCategory={selectedSubject.value === null}
+                maxCommitteeScore={
+                  maxVotes && committeeMembers
+                    ? maxVotes * committeeMembers.length
+                    : committeeMembers
+                    ? committeeMembers.length
+                    : undefined
+                }
                 onIdeaClick={onIdeaClick}
                 onDecision={onDecision}
               />
             ) : (
               <DesktopDecisionsGrid
-                ideas={ideas}
-                maxCommitteeScore={maxVotes * committeeMembers.length}
+                ideas={ideasToDisplay}
+                isOthersCategory={selectedSubject.value === null}
+                maxCommitteeScore={
+                  maxVotes && committeeMembers
+                    ? maxVotes * committeeMembers.length
+                    : committeeMembers
+                    ? committeeMembers.length
+                    : undefined
+                }
                 onIdeaClick={onIdeaClick}
                 onDecision={onDecision}
               />

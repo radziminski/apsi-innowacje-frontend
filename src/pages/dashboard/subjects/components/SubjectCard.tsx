@@ -26,7 +26,7 @@ export const SubjectCard = styled((props: SubjectCardProps) => {
   const { allUsers, isLoadingAllUsers, isErrorAllUsers } = useSelector(state => state.user);
 
   React.useEffect(() => {
-    if (allUsers.length > 0) {
+    if (allUsers && allUsers.length > 0) {
       setCommitteeInSubject(
         allUsers.filter(
           user => subject.committeeMembers && subject.committeeMembers.some(memberId => memberId === user.id)

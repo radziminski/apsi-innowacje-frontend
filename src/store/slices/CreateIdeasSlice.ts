@@ -204,6 +204,7 @@ const getSubjectsReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(getSubjects.rejected, state => {
     state.isLoadingSubjects = false;
     state.isSubjectsError = true;
+    toast.error('Wystąpił problem podczas pobierania tematów.');
   });
 };
 

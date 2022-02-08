@@ -14,12 +14,38 @@ export const DesktopDecisionsGrid = styled((props: DecisionsGridCommonProps) => 
     [props.onIdeaClick]
   );
 
+  const CommitteeVotes = React.useMemo(
+    () =>
+      ({ idea }) =>
+        (
+          <div>
+            {props.isOthersCategory ? (
+              <>
+                {idea.votesSum === undefined ? '-' : idea.votesSum}/
+                {idea.rejectsSum === undefined ? '-' : idea.rejectsSum}/
+                {props.maxCommitteeScore === undefined
+                  ? '-'
+                  : props.maxCommitteeScore -
+                    (idea.votesSum === undefined ? 0 : idea.votesSum) -
+                    (idea.rejectsSum === undefined ? 0 : idea.rejectsSum)}
+              </>
+            ) : (
+              <>
+                {idea.votesSum === undefined ? '-' : idea.votesSum}/
+                {props.maxCommitteeScore === undefined ? '-' : props.maxCommitteeScore}
+              </>
+            )}
+          </div>
+        ),
+    [props.maxCommitteeScore, props.isOthersCategory]
+  );
+
   return (
     <div className={props.className}>
       <table className={'decisions-grid'}>
         <colgroup>
-          <col style={{ width: '36%' }} />
-          <col style={{ width: '15%' }} />
+          <col style={{ width: props.isOthersCategory ? '30%' : '36%' }} />
+          <col style={{ width: props.isOthersCategory ? '21%' : '15%' }} />
           <col style={{ width: '22%' }} />
           <col style={{ width: '27%' }} />
         </colgroup>
@@ -28,7 +54,9 @@ export const DesktopDecisionsGrid = styled((props: DecisionsGridCommonProps) => 
             <Heading4 className={'decisions-grid__table-heading'}>Tytuł pomysłu</Heading4>
           </th>
           <th>
-            <Heading4 className={'decisions-grid__table-heading'}>Ocena komisji</Heading4>
+            <Heading4 className={'decisions-grid__table-heading'}>
+              {props.isOthersCategory ? 'Głosy komisji (TAK / NIE / BRAK GŁOSU)' : 'Ocena komisji'}
+            </Heading4>
           </th>
           <th>
             <Heading4 className={'decisions-grid__table-heading'}>Ocena użytkowników</Heading4>
@@ -46,10 +74,7 @@ export const DesktopDecisionsGrid = styled((props: DecisionsGridCommonProps) => 
                   <div>{idea.title || 'Tytuł nieznany'}</div>
                 </td>
                 <td>
-                  <div>
-                    {idea.votesSum === undefined ? '-' : idea.votesSum}/
-                    {props.maxCommitteeScore === undefined ? '-' : props.maxCommitteeScore}
-                  </div>
+                  <CommitteeVotes idea={idea} />
                 </td>
 
                 <td>

@@ -35,6 +35,10 @@ const JustificationComponent = styled(
     const divRef = React.useRef<HTMLDivElement>(null);
     useOutsideClick(divRef, props.onClose);
 
+    React.useEffect(() => {
+      document.querySelector<HTMLTextAreaElement>('.form-row textarea')?.focus();
+    }, []);
+
     let buttonText;
 
     switch (decision) {

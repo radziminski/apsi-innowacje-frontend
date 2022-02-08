@@ -6,7 +6,7 @@ import apiClient from '~/api-client';
 export interface UserState {
   isAuthenticated: boolean | null;
   currentUser: UserDto | null;
-  allUsers: UserDto[];
+  allUsers: UserDto[] | null;
   isLoading: boolean;
   isError: boolean;
   isUserAuthenticating: boolean;
@@ -18,7 +18,7 @@ export interface UserState {
 
 const initialState: UserState = {
   isAuthenticated: null,
-  allUsers: [],
+  allUsers: null,
   currentUser: null,
   isLoading: true,
   isError: false,

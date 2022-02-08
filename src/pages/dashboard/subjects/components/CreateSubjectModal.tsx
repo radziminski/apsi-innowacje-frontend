@@ -15,8 +15,7 @@ import { toast } from 'react-toastify';
 import { components } from 'react-select';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { getAllSubjects } from '~/store/slices/CreateSubjectsSlice';
-// import { useDispatch } from 'react-redux';
+import { getSubjects } from '~/store/slices/CreateIdeasSlice';
 
 interface CreateSubjectModalProps {
   closeSelf: () => void;
@@ -117,7 +116,7 @@ export const CreateSubjectModal = styled((props: CreateSubjectModalProps) => {
       if ([200, 201].includes(response.status)) {
         toast.success('Temat został zapisany.');
         setRequestStatus('success');
-        dispatch(getAllSubjects());
+        dispatch(getSubjects());
         props.closeSelf();
       } else {
         setRequestStatus('error');

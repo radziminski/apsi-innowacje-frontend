@@ -140,7 +140,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         value: null as any,
         label: 'Inne',
-        details: 'Nieznana'
+        details: 'Wszyscy'
       };
 
       return [...mappedSubjects, otherSubject];

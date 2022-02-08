@@ -15,6 +15,32 @@ export const MobileDecisionsGrid = styled((props: DecisionsGridCommonProps) => {
     [props.onIdeaClick]
   );
 
+  const CommitteeVotes = React.useMemo(
+    () =>
+      ({ idea }) =>
+        (
+          <>
+            {props.isOthersCategory ? (
+              <>
+                {idea.votesSum === undefined ? '-' : idea.votesSum}/
+                {idea.rejectsSum === undefined ? '-' : idea.rejectsSum}/
+                {props.maxCommitteeScore === undefined
+                  ? '-'
+                  : props.maxCommitteeScore -
+                    (idea.votesSum === undefined ? 0 : idea.votesSum) -
+                    (idea.rejectsSum === undefined ? 0 : idea.rejectsSum)}
+              </>
+            ) : (
+              <>
+                {idea.votesSum === undefined ? '-' : idea.votesSum}/
+                {props.maxCommitteeScore === undefined ? '-' : props.maxCommitteeScore}
+              </>
+            )}
+          </>
+        ),
+    [props.maxCommitteeScore, props.isOthersCategory]
+  );
+
   return (
     <div className={props.className}>
       <FlexBox className={'decisions-grid'} flexDirection={'column'}>
@@ -29,9 +55,10 @@ export const MobileDecisionsGrid = styled((props: DecisionsGridCommonProps) => {
                 </span>
               </div>
               <div>
-                <Heading5>Ocena komisji: </Heading5>
-                {idea.votesSum === undefined ? '-' : idea.votesSum}/
-                {props.maxCommitteeScore === undefined ? '-' : props.maxCommitteeScore}
+                <Heading5>
+                  {props.isOthersCategory ? 'Głosy komisji (TAK / NIE / BRAK GŁOSU): ' : 'Ocena komisji: '}
+                </Heading5>
+                <CommitteeVotes idea={idea} />
               </div>
               <div>
                 <Heading5>Ocena użytkowników:</Heading5>

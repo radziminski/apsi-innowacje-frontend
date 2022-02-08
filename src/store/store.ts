@@ -4,7 +4,6 @@ import userReducer from './slices/CreateUserSlice';
 import ideasReducer from './slices/CreateIdeasSlice';
 import inspirationsReducer from './slices/CreateInspirationsSlice';
 import decisionsIdeasReducer from '~/store/slices/CreateDecisionsIdeasSlice';
-import subjectsReducer from '~/store/slices/CreateSubjectsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,8 +11,7 @@ export const store = configureStore({
     user: userReducer,
     ideas: ideasReducer,
     inspirations: inspirationsReducer,
-    decisionsIdeas: decisionsIdeasReducer,
-    subjects: subjectsReducer
+    decisionsIdeas: decisionsIdeasReducer
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

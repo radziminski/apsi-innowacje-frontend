@@ -7,9 +7,9 @@ import { FlexBox } from '~/components/Box';
 import Loader from '~/components/Loader';
 
 export interface IdeasState {
-  ideasBySubject: Record<number, IdeaDto[]>;
-  maxVotesBySubject: Record<number, number>;
-  committeeMembersBySubject: Record<number, number[]>;
+  ideasBySubject: Record<number & 'others', IdeaDto[]>;
+  maxVotesBySubject: Record<number & 'others', number>;
+  committeeMembersBySubject: Record<number & 'others', number[]>;
   isLoading: boolean;
   isSingleIdeaLoading: boolean;
   isDecisionOnIdeaLoading: boolean;
@@ -37,34 +37,30 @@ const DecisionPendingMsg = () => {
 };
 
 export const getIdeasBySubject = createAsyncThunk<
-  { ideas: IdeaDto[] | null; maxVotes: number | null; committeeMembers: number[] | null; subjectId: number },
-  number
->('ideas/getBySubject', async subjectId => {
-  const [ideasResponse, maxVotesResponse, committeeMembersResponse] = await Promise.all([
-    apiClient.getIdeasBySubjectIdUsingGET(subjectId),
-    apiClient.getNumberOfAllowedVotesForSubjectUsingGET(subjectId),
-    apiClient.getCommitteeIdsBySubjectIdUsingGET(subjectId)
+  { ideas: IdeaDto[] | null; maxVotes: number | null; committeeMembers: number[] | null },
+  { subjectId: number | null; ideas: IdeaDto[] }
+>('ideas/getBySubject', async ({ subjectId, ideas }) => {
+  const [filteredIdeas, maxVotesResponse, committeeMembersResponse] = await Promise.all([
+    Promise.resolve(ideas.filter(id => id.subjectId === subjectId)),
+    subjectId === null ? Promise.resolve(null) : apiClient.getNumberOfAllowedVotesForSubjectUsingGET(subjectId),
+    subjectId === null ? Promise.resolve(null) : apiClient.getCommitteeIdsBySubjectIdUsingGET(subjectId)
   ]);
 
   return {
-    ideas: ideasResponse.status === 200 ? ideasResponse.data : null,
-    maxVotes: maxVotesResponse.status == 200 ? maxVotesResponse.data : null,
-    committeeMembers: committeeMembersResponse.status == 200 ? committeeMembersResponse.data : null,
-    subjectId
+    ideas: filteredIdeas,
+    maxVotes: maxVotesResponse ? maxVotesResponse.data : null,
+    committeeMembers: committeeMembersResponse ? committeeMembersResponse.data : null
   };
 });
 
-export const getSingleIdea = createAsyncThunk<
-  { idea: IdeaDto | null; subjectId: number },
-  { ideaId: number; subjectId: number }
->('ideas/getSingle', async ({ ideaId, subjectId }) => {
-  const response = await apiClient.getIdeaByIdUsingGET(ideaId);
+export const getSingleIdea = createAsyncThunk<IdeaDto | null, { ideaId: number; subjectId: number | 'others' }>(
+  'ideas/getSingle',
+  async ({ ideaId }) => {
+    const response = await apiClient.getIdeaByIdUsingGET(ideaId);
 
-  return {
-    idea: response.status === 200 ? response.data : null,
-    subjectId
-  };
-});
+    return response.status === 200 ? response.data : null;
+  }
+);
 
 export const makeDecisionOnIdea = createAsyncThunk<
   { success: boolean; decision: DecisionDto },
@@ -77,7 +73,7 @@ export const makeDecisionOnIdea = createAsyncThunk<
 
 export const makeDecisionOnIdeaAndGet = createAsyncThunk<
   void,
-  { ideaId: number; subjectId: number; decision: DecisionDto }
+  { ideaId: number; subjectId: number | 'others'; decision: DecisionDto }
 >('ideas/makeDecisionAndGet', async ({ ideaId, subjectId, decision }, { dispatch }) => {
   const result = await dispatch(makeDecisionOnIdea({ ideaId, decision }));
   if ((result.payload as { success: boolean; decision: DecisionDto }).success) {
@@ -88,20 +84,20 @@ export const makeDecisionOnIdeaAndGet = createAsyncThunk<
 const createGetIdeasBySubjectReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(getIdeasBySubject.fulfilled, (state, action) => {
     // Do not use includes(null), as TS loses null-checking
-    if (action.payload.ideas === null || action.payload.maxVotes === null || action.payload.committeeMembers === null) {
-      toast.error('Wystąpił problem podczas pobierania pomysłów.', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
+    if (
+      action.payload.ideas === null ||
+      (action.meta.arg.subjectId !== null &&
+        action.payload.maxVotes === null &&
+        action.payload.committeeMembers === null)
+    ) {
+      toast.error('Wystąpił problem podczas pobierania pomysłów.');
     } else {
-      state.ideasBySubject[action.payload.subjectId] = action.payload.ideas;
-      state.maxVotesBySubject[action.payload.subjectId] = action.payload.maxVotes;
-      state.committeeMembersBySubject[action.payload.subjectId] = action.payload.committeeMembers;
+      // eslint-disable-next-line no-console
+      console.log(action.payload.ideas);
+      const key = action.meta.arg.subjectId === null ? 'others' : action.meta.arg.subjectId;
+      state.ideasBySubject[key] = action.payload.ideas;
+      state.maxVotesBySubject[key] = action.payload.maxVotes;
+      state.committeeMembersBySubject[key] = action.payload.committeeMembers;
     }
     state.isLoading = false;
   });
@@ -110,26 +106,19 @@ const createGetIdeasBySubjectReducers = (builder: ActionReducerMapBuilder<IdeasS
   });
   builder.addCase(getIdeasBySubject.rejected, state => {
     state.isLoading = false;
-    toast.error('Wystąpił problem podczas pobierania pomysłów.', {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined
-    });
+    toast.error('Wystąpił problem podczas pobierania pomysłów.');
   });
 };
 
 const createGetSingleIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(getSingleIdea.fulfilled, (state, action) => {
-    if (action.payload.idea !== null) {
-      state.ideasBySubject[action.payload.subjectId] = state.ideasBySubject[action.payload.subjectId].reduce(
+    if (action.payload !== null) {
+      state.ideasBySubject[action.meta.arg.subjectId] = state.ideasBySubject[action.meta.arg.subjectId].reduce(
         (all, idea) => {
-          if (idea.id === action.payload.idea?.id) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          if (idea.id === action.payload!.id) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            all.push(action.payload.idea!);
+            all.push(action.payload!);
           } else {
             all.push(idea);
           }

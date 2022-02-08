@@ -7,14 +7,13 @@ import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useSelector } from '~/store/hooks';
 import { SubjectCard } from '~/pages/dashboard/subjects/components/SubjectCard';
 import { useDispatch } from 'react-redux';
-import { getAllSubjects } from '~/store/slices/CreateSubjectsSlice';
 import { getAllUsers } from '~/store/slices/CreateUserSlice';
-import { getIdeas } from '~/store/slices/CreateIdeasSlice';
+import { getIdeas, getSubjects } from '~/store/slices/CreateIdeasSlice';
 import { CreateSubject } from '~/pages/dashboard/subjects/components/CreateSubject';
 import { UserRole } from '~/api-client';
 
 export const SubjectsOverviewPage = styled((props: { className?: string }) => {
-  const { subjects, isLoading, isError } = useSelector(state => state.subjects);
+  const { subjects, isLoadingSubjects, isSubjectsError } = useSelector(state => state.ideas);
   const { allUsers, isLoadingAllUsers } = useSelector(state => state.user);
   const { ideas, isLoading: isIdeasLoading } = useSelector(state => state.ideas);
   const { currentUser } = useSelector(state => state.user);
@@ -23,11 +22,11 @@ export const SubjectsOverviewPage = styled((props: { className?: string }) => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (subjects.length === 0 && !isLoading) {
-      dispatch(getAllSubjects());
+    if ((!subjects || subjects.length === 0) && !isLoadingSubjects) {
+      dispatch(getSubjects());
     }
 
-    if (allUsers.length === 0 && !isLoadingAllUsers) {
+    if (!allUsers && !isLoadingAllUsers) {
       dispatch(getAllUsers());
     }
 
@@ -45,8 +44,8 @@ export const SubjectsOverviewPage = styled((props: { className?: string }) => {
       }>
       {canCreateSubject && <CreateSubject />}
       <AsyncContentContainer
-        isLoading={isLoading}
-        isError={isError}
+        isLoading={isLoadingSubjects}
+        isError={isSubjectsError}
         errorMessage="Wystąpił błąd podczas pobierania tematów.">
         <FlexBox className={props.className}>
           {subjects &&
