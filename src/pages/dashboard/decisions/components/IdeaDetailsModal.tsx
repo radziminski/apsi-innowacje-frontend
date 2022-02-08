@@ -2,8 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Heading3, Paragraph } from '~/components/Text';
 import CommonModal from '~/components/CommonModal';
-import { IdeaDto } from '~/api-client';
+import { IdeaDto, UserDto } from '~/api-client';
 import Box, { FlexBox } from '~/components/Box';
+import { useSelector } from '~/store/hooks';
+import { useDispatch } from 'react-redux';
+import { getAllUsers } from '~/store/slices/CreateUserSlice';
 
 interface IdeaDetailsModalProps {
   idea: IdeaDto | null;
@@ -12,12 +15,26 @@ interface IdeaDetailsModalProps {
   className?: string;
 }
 export const IdeaDetailsModal = styled((props: IdeaDetailsModalProps) => {
-  // const [author, setAuthor] = React.useState<UserDto | null>(null);
+  const [author, setAuthor] = React.useState<UserDto | null | undefined>(null);
+  const { allUsers, isLoadingAllUsers } = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const onCloseModal = React.useCallback(() => {
     if (props.isVisible) {
       props.onClose();
     }
   }, [props.isVisible, props.onClose]);
+
+  React.useEffect(() => {
+    if (!allUsers && !isLoadingAllUsers) {
+      dispatch(getAllUsers());
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (allUsers) {
+      setAuthor(allUsers.find(user => user.id === props.idea?.authorId));
+    }
+  }, [allUsers, props.idea]);
 
   return (
     <CommonModal isVisible={props.isVisible} onClose={onCloseModal}>
@@ -51,7 +68,13 @@ export const IdeaDetailsModal = styled((props: IdeaDetailsModalProps) => {
             </div>
             <div>
               <Paragraph fontWeight={500}>Autor:</Paragraph>
-              {props.idea.anonymous ? 'Anonimowy' : props.idea.id ? props.idea.id : 'Nieznany'}
+              {props.idea.anonymous
+                ? 'Anonimowy'
+                : author === null
+                ? '...'
+                : author === undefined
+                ? 'Nieznany'
+                : `${author.firstName}  ${author.lastName}`}
             </div>
           </FlexBox>
         </div>
