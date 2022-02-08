@@ -40,15 +40,17 @@ export const IdeaCard: React.FC<Props> = ({ idea, votingMode }) => {
   const [reviewsModalOpened, setReviewsModalOpened] = useState(false);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
   const [blockModalOpened, setBlockModalOpened] = useState(false);
-  const [author, setAuthor] = useState<UserDto | null | undefined>(null);
-  const { currentUser, allUsers, isLoadingAllUsers } = useSelector(state => state.user);
+  const { currentUser, allUsers, isLoadingAllUsers, isErrorAllUsers } = useSelector(state => state.user);
+  const [author, setAuthor] = useState<UserDto | null | undefined>(
+    allUsers ? allUsers.find(user => user.id === idea?.authorId) : null
+  );
   const { deletedIdeas, isDeleting, isDeleteError, blockedIdeas, isBlocking, isBlockError } = useSelector(
     state => state.ideas
   );
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (!allUsers && !isLoadingAllUsers) {
+    if (!allUsers && !isLoadingAllUsers && !isErrorAllUsers) {
       dispatch(getAllUsers());
     }
   }, []);
