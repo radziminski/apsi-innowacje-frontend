@@ -68,7 +68,7 @@ export const DecisionsPage = styled((props: { className?: string }) => {
         const fetchedSubjects: SubjectDto[] = response.data;
 
         const fetchedOptions = fetchedSubjects
-          .filter(subject => subject.done)
+          .filter(subject => !subject.done)
           .map(subject => ({
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             value: `${subject.id!}`,
@@ -208,8 +208,8 @@ export const DecisionsPage = styled((props: { className?: string }) => {
                   maxVotes && committeeMembers
                     ? maxVotes * committeeMembers.length
                     : committeeMembers
-                    ? committeeMembers.length
-                    : undefined
+                      ? committeeMembers.length
+                      : undefined
                 }
                 onIdeaClick={onIdeaClick}
                 onDecision={onDecision}
@@ -222,8 +222,8 @@ export const DecisionsPage = styled((props: { className?: string }) => {
                   maxVotes && committeeMembers
                     ? maxVotes * committeeMembers.length
                     : committeeMembers
-                    ? committeeMembers.length
-                    : undefined
+                      ? committeeMembers.length
+                      : undefined
                 }
                 onIdeaClick={onIdeaClick}
                 onDecision={onDecision}
