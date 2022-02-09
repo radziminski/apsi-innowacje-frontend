@@ -10,10 +10,16 @@ import { InspirationCard } from '~/pages/dashboard/inspirations/components/Inspi
 import useDevice from '~/hooks/useDevice';
 import DashboardContent from '~/components/DashboardContent/DashboardContent';
 import { CenteredLoader } from '~/components/Loader';
-import AsyncContentContainer from '~/components/AsyncContentContainer';
 import { useSelector } from '~/store/hooks';
 import { RootState } from '~/store/store';
-import { getInspirations } from '~/store/slices/CreateInspirationsSlice';
+import {
+  deleteCommentAndThenUpdateInspiration,
+  deleteInspiration,
+  getInspirations
+} from '~/store/slices/CreateInspirationsSlice';
+import { MdDeleteForever } from 'react-icons/md';
+import { useDispatch } from 'react-redux';
+import ConfirmModal from '~/components/ConfirmModal';
 
 interface InspirationsPageProps {
   className?: string;
@@ -21,12 +27,87 @@ interface InspirationsPageProps {
 
 const PAGE_SIZE = 8;
 
+export const DeleteIconComponent = styled((props: { onDeleteClick: (e) => void; className?: string }) => (
+  <>
+    <Box
+      className={props.className}
+      as="button"
+      transform="scale(1.3)"
+      marginTop={'-5px'}
+      paddingLeft="0.5rem"
+      onClick={e => props.onDeleteClick(e)}>
+      <MdDeleteForever />
+    </Box>
+  </>
+))`
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+  svg {
+    transform: translateY(3px);
+  }
+  transition: all 0.3s;
+`;
+
 const InspirationsPageBase = (props: InspirationsPageProps) => {
   const [chosenInspirationId, setChosenInspirationId] = React.useState<number | undefined>(undefined);
   const [isDetailsOpened, setIsDetailsOpened] = React.useState<boolean>(false);
-  const { inspirations } = useSelector(state => state.inspirations);
-
+  const [deleteInspirationModalVisible, setDeleteInspirationModalVisible] = React.useState<boolean>(false);
+  const [deleteCommentModalVisible, setDeleteCommentModalVisible] = React.useState<boolean>(false);
+  const inspirationIdToDelete = React.useRef<number | null>(null);
+  const commentIdToDelete = React.useRef<number | null>(null);
+  const { inspirations, isDeletingInspirationSuccess } = useSelector(state => state.inspirations);
   const { isWideTab } = useDevice();
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (isDeletingInspirationSuccess === true) {
+      setChosenInspirationId(undefined);
+      setIsDetailsOpened(false);
+    }
+  }, [isDeletingInspirationSuccess]);
+
+  const onDeleteComment = React.useCallback((commentId: number) => {
+    setDeleteCommentModalVisible(true);
+    commentIdToDelete.current = commentId;
+  }, []);
+
+  const onDeleteCommentModalConfirm = React.useCallback(() => {
+    if (commentIdToDelete.current !== null && chosenInspirationId !== undefined) {
+      dispatch(
+        deleteCommentAndThenUpdateInspiration({
+          commentId: commentIdToDelete.current,
+          inspirationId: chosenInspirationId
+        })
+      );
+    }
+    setDeleteCommentModalVisible(false);
+  }, [commentIdToDelete.current]);
+
+  const onCloseDeleteCommentModal = React.useCallback(() => {
+    commentIdToDelete.current = null;
+    setDeleteCommentModalVisible(false);
+  }, []);
+
+  const onDeleteInspirationClick = React.useCallback((e, inspirationId: number | null | undefined) => {
+    e.stopPropagation();
+    if (inspirationId) {
+      inspirationIdToDelete.current = inspirationId;
+      setDeleteInspirationModalVisible(true);
+    }
+  }, []);
+
+  const onDeleteInspirationModalConfirm = React.useCallback(() => {
+    if (inspirationIdToDelete.current !== null) {
+      dispatch(deleteInspiration(inspirationIdToDelete.current));
+    }
+    setDeleteInspirationModalVisible(false);
+  }, [inspirationIdToDelete.current]);
+
+  const onCloseDeleteInspirationModal = React.useCallback(() => {
+    inspirationIdToDelete.current = null;
+    setDeleteInspirationModalVisible(false);
+  }, []);
 
   const closeInspirationDetails = React.useCallback(() => {
     setIsDetailsOpened(false);
@@ -57,57 +138,71 @@ const InspirationsPageBase = (props: InspirationsPageProps) => {
 
   return (
     <DashboardContent title="Portal Inspiracji" icon={<BiMessageDetail size={28} />}>
-      <AsyncContentContainer
-        isLoading={inspirations === null && isLoading}
-        isError={inspirations === null && isError}
-        errorMessage="Wystąpił błąd z odświeżaniem pomysłów.">
-        {inspirations && (
-          <FlexBox className={props.className}>
-            <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
-              <CreateInspiration />
-              <Box>
-                {inspirations.map((inspiration, index) =>
-                  inspiration.id ? (
-                    <CSSTransition
-                      in={chosenInspirationId === inspiration.id}
-                      key={inspiration.id}
-                      timeout={500}
-                      classNames="inspiration-list-item">
-                      <InspirationCard
-                        inspiration={inspiration}
-                        onClick={() => {
-                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                          onInspirationClick(inspiration.id!);
-                        }}
-                        ref={ref => {
-                          if (inspirations.length === index + 1) {
-                            lastElementRef(ref);
-                          }
-                        }}
-                        customClassName={'inspiration-list-item'}
-                      />
-                    </CSSTransition>
-                  ) : null
-                )}
-              </Box>
-              {isLoading && loader}
-              {!isLoading && isError && errorComponent}
-              {hasMore || isLoading || noMoreComponent}
-            </div>
-            <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
-              {chosenInspirationId && chosenInspirationId && (
-                <FlexBox>
-                  <InspirationDetails
-                    inspirationId={chosenInspirationId}
-                    onClose={closeInspirationDetails}
-                    isOpened={isDetailsOpened}
-                  />
-                </FlexBox>
+      {inspirations && (
+        <FlexBox className={props.className}>
+          <ConfirmModal
+            title={'Czy na pewno chcesz usunąć tę inspirację?'}
+            onConfirm={onDeleteInspirationModalConfirm}
+            onClose={onCloseDeleteInspirationModal}
+            isVisible={deleteInspirationModalVisible}
+          />
+          <ConfirmModal
+            title={'Czy na pewno chcesz usunąć ten komentarz?'}
+            onConfirm={onDeleteCommentModalConfirm}
+            onClose={onCloseDeleteCommentModal}
+            isVisible={deleteCommentModalVisible}
+          />
+          <div className={`inspiration-list${isDetailsOpened && isWideTab ? '--hidden' : ''}`}>
+            <CreateInspiration />
+            <Box>
+              {inspirations.map((inspiration, index) =>
+                inspiration.id ? (
+                  <CSSTransition
+                    in={chosenInspirationId === inspiration.id}
+                    key={inspiration.id}
+                    timeout={500}
+                    classNames="inspiration-list-item">
+                    <InspirationCard
+                      inspiration={inspiration}
+                      onClick={() => {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        onInspirationClick(inspiration.id!);
+                      }}
+                      deleteComponent={
+                        <DeleteIconComponent onDeleteClick={e => onDeleteInspirationClick(e, inspiration.id)} />
+                      }
+                      ref={ref => {
+                        if (inspirations.length === index + 1) {
+                          lastElementRef(ref);
+                        }
+                      }}
+                      customClassName={'inspiration-list-item'}
+                    />
+                  </CSSTransition>
+                ) : null
               )}
-            </div>
-          </FlexBox>
-        )}
-      </AsyncContentContainer>
+            </Box>
+            {isLoading && loader}
+            {!isLoading && isError && errorComponent}
+            {hasMore || isLoading || noMoreComponent}
+          </div>
+          <div className={`inspiration-details${isDetailsOpened ? '' : '--hidden'}`}>
+            {chosenInspirationId && (
+              <FlexBox>
+                <InspirationDetails
+                  inspirationId={chosenInspirationId}
+                  onClose={closeInspirationDetails}
+                  isOpened={isDetailsOpened}
+                  deleteComponent={
+                    <DeleteIconComponent onDeleteClick={e => onDeleteInspirationClick(e, chosenInspirationId)} />
+                  }
+                  onDeleteComment={onDeleteComment}
+                />
+              </FlexBox>
+            )}
+          </div>
+        </FlexBox>
+      )}
     </DashboardContent>
   );
 };

@@ -2,23 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 import { Card } from '~/components/Box';
 import { TextInput } from '~/components/forms/FormTextInput/TextInput';
-import { ProfilePicture } from '~/pages/dashboard/inspirations/components/ProfilePicture';
-import { CreateInspirationModal } from './components/CreateInspirationModal';
+import { CreateSubjectModal } from './CreateSubjectModal';
 
-export const CreateInspiration = styled((props: { className?: string }) => {
+export const CreateSubject = styled((props: { className?: string }) => {
   const [modalOpened, setModalOpened] = React.useState<boolean>(false);
 
   return (
     <>
-      {modalOpened && <CreateInspirationModal closeSelf={() => setModalOpened(false)} />}
-      <label htmlFor={'create-post__input'}>
+      {modalOpened && <CreateSubjectModal closeSelf={() => setModalOpened(false)} />}
+      <label htmlFor={'create-subject__input'}>
         <Card className={props.className} onClick={() => setModalOpened(true)}>
-          <ProfilePicture />
           <TextInput
-            id={'create-post__input'}
+            id={'create-subject__input'}
             type={'text'}
-            placeholder={'Prześlij pomysł'}
-            customClassName={'create-inspiration__text-input'}
+            placeholder={'Dodaj temat'}
+            customClassName={'create-subject__text-input'}
             disabled
           />
         </Card>
@@ -38,7 +36,7 @@ export const CreateInspiration = styled((props: { className?: string }) => {
   .profile-picture {
     margin-right: ${({ theme }) => theme.spacing.s};
   }
-  .create-inspiration__text-input {
+  .create-subject__text-input {
     background-color: ${({ theme }) => theme.colors.lightGray};
     ::placeholder {
       color: black;

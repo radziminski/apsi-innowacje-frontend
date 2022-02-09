@@ -25,6 +25,9 @@ const ButtonBase = (props: ButtonProps & StyledComponentPropsWithRef<'button'>):
 };
 
 export const Button = styled(ButtonBase)`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   min-width: 130px;
   background-color: ${props => (props.primary ? props.theme.colors.primary : props.theme.colors.secondary)};
   border-radius: ${({ theme }) => theme.borderRadiuses.normal};

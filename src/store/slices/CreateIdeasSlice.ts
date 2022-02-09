@@ -1,6 +1,7 @@
-import { ReviewDto } from './../../api-client/java/api';
+import { ReviewDto, SubjectDto } from './../../api-client/java/api';
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import apiClient, { IdeaDto } from '~/api-client';
+import { toast } from 'react-toastify';
 
 export interface IdeasState {
   ideas: IdeaDto[] | null;
@@ -19,6 +20,14 @@ export interface IdeasState {
   isBlockError: boolean;
   isBlocking: boolean;
   blockedIdeas: number[];
+  isLoadingSubjects: boolean;
+  isSubjectsError: boolean;
+  subjects: SubjectDto[] | null;
+  isLoadingVotes: boolean;
+  isVotesError: boolean;
+  subjectVotes: Record<number, number>;
+  votingSubmitted: boolean;
+  isVotingSubmissionError: boolean;
 }
 
 const initialState: IdeasState = {
@@ -37,20 +46,34 @@ const initialState: IdeasState = {
   deletedIdeas: [],
   isBlocking: false,
   isBlockError: false,
-  blockedIdeas: []
+  blockedIdeas: [],
+  isLoadingSubjects: false,
+  isSubjectsError: false,
+  subjects: null,
+  isLoadingVotes: false,
+  isVotesError: false,
+  subjectVotes: {},
+  votingSubmitted: false,
+  isVotingSubmissionError: false
 };
 
-export const getIdeas = createAsyncThunk<IdeaDto[], void>('ideas/getAll', async () => {
+export const getIdeas = createAsyncThunk<IdeaDto[] | null, void>('ideas/getAll', async () => {
   const response = await apiClient.getAllIdeasUsingGET();
-  return response.data;
+  return response.status === 200 ? response.data : null;
 });
 
 const createGetIdeasReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   builder.addCase(getIdeas.fulfilled, (state, action) => {
-    state.ideas = [...action.payload];
+    if (action.payload === null) {
+      state.isError = true;
+      state.error = null;
+      toast.error('Wystąpił problem podczas pobierania pomysłów.');
+    } else {
+      state.ideas = [...action.payload];
+      state.isError = false;
+      state.error = null;
+    }
     state.isLoading = false;
-    state.isError = false;
-    state.error = null;
   });
   builder.addCase(getIdeas.pending, state => {
     state.isError = false;
@@ -58,6 +81,7 @@ const createGetIdeasReducers = (builder: ActionReducerMapBuilder<IdeasState>) =>
     state.isLoading = true;
   });
   builder.addCase(getIdeas.rejected, (state, action) => {
+    toast.error('Wystąpił problem podczas pobierania pomysłów.');
     state.isLoading = false;
     state.isError = true;
     state.error = action.error;
@@ -163,6 +187,113 @@ const blockIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
   });
 };
 
+export const getSubjects = createAsyncThunk<SubjectDto[]>('ideas/subjects', async () => {
+  return (await apiClient.getAllSubjectsUsingGET()).data;
+});
+
+const getSubjectsReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(getSubjects.fulfilled, (state, action) => {
+    state.isLoadingSubjects = false;
+    state.isSubjectsError = false;
+    state.subjects = action.payload;
+  });
+  builder.addCase(getSubjects.pending, state => {
+    state.isLoadingSubjects = true;
+    state.isSubjectsError = false;
+  });
+  builder.addCase(getSubjects.rejected, state => {
+    state.isLoadingSubjects = false;
+    state.isSubjectsError = true;
+    toast.error('Wystąpił problem podczas pobierania tematów.');
+  });
+};
+
+export const getVotesForSubject = createAsyncThunk<number, number>('ideas/subjects-votes', async id => {
+  return (await apiClient.getNumberOfAllowedVotesForSubjectUsingGET(id)).data;
+});
+
+const getVotesForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(getVotesForSubject.fulfilled, (state, action) => {
+    state.isLoadingVotes = false;
+    state.isVotesError = false;
+    state.subjectVotes = {
+      ...state.subjectVotes,
+      [action.meta.arg]: action.payload
+    };
+  });
+  builder.addCase(getVotesForSubject.pending, state => {
+    state.isLoadingVotes = true;
+    state.isVotesError = false;
+  });
+  builder.addCase(getVotesForSubject.rejected, state => {
+    state.isLoadingVotes = false;
+    state.isVotesError = true;
+  });
+};
+
+export const voteForSubjectIdeas = createAsyncThunk<void, { subjectId: number; votes: Record<string, number> }>(
+  'votes/{subjectId}',
+  async args => {
+    const { subjectId, votes } = args;
+    return (await apiClient.voteBySubjectIdUsingPOST(subjectId, votes)).data;
+  }
+);
+
+const createVoteForSubjectReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(voteForSubjectIdeas.fulfilled, (state, payload) => {
+    // Not setting loading for better UX - error handled by toasts
+    state.isVotingSubmissionError = false;
+    state.votingSubmitted = true;
+    state.subjects =
+      state.subjects?.map(subject => {
+        if (subject.id !== payload.meta.arg.subjectId) return subject;
+        return {
+          ...subject,
+          alreadyVoted: true
+        };
+      }) ?? null;
+  });
+  builder.addCase(voteForSubjectIdeas.pending, state => {
+    state.isVotingSubmissionError = false;
+    state.error = null;
+  });
+  builder.addCase(voteForSubjectIdeas.rejected, state => {
+    state.isVotingSubmissionError = true;
+  });
+};
+
+export const voteForUncategorizedIdea = createAsyncThunk<void, { ideaId: number; accept: boolean }>(
+  'votes/ideas/uncategorized/{id}',
+  async args => {
+    const { accept, ideaId } = args;
+    return (await apiClient.voteForUncategorizedIdeaUsingPOST(accept, ideaId)).data;
+  }
+);
+
+const createVoteForUncategorizedIdeaReducers = (builder: ActionReducerMapBuilder<IdeasState>) => {
+  builder.addCase(voteForUncategorizedIdea.fulfilled, (state, arg) => {
+    // Not setting loading for better UX - error handled by toasts
+    state.isVotingSubmissionError = false;
+    state.votingSubmitted = true;
+    state.ideas =
+      state.ideas?.map(idea => {
+        if (idea.id !== arg.meta.arg.ideaId) return idea;
+        return {
+          ...idea,
+          alreadyVoted: true
+        };
+      }) ?? null;
+  });
+  builder.addCase(voteForUncategorizedIdea.pending, state => {
+    state.isVotingSubmissionError = false;
+    state.error = null;
+  });
+  builder.addCase(voteForUncategorizedIdea.rejected, (state, action) => {
+    state.isVotingSubmissionError = true;
+    state.error = action.error;
+  });
+};
+
 export const ideasSlice = createSlice({
   name: 'ideas',
   initialState,
@@ -178,6 +309,18 @@ export const ideasSlice = createSlice({
     },
     clearBlockError: state => {
       state.isBlockError = false;
+    },
+    clearSubjectsError: state => {
+      state.isSubjectsError = false;
+    },
+    clearSubjectVotes: state => {
+      state.subjectVotes = {};
+    },
+    clearVotingSubmitted: state => {
+      state.votingSubmitted = false;
+    },
+    clearVotingSubmissionError: state => {
+      state.isVotingSubmissionError = false;
     },
     clearIdeasState: state => {
       state.ideas = null;
@@ -198,13 +341,25 @@ export const ideasSlice = createSlice({
   extraReducers: builder => {
     createGetIdeasReducers(builder);
     createReviewIdeaReducers(builder);
+    createVoteForSubjectReducers(builder);
+    createVoteForUncategorizedIdeaReducers(builder);
     getIdeaReviewsReducers(builder);
     deleteIdeaReducers(builder);
     blockIdeaReducers(builder);
+    getSubjectsReducers(builder);
+    getVotesForSubjectReducers(builder);
   }
 });
 
-export const { clearReviewError, clearBlockError, clearDeleteError, clearReviewsError, clearIdeasState } =
-  ideasSlice.actions;
+export const {
+  clearReviewError,
+  clearBlockError,
+  clearDeleteError,
+  clearReviewsError,
+  clearIdeasState,
+  clearSubjectVotes,
+  clearVotingSubmitted,
+  clearVotingSubmissionError
+} = ideasSlice.actions;
 
 export default ideasSlice.reducer;

@@ -12,13 +12,14 @@ import { CreateIdeaFormFields, schema } from '~/pages/dashboard/create-idea/sche
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SelectOption } from '~/components/forms';
 import { IdeaRequestPendingModal } from '~/pages/dashboard/create-idea/components/IdeaRequestPendingModal';
-import apiClient, { SubjectDto, SubjectDtoAudienceEnum } from '~/api-client';
+import apiClient, { SubjectDto } from '~/api-client';
 import { AxiosResponse } from 'axios';
 import { formSchemaToIdeaDTO } from '~/pages/dashboard/create-idea/util';
 import { components } from 'react-select';
 import { toast } from 'react-toastify';
 import { RequestStatus } from '~/constants/constants';
 import { getIdeas } from '~/store/slices/CreateIdeasSlice';
+import { subjectDTOAudienceToSelectText } from '~/utils/utils';
 
 export interface CreateIdeaFormSchema {
   [CreateIdeaFormFields.title]: string;
@@ -46,28 +47,6 @@ export const CustomSubjectSelectOption = ({ innerRef, innerProps, ...restProps }
   );
 };
 
-function subjectDTOAudienceToSelectText(
-  audience:
-    | SubjectDtoAudienceEnum.Student
-    | SubjectDtoAudienceEnum.Employee
-    | SubjectDtoAudienceEnum.Committee
-    | SubjectDtoAudienceEnum.Admin
-    | null
-    | undefined
-): string {
-  switch (audience) {
-    case SubjectDtoAudienceEnum.Student:
-      return 'Studenci';
-    case SubjectDtoAudienceEnum.Employee:
-      return 'Wykładowcy';
-    case SubjectDtoAudienceEnum.Committee:
-      return 'Komisja';
-    case SubjectDtoAudienceEnum.Admin:
-      return 'Administratorzy';
-  }
-  return 'Nieznana';
-}
-
 const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   const methods = useForm({
     resolver: yupResolver(schema)
@@ -93,22 +72,8 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
     };
   }, []);
 
-  const toastError = (message: string) => {
-    toast.error(message, {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined
-    });
-  };
-
   const onSubmit = React.useCallback(
     async (data: CreateIdeaFormSchema) => {
-      // eslint-disable-next-line no-console
-      console.log(data);
       if (currentUser && currentUser.id) {
         const ideaDTO = formSchemaToIdeaDTO(data, currentUser.id);
         try {
@@ -136,20 +101,20 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
                   dispatch(getIdeas());
                 } else {
                   setRequestStatus('error');
-                  toastError('Niestety nie udało się zapisać załączników.');
+                  toast.error('Niestety nie udało się zapisać załączników.');
                 }
               })
               .catch(() => {
                 setRequestStatus('error');
-                toastError('Niestety nie udało się zapisać załączników.');
+                toast.error('Niestety nie udało się zapisać załączników.');
               });
           } else {
             setRequestStatus('error');
-            toastError('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
+            toast.error('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
           }
         } catch (e) {
           setRequestStatus('error');
-          toastError('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
+          toast.error('Wystąpił problem podczas zapisywania posta. Post nie został zapisany.');
         }
         return;
       }
@@ -158,14 +123,31 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
   );
 
   const fetchSubjects = React.useCallback(async (): Promise<SelectOption[]> => {
-    const fetchedSubjects: SubjectDto[] = (await apiClient.getAllSubjectsUsingGET()).data;
+    const response = await apiClient.getAllSubjectsUsingGET();
+    if (response.status === 200) {
+      const fetchedSubjects: SubjectDto[] = response.data;
 
-    return fetchedSubjects.map(subject => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      value: `${subject.id!}`,
-      label: subject.name ?? 'Nieznany',
-      details: subjectDTOAudienceToSelectText(subject.audience)
-    }));
+      const mappedSubjects = fetchedSubjects
+        .filter(subject => !subject.done)
+        .map(subject => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          value: `${subject.id!}`,
+          label: subject.name ?? 'Nieznany',
+          details: subjectDTOAudienceToSelectText(subject.audience)
+        }));
+
+      const otherSubject = {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        value: null as any,
+        label: 'Inne',
+        details: 'Wszyscy'
+      };
+
+      return [...mappedSubjects, otherSubject];
+    } else {
+      toast.error('Wystąpił problem podczas pobierania tematów.');
+      return [];
+    }
   }, []);
 
   return (
@@ -237,6 +219,7 @@ const CreateIdeaForm = (props: { className?: string }): JSX.Element => {
 
 export default styled(CreateIdeaForm)`
   .create-idea-form {
+    max-width: 1000px;
     margin: ${({ theme }) => theme.spacing.s};
 
     @media ${({ theme }) => theme.mediaQueries.mobile} {

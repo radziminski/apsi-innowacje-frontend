@@ -8,6 +8,8 @@ export interface InspirationDetailsProps {
   onClose: () => void;
   isOpened?: boolean;
   className?: string;
+  deleteComponent: JSX.Element;
+  onDeleteComment: (commentId: number) => void;
 }
 
 export const InspirationDetails = (props: InspirationDetailsProps) => {

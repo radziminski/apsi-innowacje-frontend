@@ -47,6 +47,7 @@ export interface CustomTheme {
   breakpoints: Record<Device, number>;
   mediaQueries: Record<Device, string>;
   spacing: {
+    xs: string;
     s: string;
     m: string;
     l: string;

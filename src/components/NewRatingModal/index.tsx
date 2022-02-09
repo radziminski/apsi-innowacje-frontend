@@ -8,6 +8,7 @@ import { Button } from '../Button';
 import CommonModal from '../CommonModal';
 import { TextArea } from '../forms/FormTextArea/TextArea';
 import { Heading3, Heading5 } from '../Text';
+import { Asterisk } from '~/components/forms/Asterisk/Asterisk';
 
 interface Props {
   ideaId: number;
@@ -51,7 +52,8 @@ const NewRatingModal: React.FC<Props> = ({ onClose, ideaId, ideaTitle, isVisible
       <Heading3 textAlign="center">Oceń pomysł {ideaTitle ? `"${ideaTitle}"` : ''}</Heading3>
       <Box maxWidth="400px" margin="0 auto">
         <Center padding="2rem 0 0.2rem">
-          Ocena*: {ratingTempValue ?? ratingValue ?? 'brak'}
+          Ocena
+          <Asterisk />: {ratingTempValue ?? ratingValue ?? 'brak'}
           <Box marginLeft="auto">
             <Rating onHover={setRatingTempValue} onChange={setRatingValue} initialRating={ratingValue} />
           </Box>

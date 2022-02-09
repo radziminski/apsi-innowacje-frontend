@@ -633,12 +633,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetAllGet: async (page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postGetAllGet: async (sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Post/GetAll`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -654,6 +656,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
             // authentication Bearer required
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (sortDate !== undefined) {
+                localVarQueryParameter['SortDate'] = sortDate;
+            }
+
+            if (sortDescending !== undefined) {
+                localVarQueryParameter['SortDescending'] = sortDescending;
+            }
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -753,12 +763,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @param {string} [authorUsername] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByAnswerAuthorGet: async (authorUsername?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postGetPostsByAnswerAuthorGet: async (authorUsername?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Post/GetPostsByAnswerAuthor`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -777,6 +789,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (authorUsername !== undefined) {
                 localVarQueryParameter['AuthorUsername'] = authorUsername;
+            }
+
+            if (sortDate !== undefined) {
+                localVarQueryParameter['SortDate'] = sortDate;
+            }
+
+            if (sortDescending !== undefined) {
+                localVarQueryParameter['SortDescending'] = sortDescending;
             }
 
             if (page !== undefined) {
@@ -801,12 +821,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByAnswerTextGet: async (string?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postGetPostsByAnswerTextGet: async (string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Post/GetPostsByAnswerText`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -825,6 +847,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (string !== undefined) {
                 localVarQueryParameter['String'] = string;
+            }
+
+            if (sortDate !== undefined) {
+                localVarQueryParameter['SortDate'] = sortDate;
+            }
+
+            if (sortDescending !== undefined) {
+                localVarQueryParameter['SortDescending'] = sortDescending;
             }
 
             if (page !== undefined) {
@@ -849,12 +879,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @param {string} [authorUsername] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByAuthorGet: async (authorUsername?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postGetPostsByAuthorGet: async (authorUsername?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Post/GetPostsByAuthor`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -875,6 +907,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
                 localVarQueryParameter['AuthorUsername'] = authorUsername;
             }
 
+            if (sortDate !== undefined) {
+                localVarQueryParameter['SortDate'] = sortDate;
+            }
+
+            if (sortDescending !== undefined) {
+                localVarQueryParameter['SortDescending'] = sortDescending;
+            }
+
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
             }
@@ -897,12 +937,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByTextGet: async (string?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postGetPostsByTextGet: async (string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Post/GetPostsByText`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -923,6 +965,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
                 localVarQueryParameter['String'] = string;
             }
 
+            if (sortDate !== undefined) {
+                localVarQueryParameter['SortDate'] = sortDate;
+            }
+
+            if (sortDescending !== undefined) {
+                localVarQueryParameter['SortDescending'] = sortDescending;
+            }
+
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
             }
@@ -945,12 +995,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByTitleGet: async (string?: string, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postGetPostsByTitleGet: async (string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Post/GetPostsByTitle`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -969,6 +1021,14 @@ export const PostApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (string !== undefined) {
                 localVarQueryParameter['String'] = string;
+            }
+
+            if (sortDate !== undefined) {
+                localVarQueryParameter['SortDate'] = sortDate;
+            }
+
+            if (sortDescending !== undefined) {
+                localVarQueryParameter['SortDescending'] = sortDescending;
             }
 
             if (page !== undefined) {
@@ -1171,13 +1231,15 @@ export const PostApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postGetAllGet(page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetAllGet(page, count, options);
+        async postGetAllGet(sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetAllGet(sortDate, sortDescending, page, count, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1203,61 +1265,71 @@ export const PostApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [authorUsername] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postGetPostsByAnswerAuthorGet(authorUsername?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAnswerAuthorGet(authorUsername, page, count, options);
+        async postGetPostsByAnswerAuthorGet(authorUsername?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAnswerAuthorGet(authorUsername, sortDate, sortDescending, page, count, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postGetPostsByAnswerTextGet(string?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAnswerTextGet(string, page, count, options);
+        async postGetPostsByAnswerTextGet(string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAnswerTextGet(string, sortDate, sortDescending, page, count, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} [authorUsername] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postGetPostsByAuthorGet(authorUsername?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAuthorGet(authorUsername, page, count, options);
+        async postGetPostsByAuthorGet(authorUsername?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByAuthorGet(authorUsername, sortDate, sortDescending, page, count, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postGetPostsByTextGet(string?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByTextGet(string, page, count, options);
+        async postGetPostsByTextGet(string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByTextGet(string, sortDate, sortDescending, page, count, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postGetPostsByTitleGet(string?: string, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByTitleGet(string, page, count, options);
+        async postGetPostsByTitleGet(string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PostDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postGetPostsByTitleGet(string, sortDate, sortDescending, page, count, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1341,13 +1413,15 @@ export const PostApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetAllGet(page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
-            return localVarFp.postGetAllGet(page, count, options).then((request) => request(axios, basePath));
+        postGetAllGet(sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetAllGet(sortDate, sortDescending, page, count, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1370,57 +1444,67 @@ export const PostApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @param {string} [authorUsername] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByAnswerAuthorGet(authorUsername?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
-            return localVarFp.postGetPostsByAnswerAuthorGet(authorUsername, page, count, options).then((request) => request(axios, basePath));
+        postGetPostsByAnswerAuthorGet(authorUsername?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByAnswerAuthorGet(authorUsername, sortDate, sortDescending, page, count, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByAnswerTextGet(string?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
-            return localVarFp.postGetPostsByAnswerTextGet(string, page, count, options).then((request) => request(axios, basePath));
+        postGetPostsByAnswerTextGet(string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByAnswerTextGet(string, sortDate, sortDescending, page, count, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} [authorUsername] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByAuthorGet(authorUsername?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
-            return localVarFp.postGetPostsByAuthorGet(authorUsername, page, count, options).then((request) => request(axios, basePath));
+        postGetPostsByAuthorGet(authorUsername?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByAuthorGet(authorUsername, sortDate, sortDescending, page, count, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByTextGet(string?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
-            return localVarFp.postGetPostsByTextGet(string, page, count, options).then((request) => request(axios, basePath));
+        postGetPostsByTextGet(string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByTextGet(string, sortDate, sortDescending, page, count, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} [string] 
+         * @param {boolean} [sortDate] 
+         * @param {boolean} [sortDescending] 
          * @param {number} [page] 
          * @param {number} [count] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postGetPostsByTitleGet(string?: string, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
-            return localVarFp.postGetPostsByTitleGet(string, page, count, options).then((request) => request(axios, basePath));
+        postGetPostsByTitleGet(string?: string, sortDate?: boolean, sortDescending?: boolean, page?: number, count?: number, options?: any): AxiosPromise<Array<PostDto>> {
+            return localVarFp.postGetPostsByTitleGet(string, sortDate, sortDescending, page, count, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1519,6 +1603,20 @@ export interface PostApiPostDeletePostDeleteRequest {
 export interface PostApiPostGetAllGetRequest {
     /**
      * 
+     * @type {boolean}
+     * @memberof PostApiPostGetAllGet
+     */
+    readonly sortDate?: boolean
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PostApiPostGetAllGet
+     */
+    readonly sortDescending?: boolean
+
+    /**
+     * 
      * @type {number}
      * @memberof PostApiPostGetAllGet
      */
@@ -1575,6 +1673,20 @@ export interface PostApiPostGetPostsByAnswerAuthorGetRequest {
 
     /**
      * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByAnswerAuthorGet
+     */
+    readonly sortDate?: boolean
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByAnswerAuthorGet
+     */
+    readonly sortDescending?: boolean
+
+    /**
+     * 
      * @type {number}
      * @memberof PostApiPostGetPostsByAnswerAuthorGet
      */
@@ -1600,6 +1712,20 @@ export interface PostApiPostGetPostsByAnswerTextGetRequest {
      * @memberof PostApiPostGetPostsByAnswerTextGet
      */
     readonly string?: string
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByAnswerTextGet
+     */
+    readonly sortDate?: boolean
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByAnswerTextGet
+     */
+    readonly sortDescending?: boolean
 
     /**
      * 
@@ -1631,6 +1757,20 @@ export interface PostApiPostGetPostsByAuthorGetRequest {
 
     /**
      * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByAuthorGet
+     */
+    readonly sortDate?: boolean
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByAuthorGet
+     */
+    readonly sortDescending?: boolean
+
+    /**
+     * 
      * @type {number}
      * @memberof PostApiPostGetPostsByAuthorGet
      */
@@ -1659,6 +1799,20 @@ export interface PostApiPostGetPostsByTextGetRequest {
 
     /**
      * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByTextGet
+     */
+    readonly sortDate?: boolean
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByTextGet
+     */
+    readonly sortDescending?: boolean
+
+    /**
+     * 
      * @type {number}
      * @memberof PostApiPostGetPostsByTextGet
      */
@@ -1684,6 +1838,20 @@ export interface PostApiPostGetPostsByTitleGetRequest {
      * @memberof PostApiPostGetPostsByTitleGet
      */
     readonly string?: string
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByTitleGet
+     */
+    readonly sortDate?: boolean
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PostApiPostGetPostsByTitleGet
+     */
+    readonly sortDescending?: boolean
 
     /**
      * 
@@ -1815,7 +1983,7 @@ export class PostApi extends BaseAPI {
      * @memberof PostApi
      */
     public postGetAllGet(requestParameters: PostApiPostGetAllGetRequest = {}, options?: AxiosRequestConfig) {
-        return PostApiFp(this.configuration).postGetAllGet(requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+        return PostApiFp(this.configuration).postGetAllGet(requestParameters.sortDate, requestParameters.sortDescending, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1848,7 +2016,7 @@ export class PostApi extends BaseAPI {
      * @memberof PostApi
      */
     public postGetPostsByAnswerAuthorGet(requestParameters: PostApiPostGetPostsByAnswerAuthorGetRequest = {}, options?: AxiosRequestConfig) {
-        return PostApiFp(this.configuration).postGetPostsByAnswerAuthorGet(requestParameters.authorUsername, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+        return PostApiFp(this.configuration).postGetPostsByAnswerAuthorGet(requestParameters.authorUsername, requestParameters.sortDate, requestParameters.sortDescending, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1859,7 +2027,7 @@ export class PostApi extends BaseAPI {
      * @memberof PostApi
      */
     public postGetPostsByAnswerTextGet(requestParameters: PostApiPostGetPostsByAnswerTextGetRequest = {}, options?: AxiosRequestConfig) {
-        return PostApiFp(this.configuration).postGetPostsByAnswerTextGet(requestParameters.string, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+        return PostApiFp(this.configuration).postGetPostsByAnswerTextGet(requestParameters.string, requestParameters.sortDate, requestParameters.sortDescending, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1870,7 +2038,7 @@ export class PostApi extends BaseAPI {
      * @memberof PostApi
      */
     public postGetPostsByAuthorGet(requestParameters: PostApiPostGetPostsByAuthorGetRequest = {}, options?: AxiosRequestConfig) {
-        return PostApiFp(this.configuration).postGetPostsByAuthorGet(requestParameters.authorUsername, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+        return PostApiFp(this.configuration).postGetPostsByAuthorGet(requestParameters.authorUsername, requestParameters.sortDate, requestParameters.sortDescending, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1881,7 +2049,7 @@ export class PostApi extends BaseAPI {
      * @memberof PostApi
      */
     public postGetPostsByTextGet(requestParameters: PostApiPostGetPostsByTextGetRequest = {}, options?: AxiosRequestConfig) {
-        return PostApiFp(this.configuration).postGetPostsByTextGet(requestParameters.string, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+        return PostApiFp(this.configuration).postGetPostsByTextGet(requestParameters.string, requestParameters.sortDate, requestParameters.sortDescending, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1892,7 +2060,7 @@ export class PostApi extends BaseAPI {
      * @memberof PostApi
      */
     public postGetPostsByTitleGet(requestParameters: PostApiPostGetPostsByTitleGetRequest = {}, options?: AxiosRequestConfig) {
-        return PostApiFp(this.configuration).postGetPostsByTitleGet(requestParameters.string, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
+        return PostApiFp(this.configuration).postGetPostsByTitleGet(requestParameters.string, requestParameters.sortDate, requestParameters.sortDescending, requestParameters.page, requestParameters.count, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

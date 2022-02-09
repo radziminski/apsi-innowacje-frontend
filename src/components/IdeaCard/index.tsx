@@ -3,7 +3,7 @@ import { AiFillStar } from 'react-icons/ai';
 import { MdBlock, MdDeleteForever } from 'react-icons/md';
 import Rating from 'react-rating';
 import { useDispatch } from 'react-redux';
-import { IdeaDto, UserRole, IdeaDtoStatusEnum } from '~/api-client';
+import { IdeaDto, IdeaDtoStatusEnum, UserDto, UserRole } from '~/api-client';
 import { useSelector } from '~/store/hooks';
 import { blockIdea, clearBlockError, clearDeleteError, deleteIdea } from '~/store/slices/CreateIdeasSlice';
 import { COLORS } from '~/styles/variables';
@@ -12,10 +12,12 @@ import ConfirmModal from '../ConfirmModal';
 import IdeaRatingsModal from '../IdeaRatingsModal';
 import NewRatingModal from '../NewRatingModal';
 import Text, { Heading4, Heading5, Heading6, Paragraph } from '../Text';
-import { ReviewButton } from './parts';
+import { RatingSettings, ReviewButton } from './parts';
+import { getAllUsers } from '~/store/slices/CreateUserSlice';
 
 interface Props {
   idea: IdeaDto;
+  votingMode?: boolean;
 }
 
 const getStatusString = (status: IdeaDtoStatusEnum) => {
@@ -33,16 +35,31 @@ const getStatusString = (status: IdeaDtoStatusEnum) => {
   }
 };
 
-export const IdeaCard: React.FC<Props> = ({ idea }) => {
+export const IdeaCard: React.FC<Props> = ({ idea, votingMode }) => {
   const [newReviewModalOpened, setNewReviewModalOpened] = useState(false);
   const [reviewsModalOpened, setReviewsModalOpened] = useState(false);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
   const [blockModalOpened, setBlockModalOpened] = useState(false);
-  const { currentUser } = useSelector(state => state.user);
+  const { currentUser, allUsers, isLoadingAllUsers, isErrorAllUsers } = useSelector(state => state.user);
+  const [author, setAuthor] = useState<UserDto | null | undefined>(
+    allUsers ? allUsers.find(user => user.id === idea?.authorId) : null
+  );
   const { deletedIdeas, isDeleting, isDeleteError, blockedIdeas, isBlocking, isBlockError } = useSelector(
     state => state.ideas
   );
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (!allUsers && !isLoadingAllUsers && !isErrorAllUsers) {
+      dispatch(getAllUsers());
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (allUsers) {
+      setAuthor(allUsers.find(user => user.id === idea?.authorId));
+    }
+  }, [allUsers, idea]);
 
   const onAddReview = () => {
     setNewReviewModalOpened(true);
@@ -68,8 +85,13 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
     if (blockModalOpened && idea.id && blockedIdeas.includes(idea.id)) setBlockModalOpened(false);
   }, [idea, deleteModalOpened, deletedIdeas]);
 
-  const canBeDeleted = idea.authorId == currentUser?.id;
-  const canBeBlocked = currentUser?.userRole && [UserRole.Admin, UserRole.Committee].includes(currentUser?.userRole);
+  const canBeDeleted =
+    !votingMode &&
+    (idea.authorId == currentUser?.id || ((currentUser && currentUser.userRole === UserRole.Admin) as boolean));
+
+  const canBeBlocked = currentUser?.userRole && [UserRole.Admin].includes(currentUser?.userRole);
+  const isAdmin = currentUser?.userRole && UserRole.Admin === currentUser?.userRole;
+  const canBeReviewed = !votingMode;
 
   if (idea.id && deletedIdeas.includes(idea.id)) return null;
 
@@ -101,7 +123,7 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
                 </FlexBox>
               </Box>
             </FlexBox>
-            {!idea.alreadyReviewed && (
+            {!idea.alreadyReviewed && canBeReviewed && (
               <ReviewButton onClick={onAddReview}>
                 <AiFillStar />
                 <Box marginRight="0.25rem" />
@@ -118,11 +140,19 @@ export const IdeaCard: React.FC<Props> = ({ idea }) => {
                 <MdBlock />
               </Box>
             )}
+            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+            {isAdmin && <RatingSettings ideaId={idea.id!} />}
           </FlexBox>
 
           <FlexBox alignItems="center">
             <Heading6 fontWeight={400}>
-              {idea.anonymous ? 'Anonimowy użytkownik' : `Użytkownik ${idea.authorId}`}
+              {idea.anonymous
+                ? 'Anonimowy użytkownik'
+                : author === null
+                ? '...'
+                : author === undefined
+                ? 'Nieznany użytkownik'
+                : `${author.firstName} ${author.lastName}`}
             </Heading6>
             <Box paddingX="0.5rem" transform="translateY(-1px)" opacity={0.75}>
               <Heading6 fontWeight={400} fontSize="0.75rem">

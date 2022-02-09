@@ -14,7 +14,9 @@ import {
   getCreateIdeaPath,
   getInspirationsPagePath,
   getVotingPath,
-  getAccountDetailsPath
+  getAccountDetailsPath,
+  getDecisionsPath,
+  getSubjectsOverviewPagePath
 } from '~/constants/paths';
 import { COLORS } from '~/styles/variables';
 import Box, { FlexBox } from '../Box';
@@ -26,6 +28,7 @@ import useDevice from '~/hooks/useDevice';
 import { UserRole } from '~/api-client';
 import { useSelector } from '~/store/hooks';
 import { clearIdeasState } from '~/store/slices/CreateIdeasSlice';
+import { IoDocumentsOutline } from 'react-icons/io5';
 
 const ICON_SIZE = 22;
 
@@ -41,10 +44,21 @@ const NAV_LINKS = [
     label: 'Nowy pomysł'
   },
   {
+    icon: <IoDocumentsOutline size={ICON_SIZE} />,
+    to: getSubjectsOverviewPagePath(),
+    label: 'Przegląd tematów'
+  },
+  {
     icon: <MdOutlineRateReview size={ICON_SIZE} />,
     to: getVotingPath(),
     label: 'Głosowanie',
-    restrictedTo: [UserRole.Admin, UserRole.Committee]
+    restrictedTo: [UserRole.Committee]
+  },
+  {
+    icon: <MdOutlineRateReview size={ICON_SIZE} />,
+    to: getDecisionsPath(),
+    label: 'Decyzje',
+    restrictedTo: [UserRole.Admin]
   },
   {
     icon: <BiMessageDetail size={ICON_SIZE} />,
@@ -65,7 +79,9 @@ export const Nav: React.FC = () => {
       return 5.4;
     }
     return Math.max(
-      NAV_LINKS.findIndex(link => location.pathname.startsWith(link.to)),
+      NAV_LINKS.filter(
+        link => !(link.restrictedTo && currentUser?.userRole && !link.restrictedTo.includes(currentUser.userRole))
+      ).findIndex(link => location.pathname.startsWith(link.to)),
       0
     );
   };

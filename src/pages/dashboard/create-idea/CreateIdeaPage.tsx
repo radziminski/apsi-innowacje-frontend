@@ -8,7 +8,7 @@ const CreateIdeaPage = (): JSX.Element => {
   return (
     <DashboardContent
       title="Zgłoś pomysł"
-      subTitle="Oto formularz zgłoszeniowy. Wypełnij i wyślij."
+      subTitle="Oto formularz zgłoszeniowy pomysłu, który będzie oceniony przez komisję."
       icon={<MdOutlineDashboardCustomize size={28} />}>
       <div className={'required-field-info'}>
         <span>
