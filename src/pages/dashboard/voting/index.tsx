@@ -240,7 +240,7 @@ export const VotingPage: React.FC = () => {
                   {selectedSubject !== null && (
                     <Box transition="all 0.2s">
                       <SendButton disabled={!(Object.keys(selectedVotes).length === currVotes)} onClick={sendVotes}>
-                        Wyślij oceny
+                        Wyślij głosy
                       </SendButton>
                     </Box>
                   )}
