@@ -68,7 +68,6 @@ export const DecisionsPage = styled((props: { className?: string }) => {
         const fetchedSubjects: SubjectDto[] = response.data;
 
         const fetchedOptions = fetchedSubjects
-          .filter(subject => !subject.done)
           .map(subject => ({
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             value: `${subject.id!}`,
